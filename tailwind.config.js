@@ -16,8 +16,8 @@ function customColors(cssVar) {
 }
 
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
-  darkMode: "class",
+  content: ["./src/**/*.{js,jsx,ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./public/index.html"],
+  darkMode: ["class", "class"],
   theme: {
     container: {
       center: true,
@@ -26,11 +26,6 @@ module.exports = {
         "2xl": "128px",
       },
     },
-    // fontFamily: {
-    //   display: ["var(--font-display)", ...defaultTheme.fontFamily.sans],
-    //   body: ["var(--font-body)", ...defaultTheme.fontFamily.sans],
-    // },
-
     extend: {
       colors: {
         primary: {
@@ -44,6 +39,8 @@ module.exports = {
           700: customColors("--c-primary-700"),
           800: customColors("--c-primary-800"),
           900: customColors("--c-primary-900"),
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
           50: customColors("--c-secondary-50"),
@@ -56,6 +53,8 @@ module.exports = {
           700: customColors("--c-secondary-700"),
           800: customColors("--c-secondary-800"),
           900: customColors("--c-secondary-900"),
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
         },
         neutral: {
           50: customColors("--c-neutral-50"),
@@ -69,6 +68,38 @@ module.exports = {
           800: customColors("--c-neutral-800"),
           900: customColors("--c-neutral-900"),
         },
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        chart: {
+          1: "hsl(var(--chart-1))",
+          2: "hsl(var(--chart-2))",
+          3: "hsl(var(--chart-3))",
+          4: "hsl(var(--chart-4))",
+          5: "hsl(var(--chart-5))",
+        },
       },
     },
   },
@@ -79,5 +110,6 @@ module.exports = {
     require("@tailwindcss/typography"),
     require("@tailwindcss/forms"),
     require("@tailwindcss/aspect-ratio"),
+    require("tailwindcss-animate"),
   ],
 };
