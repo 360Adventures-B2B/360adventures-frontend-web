@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
-export default function FormLogin() {
+export default function FormForgotPassword() {
   const phoneRegex = /^[0-9]{10,15}$/;
   const schema = yup.object().shape({
     email: yup
@@ -22,7 +22,6 @@ export default function FormLogin() {
         return yup.string().email().isValidSync(value) || phoneRegex.test(value);
       })
       .required(),
-    password: yup.string().min(6).max(32).required(),
   });
 
   type FormData = yup.InferType<typeof schema>;
@@ -31,31 +30,23 @@ export default function FormLogin() {
     resolver: yupResolver(schema),
     defaultValues: {
       email: "",
-      password: "",
     },
   });
 
   const [isLoading, setLoading] = useState(false);
 
-  const router = useRouter();
 
   async function onSubmit(formData: FormData) {
     setLoading(true);
     try {
-      if (formData.email === "test@gmail.com" && formData.password === "123123") {
-        const result = await signIn("credentials", {
-          id: 1,
-          email: formData.email,
-          name: "tes123",
-          token: "mantap123",
-          callbackUrl: "/",
-          redirect: false,
+      if (formData.email === "test@gmail.com") {
+        toast({
+          className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+          title: "Success",
+          variant: "success",
+          description: "Send reset link send to your email or whatsapp",
+          duration: 5000,
         });
-        if (result) {
-          router.push("/");
-        } else {
-          router.push("/login");
-        }
       } else {
         toast({
           className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
@@ -104,36 +95,14 @@ export default function FormLogin() {
               )}
             />
           </label>
-          <label className="block">
-            <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
-              Password
-              <Link href="/forgot-password" className="text-sm underline font-medium">
-                Forgot password?
-              </Link>
-            </span>
-
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input type="password" placeholder="Password" autoComplete="password" className="mt-1" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </label>
           <ButtonPrimary loading={isLoading} type="submit">
-            Login
+            Send Reset Link
           </ButtonPrimary>
         </form>
       </Form>
       <span className="block text-center text-neutral-700 dark:text-neutral-300">
-        New agent? {` `}
-        <Link href="/register" className="font-semibold underline">
-          Create an account
+        <Link href="/login" className="font-semibold underline">
+          Login Here
         </Link>
       </span>
     </>

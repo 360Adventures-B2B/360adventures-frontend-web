@@ -17,8 +17,8 @@ function customColors(cssVar) {
 
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./public/index.html"],
-  darkMode: ["class", "class"],
-  theme: {
+  darkMode: ["class"],
+theme: {
     container: {
       center: true,
       padding: {

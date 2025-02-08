@@ -10,7 +10,7 @@ import { AuthProvider } from "@/context/AuthContext";
 
 const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
-  const hiddenPaths = ["/login", "/register"];
+  const hiddenPaths = ["/login", "/register", "/account-review", "/forgot-password","/reset-password","/otp"];
 
   const hideLayout = hiddenPaths.includes(pathname);
 

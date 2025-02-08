@@ -12,9 +12,14 @@ import { useRouter } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
-export default function FormLogin() {
+export default function FormRegister() {
   const phoneRegex = /^[0-9]{10,15}$/;
   const schema = yup.object().shape({
+    name: yup.string().min(3, "full name must be at least 3 characters").required("full name is a required field"),
+    companyName: yup
+      .string()
+      .min(5, "company name must be at least 5 characters")
+      .required("company name is a required field"),
     email: yup
       .string()
       .test("email-or-phone", "email or phone invalid", (value) => {
@@ -23,6 +28,10 @@ export default function FormLogin() {
       })
       .required(),
     password: yup.string().min(6).max(32).required(),
+    passwordConfirmation: yup
+      .string()
+      .oneOf([yup.ref("password"), null], "confirmation password doesn't match")
+      .required("password confirmation is a required field"),
   });
 
   type FormData = yup.InferType<typeof schema>;
@@ -30,8 +39,11 @@ export default function FormLogin() {
   const form = useForm<FormData>({
     resolver: yupResolver(schema),
     defaultValues: {
+      name: "",
+      companyName: "",
       email: "",
       password: "",
+      passwordConfirmation: "",
     },
   });
 
@@ -82,7 +94,23 @@ export default function FormLogin() {
   return (
     <>
       <Form {...form}>
-        <form className="grid grid-cols-1 gap-6" onSubmit={form.handleSubmit(onSubmit)}>
+        <form className="grid grid-cols-1 gap-6 gap-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+          <label className="block">
+            <span className="text-neutral-800 dark:text-neutral-200">Full Name</span>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input type="text" placeholder="Name" autoComplete="name" className="mt-1 w-full" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </label>
+
           <label className="block">
             <span className="text-neutral-800 dark:text-neutral-200">Email address or Mobile phone</span>
             <FormField
@@ -95,7 +123,7 @@ export default function FormLogin() {
                       type="text"
                       placeholder="Email address or Mobile phone"
                       autoComplete="email"
-                      className="mt-1"
+                      className="mt-1 w-full"
                       {...field}
                     />
                   </FormControl>
@@ -104,36 +132,61 @@ export default function FormLogin() {
               )}
             />
           </label>
-          <label className="block">
-            <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
-              Password
-              <Link href="/forgot-password" className="text-sm underline font-medium">
-                Forgot password?
-              </Link>
-            </span>
 
+          <label className="block">
+            <span className="text-neutral-800 dark:text-neutral-200">Password</span>
             <FormField
               control={form.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input type="password" placeholder="Password" autoComplete="password" className="mt-1" {...field} />
+                    <Input
+                      type="password"
+                      placeholder="Password"
+                      autoComplete="password"
+                      className="mt-1 w-full"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </label>
-          <ButtonPrimary loading={isLoading} type="submit">
-            Login
+
+          <label className="block">
+            <span className="text-neutral-800 dark:text-neutral-200">Confirmation Password</span>
+            <FormField
+              control={form.control}
+              name="passwordConfirmation"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Confirmation Password"
+                      autoComplete="confirmation_password"
+                      className="mt-1 w-full"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </label>
+
+          <ButtonPrimary loading={isLoading} type="submit" className="w-full">
+            Register
           </ButtonPrimary>
         </form>
       </Form>
+
       <span className="block text-center text-neutral-700 dark:text-neutral-300">
-        New agent? {` `}
-        <Link href="/register" className="font-semibold underline">
-          Create an account
+        Already an account? {` `}
+        <Link href="/login" className="font-semibold underline">
+          Login
         </Link>
       </span>
     </>

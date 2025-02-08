@@ -7,22 +7,17 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
-export default function FormLogin() {
+export default function FormResetPassword() {
   const phoneRegex = /^[0-9]{10,15}$/;
   const schema = yup.object().shape({
-    email: yup
-      .string()
-      .test("email-or-phone", "email or phone invalid", (value) => {
-        if (!value) return false;
-        return yup.string().email().isValidSync(value) || phoneRegex.test(value);
-      })
-      .required(),
     password: yup.string().min(6).max(32).required(),
+    passwordConfirmation: yup
+      .string()
+      .oneOf([yup.ref("password"), null], "confirmation password doesn't match")
+      .required("password confirmation is a required field"),
   });
 
   type FormData = yup.InferType<typeof schema>;
@@ -30,43 +25,17 @@ export default function FormLogin() {
   const form = useForm<FormData>({
     resolver: yupResolver(schema),
     defaultValues: {
-      email: "",
       password: "",
+      passwordConfirmation: "",
     },
   });
 
   const [isLoading, setLoading] = useState(false);
 
-  const router = useRouter();
-
   async function onSubmit(formData: FormData) {
     setLoading(true);
     try {
-      if (formData.email === "test@gmail.com" && formData.password === "123123") {
-        const result = await signIn("credentials", {
-          id: 1,
-          email: formData.email,
-          name: "tes123",
-          token: "mantap123",
-          callbackUrl: "/",
-          redirect: false,
-        });
-        if (result) {
-          router.push("/");
-        } else {
-          router.push("/login");
-        }
-      } else {
-        toast({
-          className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
-          title: "Error",
-          description: "Invalid Credentials",
-          variant: "destructive",
-          duration: 5000,
-        });
-
-        setLoading(false);
-      }
+      console.log("🚀 ~ onSubmit ~ formData:", formData);
     } catch (error) {
       toast({
         className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
@@ -84,18 +53,18 @@ export default function FormLogin() {
       <Form {...form}>
         <form className="grid grid-cols-1 gap-6" onSubmit={form.handleSubmit(onSubmit)}>
           <label className="block">
-            <span className="text-neutral-800 dark:text-neutral-200">Email address or Mobile phone</span>
+            <span className="text-neutral-800 dark:text-neutral-200">Password</span>
             <FormField
               control={form.control}
-              name="email"
+              name="password"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
                     <Input
-                      type="text"
-                      placeholder="Email address or Mobile phone"
-                      autoComplete="email"
-                      className="mt-1"
+                      type="password"
+                      placeholder="Password"
+                      autoComplete="password"
+                      className="mt-1 w-full"
                       {...field}
                     />
                   </FormControl>
@@ -104,38 +73,34 @@ export default function FormLogin() {
               )}
             />
           </label>
-          <label className="block">
-            <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
-              Password
-              <Link href="/forgot-password" className="text-sm underline font-medium">
-                Forgot password?
-              </Link>
-            </span>
 
+          <label className="block">
+            <span className="text-neutral-800 dark:text-neutral-200">Confirmation Password</span>
             <FormField
               control={form.control}
-              name="password"
+              name="passwordConfirmation"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input type="password" placeholder="Password" autoComplete="password" className="mt-1" {...field} />
+                    <Input
+                      type="password"
+                      placeholder="Confirmation Password"
+                      autoComplete="confirmation_password"
+                      className="mt-1 w-full"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </label>
+
           <ButtonPrimary loading={isLoading} type="submit">
-            Login
+            Reset Password
           </ButtonPrimary>
         </form>
       </Form>
-      <span className="block text-center text-neutral-700 dark:text-neutral-300">
-        New agent? {` `}
-        <Link href="/register" className="font-semibold underline">
-          Create an account
-        </Link>
-      </span>
     </>
   );
 }

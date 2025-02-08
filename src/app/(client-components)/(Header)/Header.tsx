@@ -16,8 +16,6 @@ export interface HeaderProps {
 
 const Header: FC<HeaderProps> = ({ className = "" }) => {
   const { user, status } = useAuth();
-  console.log("🚀 ~ user:", user);
-  console.log("🚀 ~ status:", status)
   return (
     <div className={`nc-Header sticky top-0 w-full left-0 right-0 z-40 nc-header-bg ${className}`}>
       <div className={`nc-MainNav1 relative z-10 ${className}`}>
