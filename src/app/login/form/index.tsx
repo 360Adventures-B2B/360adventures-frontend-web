@@ -11,6 +11,8 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { useLoginUserMutation } from "@/lib/services/authService";
+import { handleError } from "@/lib/handleApiError";
 
 export default function FormLogin() {
   const phoneRegex = /^[0-9]{10,15}$/;
@@ -35,25 +37,40 @@ export default function FormLogin() {
     },
   });
 
-  const [isLoading, setLoading] = useState(false);
+  const [loginUser, { isLoading }] = useLoginUserMutation();
 
   const router = useRouter();
 
   async function onSubmit(formData: FormData) {
-    setLoading(true);
     try {
-      if (formData.email === "test@gmail.com" && formData.password === "123123") {
+      const value = {
+        user: formData.email,
+        password: formData.password,
+      };
+      const res = await loginUser(value).unwrap();
+
+      if (res.code == 200) {
+        const user = res.data.user;
+
         const result = await signIn("credentials", {
           id: 1,
-          email: formData.email,
-          name: "tes123",
-          token: "mantap123",
+          email: user.email,
+          name: user.name,
+          token: res.data.token,
           callbackUrl: "/",
+          action: "login",
           redirect: false,
         });
         if (result) {
           router.push("/");
         } else {
+          toast({
+            className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+            title: "Error",
+            description: "Something Wrong, Try Again!",
+            variant: "destructive",
+            duration: 5000,
+          });
           router.push("/login");
         }
       } else {
@@ -64,18 +81,9 @@ export default function FormLogin() {
           variant: "destructive",
           duration: 5000,
         });
-
-        setLoading(false);
       }
-    } catch (error) {
-      toast({
-        className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
-        title: "Error",
-        description: "Server Error",
-        variant: "destructive",
-        duration: 5000,
-      });
-      setLoading(false);
+    } catch (error: any) {
+      handleError(error);
     }
   }
 

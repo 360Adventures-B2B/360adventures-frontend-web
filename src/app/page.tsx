@@ -14,6 +14,7 @@ import SectionBecomeAnAuthor from "@/components/SectionBecomeAnAuthor";
 import SectionVideos from "@/components/SectionVideos";
 import SectionClientSay from "@/components/SectionClientSay";
 import SectionHero3 from "./(server-components)/SectionHero3";
+import { useSession } from "next-auth/react";
 
 const DEMO_CATS: TaxonomyType[] = [
   {

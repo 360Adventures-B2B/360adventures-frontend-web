@@ -5,10 +5,12 @@ declare module "next-auth" {
     user: {
       id: number;
       token: string;
+      isVerify: boolean;
     } & DefaultSession["user"];
   }
 
   interface User {
     token: string;
+    isVerify: boolean;
   }
 }

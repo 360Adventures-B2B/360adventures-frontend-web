@@ -24,24 +24,37 @@ export const authOptions: AuthOptions = {
         token: {
           type: "text",
         },
+        action: { type: "hidden" },
       },
       authorize: async (credentials, req) => {
-        return credentials || null;
+        const extendedCredentials = {
+          ...credentials,
+          isVerify: credentials?.action === "login" ? true : false,
+        };
+        return extendedCredentials || null;
       },
     }),
   ],
   callbacks: {
-    jwt: async ({ user, token }) => {
+    jwt: async ({ user, token, trigger, session }) => {
       if (user) {
         token.id = +user.id;
         token.token = user.token;
+        token.isVerify = user.isVerify;
       }
+
+      if (trigger === "update") {
+        token.isVerify = session.isVerify;
+        // return { ...token, ...session.user };
+      }
+
       return token;
     },
     session: async ({ session, token }) => {
       if (session?.user) {
-        session.user.id = token.id as number;
-        session.user.token = token.token as number;
+        session.user.id = token.id as string;
+        session.user.token = token.token as string;
+        session.user.isVerify = token.isVerify;
       }
       return session;
     },

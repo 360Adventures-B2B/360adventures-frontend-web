@@ -1,10 +1,14 @@
 // middleware.ts
+import { getToken } from "next-auth/jwt";
 import { withAuth } from "next-auth/middleware";
+import { getSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 
 export default withAuth(
-  function middleware(req) {
+  async function middleware(req) {
+    const session = await getToken({ req });
+
     const path = req.nextUrl.pathname;
 
     const searchParams = req.nextUrl.searchParams;
@@ -13,9 +17,21 @@ export default withAuth(
     const publicRoutes = ["/login", "/register", "/forgot-password"];
     const isPublicRoute = publicRoutes.includes(path);
 
+    if (session && !session?.isVerify) {
+      if (req.url.includes("/otp")) {
+        return NextResponse.next();
+      }
+      return NextResponse.redirect(new URL("/otp", req.url));
+    }
+    if (session && session?.isVerify) {
+      if (req.nextUrl.pathname === "/otp") {
+        return NextResponse.redirect(new URL("/", req.url));
+      }
+    }
+
     if (path === "/reset-password") {
       if (!resetToken) {
-        return redirect('/');
+        return redirect("/");
       }
       return NextResponse.next();
     }
@@ -24,7 +40,6 @@ export default withAuth(
       return NextResponse.redirect(new URL("/", req.url));
     }
 
-    // Jika belum login, redirect ke home
     if (!req.nextauth.token && !isPublicRoute) {
       return NextResponse.redirect(new URL("/", req.url));
     }

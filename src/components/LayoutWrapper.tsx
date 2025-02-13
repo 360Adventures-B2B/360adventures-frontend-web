@@ -7,15 +7,16 @@ import FooterNav from "./FooterNav";
 import Footer from "./Footer";
 import { SessionProvider } from "next-auth/react";
 import { AuthProvider } from "@/context/AuthContext";
+import ReduxProvider from "@/lib/provider/redux";
 
 const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
-  const hiddenPaths = ["/login", "/register", "/account-review", "/forgot-password","/reset-password","/otp"];
+  const hiddenPaths = ["/login", "/register", "/account-review", "/forgot-password", "/reset-password", "/otp"];
 
   const hideLayout = hiddenPaths.includes(pathname);
 
   return (
-    <SessionProvider>
+    <ReduxProvider>
       <AuthProvider>
         <div>
           {!hideLayout && <ClientCommons />}
@@ -25,7 +26,7 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
           {!hideLayout && <Footer />}
         </div>
       </AuthProvider>
-    </SessionProvider>
+    </ReduxProvider>
   );
 };
 

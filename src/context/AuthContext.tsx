@@ -12,13 +12,15 @@ type AuthContextType = {
   user: User | null;
   status: "loading" | "authenticated" | "unauthenticated";
   handleLogout: () => Promise<void>;
+  updateIsVerify: (isVerify: boolean) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const [user, setUser] = useState<User | null>(null);
+  console.log("🚀 ~ session:", session);
 
   useEffect(() => {
     if (session) {
@@ -33,14 +35,21 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const handleLogout = async () => {
     try {
       await signOut({ redirect: false });
-      // Bisa tambahkan clear localStorage atau state lainnya
       router.push("/login");
     } catch (error) {
       console.error("Logout error:", error);
     }
   };
 
-  return <AuthContext.Provider value={{ user, status, handleLogout }}>{children}</AuthContext.Provider>;
+  const updateIsVerify = async (isVerify: boolean): Promise<void> => {
+    if (session?.user) {
+      await update({
+        isVerify: isVerify,
+      });
+    }
+  };
+
+  return <AuthContext.Provider value={{ user, status, handleLogout, updateIsVerify }}>{children}</AuthContext.Provider>;
 };
 
 // Custom hook untuk mengakses AuthContext di komponen lain

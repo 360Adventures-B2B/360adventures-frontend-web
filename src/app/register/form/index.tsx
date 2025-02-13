@@ -11,15 +11,14 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { useRegisterUserMutation } from "@/lib/services/authService";
+import { handleError } from "@/lib/handleApiError";
 
 export default function FormRegister() {
   const phoneRegex = /^[0-9]{10,15}$/;
   const schema = yup.object().shape({
     name: yup.string().min(3, "full name must be at least 3 characters").required("full name is a required field"),
-    companyName: yup
-      .string()
-      .min(5, "company name must be at least 5 characters")
-      .required("company name is a required field"),
+    username: yup.string().min(5, "username must be at least 5 characters").required("username is a required field"),
     email: yup
       .string()
       .test("email-or-phone", "email or phone invalid", (value) => {
@@ -40,33 +39,57 @@ export default function FormRegister() {
     resolver: yupResolver(schema),
     defaultValues: {
       name: "",
-      companyName: "",
+      username: "",
       email: "",
       password: "",
       passwordConfirmation: "",
     },
   });
 
-  const [isLoading, setLoading] = useState(false);
+  const [registerUser, { isLoading }] = useRegisterUserMutation();
 
   const router = useRouter();
 
   async function onSubmit(formData: FormData) {
-    setLoading(true);
     try {
-      if (formData.email === "test@gmail.com" && formData.password === "123123") {
+      const value = {
+        name: formData.name,
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+      };
+      const res = await registerUser(value).unwrap();
+
+      if (res.code == 201) {
+        const user = res.data.user;
+
         const result = await signIn("credentials", {
-          id: 1,
-          email: formData.email,
-          name: "tes123",
-          token: "mantap123",
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          token: res.data.token,
           callbackUrl: "/",
+          action: "register",
           redirect: false,
         });
         if (result) {
-          router.push("/");
+          toast({
+            className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+            title: "Error",
+            description: "Check Email Your OTP",
+            variant: "success",
+            duration: 5000,
+          });
+          router.push("/otp");
         } else {
-          router.push("/login");
+          toast({
+            className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+            title: "Error",
+            description: "Something Wrong, Try Again!",
+            variant: "destructive",
+            duration: 5000,
+          });
+          router.push("/register");
         }
       } else {
         toast({
@@ -76,18 +99,9 @@ export default function FormRegister() {
           variant: "destructive",
           duration: 5000,
         });
-
-        setLoading(false);
       }
-    } catch (error) {
-      toast({
-        className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
-        title: "Error",
-        description: "Server Error",
-        variant: "destructive",
-        duration: 5000,
-      });
-      setLoading(false);
+    } catch (error: any) {
+      handleError(error);
     }
   }
 
@@ -104,6 +118,28 @@ export default function FormRegister() {
                 <FormItem>
                   <FormControl>
                     <Input type="text" placeholder="Name" autoComplete="name" className="mt-1 w-full" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </label>
+
+          <label className="block">
+            <span className="text-neutral-800 dark:text-neutral-200">Username</span>
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Username"
+                      autoComplete="username"
+                      className="mt-1 w-full"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
