@@ -22,6 +22,7 @@ export function isErrorResponse(error: any): error is ErrorResponse {
 }
 
 export function handleError(error: any, customMessage?: string): void {
+  console.log("🚀 ~ handleError ~ error:", error);
   const customMessages: { [key: number]: string } = {
     401: "Oops! You are unauthorized. Please check your login credentials.",
     403: "Sorry, you do not have permission to access this resource.",
@@ -32,7 +33,7 @@ export function handleError(error: any, customMessage?: string): void {
   let errorMessage = customMessage;
 
   if (!errorMessage && isErrorResponse(error)) {
-    errorMessage = customMessages[error.data.code] || error.data.message || "An unexpected error occurred.";
+    errorMessage = error.data.message || customMessages[error.data.code] || "An unexpected error occurred.";
   }
 
   if (!errorMessage) {

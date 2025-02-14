@@ -9,9 +9,14 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useResetUserPasswordMutation } from "@/lib/services/authService";
+import { handleError } from "@/lib/handleApiError";
 
 export default function FormResetPassword() {
-  const phoneRegex = /^[0-9]{10,15}$/;
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+
   const schema = yup.object().shape({
     password: yup.string().min(6).max(32).required(),
     passwordConfirmation: yup
@@ -30,21 +35,35 @@ export default function FormResetPassword() {
     },
   });
 
-  const [isLoading, setLoading] = useState(false);
+  const [resetUserPassword, { isLoading }] = useResetUserPasswordMutation();
+  const router = useRouter();
 
   async function onSubmit(formData: FormData) {
-    setLoading(true);
     try {
-      console.log("🚀 ~ onSubmit ~ formData:", formData);
-    } catch (error) {
-      toast({
-        className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
-        title: "Error",
-        description: "Server Error",
-        variant: "destructive",
-        duration: 5000,
-      });
-      setLoading(false);
+      const values = {
+        password: formData.password,
+      };
+      const res = await resetUserPassword({ credentials: values, token }).unwrap();
+      if (res.code === 200) {
+        toast({
+          className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+          title: "Success",
+          description: "Reset Password Successfully, Please Login",
+          variant: "success",
+          duration: 5000,
+        });
+        router.push("/login");
+      } else {
+        toast({
+          className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+          title: "Error",
+          description: "Something Wrong, Try Again!",
+          variant: "destructive",
+          duration: 5000,
+        });
+      }
+    } catch (error: any) {
+      handleError(error);
     }
   }
 

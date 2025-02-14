@@ -22,9 +22,27 @@ export const authApi = createApi({
         body: credentials,
       }),
     }),
-    validateUserOtp: builder.mutation({
+    validateUserOtp: builder.query({
+      query: ({ token, otpCode }) => ({
+        url: `api/auth/verify-otp?token=${token}&otp_code=${otpCode}`,
+      }),
+    }),
+    resendUserOtp: builder.mutation({
+      query: () => ({
+        url: "api/auth/resend-otp",
+        method: "POST",
+      }),
+    }),
+    requestUserResetPassword: builder.mutation({
       query: (credentials) => ({
-        url: "api/auth/validate-otp",
+        url: "api/auth/request-reset-password",
+        method: "POST",
+        body: credentials,
+      }),
+    }),
+    resetUserPassword: builder.mutation({
+      query: ({ credentials, token }) => ({
+        url: `api/auth/reset-password?token=${token}`,
         method: "POST",
         body: credentials,
       }),
@@ -41,13 +59,13 @@ export const authApi = createApi({
     }),
   }),
 });
-  console.log("🚀 ~ createBaseQuery:", createBaseQuery)
-  console.log("🚀 ~ createBaseQuery:", createBaseQuery)
-
 export const {
   useLoginUserMutation,
   useRegisterUserMutation,
-  useValidateUserOtpMutation,
+  useLazyValidateUserOtpQuery,
+  useResendUserOtpMutation,
+  useRequestUserResetPasswordMutation,
+  useResetUserPasswordMutation,
   useGetUserQuery,
   useUpdateUserMutation,
 } = authApi;

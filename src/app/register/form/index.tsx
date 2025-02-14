@@ -75,7 +75,7 @@ export default function FormRegister() {
         if (result) {
           toast({
             className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
-            title: "Error",
+            title: "Success",
             description: "Check Email Your OTP",
             variant: "success",
             duration: 5000,

@@ -7,10 +7,10 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { useRequestUserResetPasswordMutation } from "@/lib/services/authService";
+import { handleError } from "@/lib/handleApiError";
 
 export default function FormForgotPassword() {
   const phoneRegex = /^[0-9]{10,15}$/;
@@ -33,40 +33,30 @@ export default function FormForgotPassword() {
     },
   });
 
-  const [isLoading, setLoading] = useState(false);
-
+  const [requestUserResetPassword, { isLoading }] = useRequestUserResetPasswordMutation();
 
   async function onSubmit(formData: FormData) {
-    setLoading(true);
     try {
-      if (formData.email === "test@gmail.com") {
+      const res = await requestUserResetPassword(formData).unwrap();
+      if (res.code === 200) {
         toast({
           className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
           title: "Success",
+          description: "Check Email Your Reset Password Link",
           variant: "success",
-          description: "Send reset link send to your email or whatsapp",
           duration: 5000,
         });
       } else {
         toast({
           className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
           title: "Error",
-          description: "Invalid Credentials",
+          description: "Something Wrong, Try Again!",
           variant: "destructive",
           duration: 5000,
         });
-
-        setLoading(false);
       }
-    } catch (error) {
-      toast({
-        className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
-        title: "Error",
-        description: "Server Error",
-        variant: "destructive",
-        duration: 5000,
-      });
-      setLoading(false);
+    } catch (error: any) {
+      handleError(error);
     }
   }
 

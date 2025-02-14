@@ -5,27 +5,27 @@ import { redirect } from "next/navigation";
 
 export interface PageResetPasswordProps {}
 
-async function validateResetToken(token: string) {
-  try {
-    // const response = await fetch('/api/validate-reset-token', {
-    //   method: 'POST',
-    //   body: JSON.stringify({ token })
-    // })
-    if (token === "123123") {
-      return true;
-    }
-  } catch (error) {
-    return false;
-  }
-}
+// async function validateResetToken(token: string) {
+//   try {
+//     // const response = await fetch('/api/validate-reset-token', {
+//     //   method: 'POST',
+//     //   body: JSON.stringify({ token })
+//     // })
+//     if (token === "123123") {
+//       return true;
+//     }
+//   } catch (error) {
+//     return false;
+//   }
+// }
 
 export default async function PageResetPassword({ searchParams }: { searchParams: { token: string } }) {
   const { token } = searchParams;
-  const isValidToken = await validateResetToken(token);
+  // const isValidToken = await validateResetToken(token);
 
-  if (!isValidToken) {
-    redirect("/login");
-  }
+  // if (!isValidToken) {
+  //   redirect("/login");
+  // }
   return (
     <div className={`nc-PageResetPassword`}>
       <div className="container mb-24 lg:mb-32">

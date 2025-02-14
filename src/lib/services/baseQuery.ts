@@ -27,12 +27,11 @@ export const createBaseQuery = () => {
     });
 
     const result = await baseQuery(args, api, extraOptions);
-    console.log("🚀 ~ return ~ result:", result);
 
     if (result.error && result.error.status === 403) {
-      await signOut({ redirect: false });
-      const router = useRouter();
-      router.push("/login");
+      if (!args.url.includes("api/auth/verify-otp")) {
+        await signOut({ redirect: true });
+      }
     }
 
     return result;

@@ -10,10 +10,16 @@ import { redirect, useRouter } from "next/navigation";
 import { handleError } from "@/lib/handleApiError";
 import { useEffect, useState } from "react";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { useValidateUserOtpMutation } from "@/lib/services/authService";
 import { useAuth } from "@/context/AuthContext";
+import { useLazyValidateUserOtpQuery, useResendUserOtpMutation } from "@/lib/services/authService";
+import { useSession } from "next-auth/react";
+import { toast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
+import useSweetAlert from "@/hooks/useSweetAlert";
 
 export default function FormOTP() {
+  const { data: session } = useSession();
+
   const schema = yup.object().shape({
     otp: yup
       .string()
@@ -32,14 +38,22 @@ export default function FormOTP() {
   });
 
   const router = useRouter();
-  const [validateUserOtp, { isLoading }] = useValidateUserOtpMutation();
 
   const { updateIsVerify } = useAuth();
 
+  const [trigger, { isLoading }] = useLazyValidateUserOtpQuery();
+
+  const [resendUserOtp, { isLoading: isLoadingResendOTP }] = useResendUserOtpMutation();
+
+  const { showLoading, close } = useSweetAlert();
+
   async function onSubmit(formData: FormData) {
     try {
-      await updateIsVerify(true);
-      router.push("/");
+      const res = await trigger({ token: session?.user?.token, otpCode: formData.otp }).unwrap();
+      if (res.code === 200) {
+        await updateIsVerify(true);
+        router.push("/");
+      }
     } catch (error: any) {
       handleError(error);
     }
@@ -83,11 +97,29 @@ export default function FormOTP() {
     return () => clearInterval(timer);
   }, [secondsLeft, isInitialized]);
 
-  const handleResend = () => {
-    const newExpireTime = Date.now() + 60000; // 1 menit ke depan
-    localStorage.setItem("otpExpireTime", newExpireTime.toString());
-    setSecondsLeft(60);
-    setIsResendDisabled(true);
+  const handleResend = async () => {
+    try {
+      showLoading("please wait..");
+      const res = await resendUserOtp(undefined).unwrap();
+
+      if (res.code === 200) {
+        const newExpireTime = Date.now() + 60000;
+        localStorage.setItem("otpExpireTime", newExpireTime.toString());
+        setSecondsLeft(60);
+        setIsResendDisabled(true);
+      } else {
+        toast({
+          className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+          title: "Error",
+          description: "Something Wrong, Try Again!",
+          variant: "destructive",
+          duration: 5000,
+        });
+      }
+      close();
+    } catch (error: any) {
+      handleError(error);
+    }
   };
 
   if (!isInitialized) {
