@@ -1,9 +1,11 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useState, useEffect, useRef } from "react";
 import ReactDatePicker from "react-datepicker";
 import DatePickerCustomDay from "@/components/DatePickerCustomDay";
 import DatePickerCustomHeaderTwoMonth from "@/components/DatePickerCustomHeaderTwoMonth";
 import { useBooking } from "@/context/BookingContext";
 import { formatDateString } from "@/utils/dateHelper";
+import NcModal from "@/shared/NcModal";
+import ModalPackage from "./ModalPackage";
 
 interface ModalDatePickerProps {
   selectedDate: Date | null;
@@ -14,6 +16,8 @@ interface ModalDatePickerProps {
 const ModalDatePicker: FC<ModalDatePickerProps> = ({ selectedDate, handleDateSelection, closeModal }) => {
   const [monthsShown, setMonthsShown] = useState(1);
   const { bookingData, updateBookingData } = useBooking();
+  const openModalRef = useRef<Function | null>(null);
+  const [isChangeDate, setIsChangeDate] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -33,11 +37,22 @@ const ModalDatePicker: FC<ModalDatePickerProps> = ({ selectedDate, handleDateSel
 
   const onDateChange = (date: Date) => {
     handleDateSelection(date);
-    closeModal();
     if (date) {
-      updateBookingData({ start_date: formatDateString(date) });
+      updateBookingData({ start_date: formatDateString(date), time_slot: "" });
     }
+
+    if (bookingData.package_id) {
+      openModalRef.current?.();
+    }
+    setIsChangeDate(true);
   };
+
+  if (isChangeDate) {
+    if (bookingData.package_id) {
+      return <ModalPackage packageId={bookingData.package_id} closeModal={closeModal} />;
+    }
+  }
+
   return (
     <div>
       <div className="text-lg font-semibold mb-4">Select a date</div>
@@ -59,12 +74,22 @@ const ModalDatePicker: FC<ModalDatePickerProps> = ({ selectedDate, handleDateSel
           className="bg-blue-500 text-white px-4 py-2 rounded transition-all duration-200 ease-in-out hover:bg-blue-600"
           onClick={() => {
             handleDateSelection(selectedDate);
-            closeModal(); // This will close the modal after confirming the date
-          }} // Panggil fungsi untuk menutup modal
+          }}
         >
           Close
         </button>
       </div>
+      {/* <NcModal
+        contentExtraClass="w-full md:w-1/2"
+        renderTrigger={(openModal) => {
+          openModalRef.current = openModal;
+          return <></>;
+        }}
+        renderContent={(closeModal) => {
+          return <ModalPackage packageId={bookingData.package_id ?? 0} closeModal={closeModal} />;
+        }}
+        modalTitle="Select your awgawgagawwaawafwafw"
+      /> */}
     </div>
   );
 };

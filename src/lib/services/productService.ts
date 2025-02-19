@@ -18,9 +18,9 @@ export const productApi = createApi({
       query: (id) => `__products_${id}.json`,
     }),
     getDetailPackage: builder.query<Package, number>({
-      query: (id) => `package/__package_${id}.json`,
+      query: (id) => `package/__package_${id}.json?timestamp=${new Date().getTime()}`,
       async transformResponse(response) {
-        await new Promise((resolve) => setTimeout(resolve, 1000)); 
+        await new Promise((resolve) => setTimeout(resolve, 2000));
         return response;
       },
     }),

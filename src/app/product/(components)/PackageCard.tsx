@@ -3,12 +3,16 @@ import React from "react";
 import ModalPackage from "./ModalPackage";
 import { Package } from "@/interfaces/Package";
 import { formatNumber } from "@/utils/currencyConverter";
+import { useBooking } from "@/context/BookingContext";
+import ModalDatePicker from "./ModalDatePicker";
 
 interface PackageCardProps {
   packageData: Package;
 }
 
 const PackageCard: React.FC<PackageCardProps> = ({ packageData }) => {
+  const { bookingData, updateBookingData } = useBooking();
+
   return (
     <div className="border border-gray-300 rounded-lg p-3 flex flex-col sm:flex-row gap-3">
       {/* Left Section: Title and Description */}
@@ -66,10 +70,15 @@ const PackageCard: React.FC<PackageCardProps> = ({ packageData }) => {
                 onClick={() => openModal()}
                 className="bg-primary-6000 hover:bg-primary-700 text-white py-1.5 px-3 mt-3 w-full sm:w-full rounded-md text-sm"
               >
-                Select
+                {bookingData.start_date ? "Select Package" : "Check Availability"}
               </button>
             )}
-            renderContent={(closeModal) => <ModalPackage packageId={packageData.id} />}
+            renderContent={(closeModal) => {
+              if (!bookingData.start_date) {
+                return <ModalDatePicker selectedDate={null} handleDateSelection={() => {}} closeModal={closeModal} />;
+              }
+              return <ModalPackage packageId={packageData.id} closeModal={closeModal} />;
+            }}
             modalTitle="Select your preferences"
           />
         </div>

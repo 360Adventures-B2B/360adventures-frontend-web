@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import ModalDatePicker from "./ModalDatePicker";
 import { useBooking } from "@/context/BookingContext";
 import { formatDateString } from "@/utils/dateHelper";
+import ModalPackage from "./ModalPackage";
 
 const DatePicker = () => {
   const { bookingData, updateBookingData } = useBooking();
-  console.log("🚀 ~ DatePicker ~ bookingData:", bookingData);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [highlightedDate, setHighlightedDate] = useState<Date | null>(null);
 
@@ -67,6 +67,7 @@ const DatePicker = () => {
         ))}
 
         <NcModal
+          contentExtraClass="w-full md:w-1/2"
           renderTrigger={(openModal) => (
             <div
               className="w-24 h-24 bg-gray-100 rounded-lg flex items-center justify-center cursor-pointer"
@@ -89,13 +90,18 @@ const DatePicker = () => {
               </svg>
             </div>
           )}
-          renderContent={(closeModal) => (
-            <ModalDatePicker
-              selectedDate={selectedDate}
-              handleDateSelection={handleDateSelection}
-              closeModal={closeModal} // Pass closeModal here
-            />
-          )}
+          renderContent={(closeModal) => {
+            if (bookingData.package_id) {
+              return <ModalPackage packageId={bookingData.package_id} closeModal={closeModal} />;
+            }
+            return (
+              <ModalDatePicker
+                selectedDate={selectedDate}
+                handleDateSelection={handleDateSelection}
+                closeModal={closeModal}
+              />
+            );
+          }}
           modalTitle="Select a Date"
         />
       </div>

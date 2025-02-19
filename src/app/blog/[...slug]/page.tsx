@@ -32,18 +32,14 @@ const Page = ({
             Keep up the spirit of the desire to travel around the world
           </h1>
           <span className="block text-base text-neutral-500 md:text-lg dark:text-neutral-400 pb-1">
-            We’re an online magazine dedicated to covering the best in
-            international product design. We started as a little blog back in
-            2002 covering student work and over time
+            We’re an online magazine dedicated to covering the best in international product design. We started as a
+            little blog back in 2002 covering student work and over time
           </span>
 
           <div className="w-full border-b border-neutral-100 dark:border-neutral-800"></div>
           <div className="flex flex-col items-baseline sm:flex-row sm:justify-between">
             <div className="nc-PostMeta2 flex items-center flex-wrap text-neutral-700 text-left dark:text-neutral-200 text-sm leading-none flex-shrink-0">
-              <Avatar
-                containerClassName="flex-shrink-0"
-                sizeClass="w-8 h-8 sm:h-11 sm:w-11 "
-              />
+              <Avatar containerClassName="flex-shrink-0" sizeClass="w-8 h-8 sm:h-11 sm:w-11 " />
               <div className="ml-3">
                 <div className="flex items-center">
                   <a className="block font-semibold" href="/">
@@ -51,13 +47,9 @@ const Page = ({
                   </a>
                 </div>
                 <div className="text-xs mt-[6px]">
-                  <span className="text-neutral-700 dark:text-neutral-300">
-                    May 20, 2021
-                  </span>
+                  <span className="text-neutral-700 dark:text-neutral-300">May 20, 2021</span>
                   <span className="mx-2 font-semibold">·</span>
-                  <span className="text-neutral-700 dark:text-neutral-300">
-                    6 min read
-                  </span>
+                  <span className="text-neutral-700 dark:text-neutral-300">6 min read</span>
                 </div>
               </div>
             </div>
@@ -77,25 +69,21 @@ const Page = ({
         className="prose dark:prose-invert prose-sm !max-w-screen-md sm:prose lg:prose-lg mx-auto dark:prose-dark"
       >
         <p>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iure vel
-          officiis ipsum placeat itaque neque dolorem modi perspiciatis dolor
-          distinctio veritatis sapiente, minima corrupti dolores necessitatibus
-          suscipit accusantium dignissimos culpa cumque.
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iure vel officiis ipsum placeat itaque neque dolorem
+          modi perspiciatis dolor distinctio veritatis sapiente, minima corrupti dolores necessitatibus suscipit
+          accusantium dignissimos culpa cumque.
         </p>
         <p>
-          It is a long established fact that a <strong>reader</strong> will be
-          distracted by the readable content of a page when looking at its{" "}
-          <strong>layout</strong>. The point of using Lorem Ipsum is that it has
-          a more-or-less normal{" "}
+          It is a long established fact that a <strong>reader</strong> will be distracted by the readable content of a
+          page when looking at its <strong>layout</strong>. The point of using Lorem Ipsum is that it has a more-or-less
+          normal{" "}
           <a href="/#" target="_blank" rel="noopener noreferrer">
             distribution of letters.
           </a>{" "}
         </p>
         <ol>
           <li>We want everything to look good out of the box.</li>
-          <li>
-            {` Really just the first reason, that's the whole point of the plugin.`}
-          </li>
+          <li>{` Really just the first reason, that's the whole point of the plugin.`}</li>
           <li>
             {`   Here's a third pretend reason though a list with three items looks
             more realistic than a list with two items.`}
@@ -113,15 +101,12 @@ const Page = ({
             like trash. Make it good then it won't be bad.`}
           </p>
         </blockquote>
-        <p>
-          {`        It's probably important that images look okay here by default as well:`}
-        </p>
+        <p>{`        It's probably important that images look okay here by default as well:`}</p>
         <figure>
           <Image src={travelhero2Image} alt="blog" className="rounded-2xl" />
           <figcaption>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iure vel
-            officiis ipsum placeat itaque neque dolorem modi perspiciatis dolor
-            distinctio veritatis sapiente
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iure vel officiis ipsum placeat itaque neque
+            dolorem modi perspiciatis dolor distinctio veritatis sapiente
           </figcaption>
         </figure>
         <p>
@@ -136,8 +121,7 @@ const Page = ({
         <p>{`And that's the end of this section.`}</p>
         <h2>Code should look okay by default.</h2>
         <p>
-          I think most people are going to use{" "}
-          <a href="https://highlightjs.org/">highlight.js</a> or{" "}
+          I think most people are going to use <a href="https://highlightjs.org/">highlight.js</a> or{" "}
           <a href="https://prismjs.com/">Prism</a>{" "}
           {`or something if they want to
           style their code blocks but it wouldn't hurt to make them look`}{" "}
@@ -151,10 +135,7 @@ const Page = ({
         <p>Hopefully that looks good enough to you.</p>
         <h3>We still need to think about stacked headings though.</h3>
 
-        <p>
-          Phew, with any luck we have styled the headings above this text and
-          they look pretty good.
-        </p>
+        <p>Phew, with any luck we have styled the headings above this text and they look pretty good.</p>
       </div>
     );
   };
@@ -190,15 +171,13 @@ const Page = ({
         <div className="nc-SingleAuthor flex">
           <Avatar sizeClass="w-11 h-11 md:w-24 md:h-24" />
           <div className="flex flex-col ml-3 max-w-lg sm:ml-5 space-y-1">
-            <span className="text-xs text-neutral-400 uppercase tracking-wider">
-              WRITEN BY
-            </span>
+            <span className="text-xs text-neutral-400 uppercase tracking-wider">WRITEN BY</span>
             <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-200">
               <a href="/">Fones Mimi</a>
             </h2>
             <span className="text-sm text-neutral-500 sm:text-base dark:text-neutral-300">
-              There’s no stopping the tech giant. Apple now opens its 100th
-              store in China.There’s no stopping the tech giant.
+              There’s no stopping the tech giant. Apple now opens its 100th store in China.There’s no stopping the tech
+              giant.
               <a className="text-primary-6000 font-medium ml-1" href="/">
                 Readmore
               </a>
@@ -212,9 +191,7 @@ const Page = ({
   const renderCommentForm = () => {
     return (
       <div className="max-w-screen-md mx-auto pt-5">
-        <h3 className="text-xl font-semibold text-neutral-800 dark:text-neutral-200">
-          Responses (14)
-        </h3>
+        <h3 className="text-xl font-semibold text-neutral-800 dark:text-neutral-200">Responses (14)</h3>
         <form className="nc-SingleCommentForm mt-5">
           <Textarea />
           <div className="mt-2 space-x-3">
@@ -253,10 +230,7 @@ const Page = ({
 
   const renderPostRelated = (post: PostDataType) => {
     return (
-      <div
-        key={post.id}
-        className="relative aspect-w-3 aspect-h-4 rounded-3xl overflow-hidden group"
-      >
+      <div key={post.id} className="relative aspect-w-3 aspect-h-4 rounded-3xl overflow-hidden group">
         <Link href={post.href as Route} />
         <Image
           className="object-cover transform group-hover:scale-105 transition-transform duration-300"

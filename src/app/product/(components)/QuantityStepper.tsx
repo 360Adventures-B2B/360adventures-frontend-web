@@ -1,3 +1,4 @@
+"use client";
 import { useBooking } from "@/context/BookingContext";
 import { PersonType } from "@/interfaces/PersonType";
 import { formatNumber } from "@/utils/currencyConverter";
@@ -8,78 +9,58 @@ interface QuantityStepperProps {
 }
 
 const QuantityStepper: React.FC<QuantityStepperProps> = ({ personTypes }) => {
-  // Mengambil booking context
   const { bookingData, updateBookingData } = useBooking();
-  console.log("🚀 ~ QuantityStepper ~ bookingData:", bookingData);
+  console.log("🚀 ~ bookingData:", bookingData);
 
-  // State untuk menyimpan kuantitas per tipe tamu
-  const [quantities, setQuantities] = useState(
-    personTypes.reduce((acc: any, type: any) => {
-      acc[type.name] = 0; // Inisialisasi semua dengan 0
-      return acc;
-    }, {})
-  );
+  const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
+  console.log("🚀 ~ quantities:", quantities);
 
-  // Fungsi untuk menghitung total harga
-  const calculateTotalPrice = () => {
-    let total = 0;
+  useEffect(() => {
+    const total = bookingData.person_types.reduce((acc, personType) => {
+      return acc + personType.price * personType.guest;
+    }, 0);
 
-    // Iterasi untuk menghitung total harga berdasarkan kuantitas dan harga per unit
-    personTypes.forEach((unit) => {
-      total += quantities[unit.name] * unit.price; // Harga berdasarkan kuantitas
+    updateBookingData({
+      total_price: total,
     });
+  }, [bookingData.person_types]);
 
-    return total;
+  const increment = (unitName: string) => {
+    setQuantities((prevQuantities: any) => ({
+      ...prevQuantities,
+      [unitName]: (prevQuantities[unitName] || 0) + 1,
+    }));
+    updateBookingData({
+      person_types: bookingData.person_types.map((person) => {
+        if (person.name === unitName) {
+          return { ...person, guest: person.guest + 1 };
+        }
+        return person;
+      }),
+    });
   };
 
-  // Mengupdate bookingData setiap ada perubahan kuantitas
-
-  // Fungsi untuk increment kuantitas
-  const increment = (type: string) => {
-    const personType = personTypes.find((item) => item.name === type);
-    const maxQuantity = personType?.max ?? 0;
-
-    const updatedPersonTypes = personTypes.map((unit) => ({
-      ...unit,
-      guest: quantities[unit.name], // Update kuantitas tamu berdasarkan state
+  const decrement = (unitName: string) => {
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [unitName]: Math.max((prevQuantities[unitName] || 0) - 1, 0),
     }));
 
     updateBookingData({
-      person_types: updatedPersonTypes, // Memperbarui person_types di context
-      total_price: calculateTotalPrice(), // Update total price
+      person_types: bookingData.person_types.map((person) => {
+        if (person.name === unitName && person.guest > 0) {
+          return { ...person, guest: person.guest - 1 };
+        }
+        return person;
+      }),
     });
-
-    setQuantities((prevQuantities: any) => ({
-      ...prevQuantities,
-      [type]: Math.min(prevQuantities[type] + 1, maxQuantity),
-    }));
-  };
-
-  // Fungsi untuk decrement kuantitas
-  const decrement = (type: string) => {
-    const updatedPersonTypes = personTypes.map((unit) => ({
-      ...unit,
-      guest: quantities[unit.name], // Update kuantitas tamu berdasarkan state
-    }));
-
-    updateBookingData({
-      person_types: updatedPersonTypes, // Memperbarui person_types di context
-      total_price: calculateTotalPrice(), // Update total price
-    });
-    const personType = personTypes.find((item) => item.name === type);
-    const maxQuantity = personType?.max ?? 0;
-
-    setQuantities((prevQuantities: any) => ({
-      ...prevQuantities,
-      [type]: Math.max(prevQuantities[type] - 1, 0),
-    }));
   };
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 p-4 rounded-lg bg-gray-100">
       <div className="flex flex-col gap-2 w-full sm:w-44">
         <h4 className="text-lg font-bold text-gray-800">Quantity</h4>
-        <p className="text-sm text-gray-600">(Max: 15)</p>
+        {/* <p className="text-sm text-gray-600">(Max: 15)</p> */}
       </div>
 
       <div className="flex flex-col gap-3 flex-1">
@@ -117,7 +98,7 @@ const QuantityStepper: React.FC<QuantityStepperProps> = ({ personTypes }) => {
                     ></path>
                   </svg>
                 </button>
-                <span className="text-lg">{quantities[unit.name]}</span>
+                <span className="text-lg">{quantities[unit.name] ?? 0}</span>
                 <button
                   type="button"
                   className="px-2 py-1 bg-gray-100 rounded-full"
@@ -144,7 +125,6 @@ const QuantityStepper: React.FC<QuantityStepperProps> = ({ personTypes }) => {
               </div>
             </div>
 
-            {/* Menampilkan total harga per unit */}
             <div className="mt-2">
               <span className="text-gray-700 font-medium">{formatNumber(unit.price)}</span>
             </div>

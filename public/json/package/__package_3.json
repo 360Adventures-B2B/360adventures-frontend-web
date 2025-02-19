@@ -30,7 +30,7 @@
       "min": 1,
       "max": 50,
       "price": 500,
-      "guest": 2
+      "guest": 0
     },
     {
       "name": "Infant",
@@ -38,7 +38,7 @@
       "min": 0,
       "max": 50,
       "price": 100,
-      "guest": 1
+      "guest": 0
     }
   ],
   "product": {
