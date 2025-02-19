@@ -11,7 +11,7 @@ import { Route } from "@/routers/types";
 
 export interface GallerySliderProps {
   className?: string;
-  galleryImgs: (StaticImageData | string)[];
+  galleryImgs: (StaticImageData | string)[] | undefined;
   ratioClass?: string;
   uniqueID: string;
   href?: Route<string>;

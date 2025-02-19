@@ -6,7 +6,7 @@ import ButtonClose from "@/shared/ButtonClose";
 import Button from "@/shared/Button";
 
 export interface NcModalProps {
-  renderContent: () => ReactNode;
+  renderContent: (closeModal: () => void) => ReactNode; // update sini
   renderTrigger?: (openModal: Function) => ReactNode;
   contentExtraClass?: string;
   contentPaddingClass?: string;
@@ -47,18 +47,10 @@ const NcModal: FC<NcModalProps> = ({
 
   return (
     <div className="nc-NcModal">
-      {renderTrigger ? (
-        renderTrigger(openModal)
-      ) : (
-        <Button onClick={openModal}> {triggerText} </Button>
-      )}
+      {renderTrigger ? renderTrigger(openModal) : <Button onClick={openModal}> {triggerText} </Button>}
 
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog
-          as="div"
-          className="fixed inset-0 z-50 overflow-y-auto"
-          onClose={closeModal}
-        >
+        <Dialog as="div" className="fixed inset-0 z-50 overflow-y-auto" onClose={closeModal}>
           <div className="min-h-screen px-1 text-center md:px-4">
             <Transition.Child
               as={Fragment}
@@ -72,11 +64,7 @@ const NcModal: FC<NcModalProps> = ({
               <Dialog.Overlay className="fixed inset-0 bg-neutral-900 bg-opacity-50 dark:bg-opacity-80" />
             </Transition.Child>
 
-            {/* This element is to trick the browser into centering the modal contents. */}
-            <span
-              className="inline-block h-screen align-middle"
-              aria-hidden="true"
-            >
+            <span className="inline-block h-screen align-middle" aria-hidden="true">
               &#8203;
             </span>
             <Transition.Child
@@ -105,7 +93,10 @@ const NcModal: FC<NcModalProps> = ({
                     </Dialog.Title>
                   )}
                 </div>
-                <div className={contentPaddingClass}>{renderContent()}</div>
+                <div className={contentPaddingClass}>
+                  {/* Pass closeModal to the ModalDatePicker */}
+                  {renderContent(closeModal)}
+                </div>
               </div>
             </Transition.Child>
           </div>

@@ -1,0 +1,166 @@
+[
+  {
+    "id": 1,
+    "category_id": 1,
+    "location_id": 1,
+    "author_id": 1,
+    "name": "Amazing Tour Package 1",
+    "slug": "amazing-tour-package-1",
+    "content": "This is an amazing tour package that includes various activities.",
+    "instant_confirmation": "Yes",
+    "cancellation_policy": "No cancellation.",
+    "pickup_included": "Yes",
+    "voucher_type": "internal",
+    "duration": 7,
+    "price": 300,
+    "created_at": "2025-02-17T12:00:00Z",
+    "updated_at": "2025-02-17T12:00:00Z",
+    "category": {
+      "id": 1,
+      "name": "Adventure Tours"
+    },
+    "location": {
+      "id": 1,
+      "name": "Bali",
+      "slug": "bali",
+      "image": "/images/bali.jpg",
+      "status": true,
+      "created_at": "2025-01-01T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    },
+    "author": {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john.doe@example.com"
+    },
+    "product_galleries": [
+      "https://images.pexels.com/photos/6434634/pexels-photo-6434634.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+      "https://images.pexels.com/photos/3201735/pexels-photo-3201735.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+      "https://images.pexels.com/photos/4577673/pexels-photo-4577673.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+      "https://images.pexels.com/photos/6474535/pexels-photo-6474535.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+    ]
+  },
+  {
+    "id": 2,
+    "category_id": 2,
+    "location_id": 2,
+    "author_id": 2,
+    "name": "Luxury Cruise Experience",
+    "slug": "luxury-cruise-experience",
+    "content": "Experience luxury on this amazing cruise tour.",
+    "instant_confirmation": "Yes",
+    "cancellation_policy": "Cancel before 24 hours.",
+    "pickup_included": "No",
+    "voucher_type": "API",
+    "duration": 5,
+    "price": 500,
+    "created_at": "2025-02-15T10:00:00Z",
+    "updated_at": "2025-02-15T10:00:00Z",
+    "category": {
+      "id": 2,
+      "name": "Luxury Tours"
+    },
+    "location": {
+      "id": 2,
+      "name": "Caribbean Sea",
+      "slug": "caribbean-sea",
+      "image": "/images/caribbean.jpg",
+      "status": true,
+      "created_at": "2025-01-10T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    },
+    "author": {
+      "id": 2,
+      "name": "Jane Smith",
+      "email": "jane.smith@example.com"
+    },
+    "product_galleries": [
+      "https://images.pexels.com/photos/4186560/pexels-photo-4186560.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+      "https://images.pexels.com/photos/2404422/pexels-photo-2404422.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+      "https://images.pexels.com/photos/2677398/pexels-photo-2677398.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+      "https://images.pexels.com/photos/756078/pexels-photo-756078.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+    ]
+  },
+  {
+    "id": 3,
+    "category_id": 3,
+    "location_id": 3,
+    "author_id": 3,
+    "name": "Cultural Exploration of Egypt",
+    "slug": "cultural-exploration-egypt",
+    "content": "Discover the wonders of ancient Egypt on this tour.",
+    "instant_confirmation": "Yes",
+    "cancellation_policy": "Refundable within 48 hours.",
+    "pickup_included": "Yes",
+    "voucher_type": "internal",
+    "duration": 10,
+    "price": 700,
+    "created_at": "2025-02-10T08:00:00Z",
+    "updated_at": "2025-02-10T08:00:00Z",
+    "category": {
+      "id": 3,
+      "name": "Cultural Tours"
+    },
+    "location": {
+      "id": 3,
+      "name": "Egypt",
+      "slug": "egypt",
+      "image": "/images/egypt.jpg",
+      "status": true,
+      "created_at": "2025-01-12T00:00:00Z",
+      "updated_at": "2025-02-01T00:00:00Z"
+    },
+    "author": {
+      "id": 3,
+      "name": "David Johnson",
+      "email": "david.johnson@example.com"
+    },
+    "product_galleries": [
+      "https://images.pexels.com/photos/2290738/pexels-photo-2290738.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+      "https://images.pexels.com/photos/751268/pexels-photo-751268.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+      "https://images.pexels.com/photos/3201922/pexels-photo-3201922.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+      "https://images.pexels.com/photos/2404422/pexels-photo-2404422.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+    ]
+  },
+  {
+    "id": 4,
+    "category_id": 4,
+    "location_id": 4,
+    "author_id": 4,
+    "name": "Mountain Adventure in Nepal",
+    "slug": "mountain-adventure-nepal",
+    "content": "Explore the stunning peaks of Nepal on this thrilling adventure.",
+    "instant_confirmation": "No",
+    "cancellation_policy": "Non-refundable.",
+    "pickup_included": "No",
+    "voucher_type": "API",
+    "duration": 12,
+    "price": 900,
+    "created_at": "2025-02-12T14:00:00Z",
+    "updated_at": "2025-02-12T14:00:00Z",
+    "category": {
+      "id": 4,
+      "name": "Mountain Tours"
+    },
+    "location": {
+      "id": 4,
+      "name": "Nepal",
+      "slug": "nepal",
+      "image": "/images/nepal.jpg",
+      "status": true,
+      "created_at": "2025-01-20T00:00:00Z",
+      "updated_at": "2025-02-02T00:00:00Z"
+    },
+    "author": {
+      "id": 4,
+      "name": "Emily Brown",
+      "email": "emily.brown@example.com"
+    },
+    "product_galleries": [
+      "https://images.pexels.com/photos/261327/pexels-photo-261327.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+      "https://images.pexels.com/photos/2079452/pexels-photo-2079452.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+      "https://images.pexels.com/photos/261410/pexels-photo-261410.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+      "https://images.pexels.com/photos/2983472/pexels-photo-2983472.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+    ]
+  }
+]

@@ -8,6 +8,7 @@ import Footer from "./Footer";
 import { SessionProvider } from "next-auth/react";
 import { AuthProvider } from "@/context/AuthContext";
 import ReduxProvider from "@/lib/provider/redux";
+import { BookingProvider } from "@/context/BookingContext";
 
 const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
@@ -18,6 +19,7 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <ReduxProvider>
       <AuthProvider>
+        <BookingProvider>
         <div>
           {!hideLayout && <ClientCommons />}
           {!hideLayout && <SiteHeader />}
@@ -25,6 +27,7 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
           {!hideLayout && <FooterNav />}
           {!hideLayout && <Footer />}
         </div>
+        </BookingProvider>
       </AuthProvider>
     </ReduxProvider>
   );
