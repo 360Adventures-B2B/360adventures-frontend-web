@@ -1,3 +1,4 @@
+"use client";
 import React, { FC, useState, useEffect, useRef } from "react";
 import ReactDatePicker from "react-datepicker";
 import DatePickerCustomDay from "@/components/DatePickerCustomDay";
@@ -6,17 +7,26 @@ import { useBooking } from "@/context/BookingContext";
 import { formatDateString } from "@/utils/dateHelper";
 import NcModal from "@/shared/NcModal";
 import ModalPackage from "./ModalPackage";
+import { useDate } from "@/context/DateContext";
 
 interface ModalDatePickerProps {
   selectedDate: Date | null;
   handleDateSelection: (date: Date | null) => void;
   closeModal: () => void;
+  hideCloseButton?: boolean;
+  isIconDatePickerClick?: boolean;
 }
 
-const ModalDatePicker: FC<ModalDatePickerProps> = ({ selectedDate, handleDateSelection, closeModal }) => {
+const ModalDatePicker: FC<ModalDatePickerProps> = ({
+  selectedDate,
+  handleDateSelection,
+  closeModal,
+  hideCloseButton = true,
+  isIconDatePickerClick = false,
+}) => {
   const [monthsShown, setMonthsShown] = useState(1);
   const { bookingData, updateBookingData } = useBooking();
-  const openModalRef = useRef<Function | null>(null);
+  const { setHighlightedDate } = useDate();
   const [isChangeDate, setIsChangeDate] = useState(false);
 
   useEffect(() => {
@@ -39,12 +49,12 @@ const ModalDatePicker: FC<ModalDatePickerProps> = ({ selectedDate, handleDateSel
     handleDateSelection(date);
     if (date) {
       updateBookingData({ start_date: formatDateString(date), time_slot: "" });
+      setHighlightedDate(date);
     }
 
-    if (bookingData.package_id) {
-      openModalRef.current?.();
+    if (isIconDatePickerClick && !bookingData.package_id) {
+      closeModal();
     }
-    setIsChangeDate(true);
   };
 
   if (isChangeDate) {
@@ -70,26 +80,18 @@ const ModalDatePicker: FC<ModalDatePickerProps> = ({ selectedDate, handleDateSel
 
       <div className="mt-4 flex justify-end">
         {/* Tombol Close memanggil onCloseModal */}
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded transition-all duration-200 ease-in-out hover:bg-blue-600"
-          onClick={() => {
-            handleDateSelection(selectedDate);
-          }}
-        >
-          Close
-        </button>
+        {!hideCloseButton && (
+          <button
+            className="bg-primary-6000 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm sm:text-base w-full sm:w-auto"
+            onClick={() => {
+              handleDateSelection(selectedDate);
+              setIsChangeDate(true);
+            }}
+          >
+            Apply
+          </button>
+        )}
       </div>
-      {/* <NcModal
-        contentExtraClass="w-full md:w-1/2"
-        renderTrigger={(openModal) => {
-          openModalRef.current = openModal;
-          return <></>;
-        }}
-        renderContent={(closeModal) => {
-          return <ModalPackage packageId={bookingData.package_id ?? 0} closeModal={closeModal} />;
-        }}
-        modalTitle="Select your awgawgagawwaawafwafw"
-      /> */}
     </div>
   );
 };

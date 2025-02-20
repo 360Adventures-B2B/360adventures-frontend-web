@@ -14,9 +14,9 @@ const PackageCard: React.FC<PackageCardProps> = ({ packageData }) => {
   const { bookingData, updateBookingData } = useBooking();
 
   return (
-    <div className="border border-gray-300 rounded-lg p-3 flex flex-col sm:flex-row gap-3">
+    <div className="border border-gray-300 rounded-lg p-4 flex flex-col sm:flex-row gap-3">
       {/* Left Section: Title and Description */}
-      <div className="flex-1 flex flex-col gap-2 sm:border-r sm:border-gray-300 sm:pr-3 h-full">
+      <div className="flex-1 flex flex-col gap-2 sm:border-r sm:border-gray-300 sm:pr-3">
         {/* Bestseller Tag */}
         {/* <div className="flex items-center text-xs font-semibold text-red-500">
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 32 32" className="mr-1">
@@ -51,7 +51,7 @@ const PackageCard: React.FC<PackageCardProps> = ({ packageData }) => {
       </div>
 
       {/* Right Section: Price and Select Button */}
-      <div className="flex flex-col justify-between items-start sm:items-end mt-3 sm:mt-0">
+      <div className="flex-col justify-between items-start sm:items-end mt-3 sm:mt-0">
         <div className="pricing">
           <p className="text-md font-semibold text-gray-900">
             From <span className="line-through text-gray-500 ml-2">{formatNumber(packageData.retail_price)}</span>
@@ -79,7 +79,7 @@ const PackageCard: React.FC<PackageCardProps> = ({ packageData }) => {
               }
               return <ModalPackage packageId={packageData.id} closeModal={closeModal} />;
             }}
-            modalTitle="Select your preferences"
+            modalTitle={bookingData.start_date ? "Select your preferences" : "Select a Date"}
           />
         </div>
       </div>

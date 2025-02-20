@@ -7,6 +7,7 @@ import { formatNumber } from "@/utils/currencyConverter";
 import { formatDate } from "@/utils/dateHelper";
 import ModalDatePicker from "./ModalDatePicker";
 import NcModal from "@/shared/NcModal";
+import { useDate } from "@/context/DateContext";
 
 interface ModalPackageProps {
   packageId: number;
@@ -15,6 +16,7 @@ interface ModalPackageProps {
 
 const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: closeModalPackage }) => {
   const { bookingData, updateBookingData } = useBooking();
+  const { selectedDate, setSelectedDate } = useDate();
 
   const [isChangeDate, setIsChangeDate] = useState(false);
   const [isFirstOpen, setIsFirstOpen] = useState(true);
@@ -39,12 +41,23 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
     }
   }, [packageData, isFirstOpen, bookingData, updateBookingData]);
 
+  const handleDateSelection = (date: Date | null) => {
+    setSelectedDate(date);
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
   if (isChangeDate) {
-    return <ModalDatePicker selectedDate={null} handleDateSelection={() => {}} closeModal={closeModalPackage} />;
+    return (
+      <ModalDatePicker
+        selectedDate={selectedDate}
+        handleDateSelection={handleDateSelection}
+        closeModal={closeModalPackage}
+        hideCloseButton={false}
+      />
+    );
   }
 
   return (

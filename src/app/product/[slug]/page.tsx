@@ -24,6 +24,7 @@ import SectionDateRange from "../SectionDateRange";
 import DatePicker from "../(components)/DatePicker";
 import PackageCard from "../(components)/PackageCard";
 import { useGetDetailProductQuery } from "@/lib/services/productService";
+import { formatNumber } from "@/utils/currencyConverter";
 
 export interface ProductDetailPageProps {}
 
@@ -296,10 +297,10 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
       <div className="listingSectionSidebar__wrap shadow-xl">
         <div className="flex flex-col space-y-2">
           <span className="text-sm text-gray-500">
-            From <span className="line-through text-gray-400 ml-1">USD 43.31</span>
+            From <span className="line-through text-gray-400 ml-1">{formatNumber(product?.packages[0]?.cost_price)}</span>
           </span>
           <div className="flex items-center">
-            <p className="text-lg font-semibold text-gray-900">USD 36.81</p>
+            <p className="text-lg font-semibold text-gray-900">{formatNumber(product?.packages[0]?.selling_price)}</p>
             <div className="ml-2 text-green-600 bg-green-100 rounded-full px-2 py-1 text-xs">-15%</div>
           </div>
           <button

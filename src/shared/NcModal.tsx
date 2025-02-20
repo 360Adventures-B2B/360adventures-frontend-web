@@ -14,6 +14,7 @@ export interface NcModalProps {
   modalTitle?: ReactNode;
   isOpenProp?: boolean;
   onCloseModal?: () => void;
+  className?: string;
 }
 
 const NcModal: FC<NcModalProps> = ({
@@ -25,6 +26,7 @@ const NcModal: FC<NcModalProps> = ({
   modalTitle = "Modal title",
   isOpenProp,
   onCloseModal,
+  className = "",
 }) => {
   let [isOpen, setIsOpen] = useState(!!isOpenProp);
 
@@ -46,7 +48,7 @@ const NcModal: FC<NcModalProps> = ({
   }, [isOpenProp]);
 
   return (
-    <div className="nc-NcModal">
+    <div className={`nc-NcModal ${className}`}>
       {renderTrigger ? renderTrigger(openModal) : <Button onClick={openModal}> {triggerText} </Button>}
 
       <Transition appear show={isOpen} as={Fragment}>
