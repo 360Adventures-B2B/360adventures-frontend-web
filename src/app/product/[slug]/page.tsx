@@ -84,7 +84,7 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
           {/* <span>·</span> */}
           <span>
             <i className="las la-map-marker-alt"></i>
-            <span className="ml-1"> Tokyo, Jappan</span>
+            <span className="ml-1">{product?.location?.name}</span>
           </span>
         </div>
 
@@ -297,7 +297,8 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
       <div className="listingSectionSidebar__wrap shadow-xl">
         <div className="flex flex-col space-y-2">
           <span className="text-sm text-gray-500">
-            From <span className="line-through text-gray-400 ml-1">{formatNumber(product?.packages[0]?.cost_price)}</span>
+            From{" "}
+            <span className="line-through text-gray-400 ml-1">{formatNumber(product?.packages[0]?.cost_price)}</span>
           </span>
           <div className="flex items-center">
             <p className="text-lg font-semibold text-gray-900">{formatNumber(product?.packages[0]?.selling_price)}</p>

@@ -22,11 +22,13 @@ const currencySymbols: { [key: string]: string } = {
   AUD: "A$",
 };
 
-// Fungsi untuk mengambil data kurs dari localStorage
 export const getCurrencyRatesFromLocalStorage = (): CurrencyRates => {
+  if (typeof window === "undefined") {
+    return defaultCurrencyRates;
+  }
+
   const rates = localStorage.getItem("currencyRates");
-  return rates ? JSON.parse(rates) : defaultCurrencyRates; 
-  // Jika tidak ada, pakai default
+  return rates ? JSON.parse(rates) : defaultCurrencyRates;
 };
 
 // Fungsi untuk mengambil simbol mata uang

@@ -37,17 +37,9 @@ const SearchDropdown: FC<Props> = ({ className = "" }) => {
                 leaveFrom="opacity-100 translate-y-0"
                 leaveTo="opacity-0 translate-y-1"
               >
-                <Popover.Panel
-                  static
-                  className="absolute right-0 z-10 top-full w-screen max-w-sm"
-                >
+                <Popover.Panel static className="absolute right-0 z-10 top-full w-screen max-w-sm">
                   <form action="" method="POST">
-                    <Input
-                      ref={inputRef}
-                      rounded="rounded-full"
-                      type="search"
-                      placeholder="Type and press enter"
-                    />
+                    <Input ref={inputRef} rounded="rounded-full" type="search" placeholder="Type and press enter" />
                     <input type="submit" hidden value="" />
                   </form>
                 </Popover.Panel>

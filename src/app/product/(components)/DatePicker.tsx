@@ -9,7 +9,7 @@ import { useDate } from "@/context/DateContext";
 const DatePicker = () => {
   const { bookingData, updateBookingData } = useBooking();
   const { selectedDate, setSelectedDate, highlightedDate, setHighlightedDate } = useDate();
-  const containerRef = useRef(null); 
+  const containerRef = useRef(null);
 
   const getNextDays = (count: number) => {
     const today = new Date();
@@ -55,7 +55,7 @@ const DatePicker = () => {
   };
 
   useEffect(() => {
-    updateVisibleDates(); 
+    updateVisibleDates();
 
     window.addEventListener("resize", updateVisibleDates);
 
@@ -88,7 +88,10 @@ const DatePicker = () => {
           className="w-24 h-20 bg-gray-100 rounded-lg flex items-center justify-center cursor-pointer"
           contentExtraClass="w-full md:w-1/2"
           renderTrigger={(openModal) => (
-            <div onClick={() => openModal()}>
+            <div
+              onClick={() => openModal()}
+              className="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center cursor-pointer"
+            >
               <i className=" las la-calendar text-3xl "></i>
             </div>
           )}

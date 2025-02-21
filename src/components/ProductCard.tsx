@@ -16,8 +16,6 @@ export interface ProductCardProps {
 }
 
 const ProductCard: FC<ProductCardProps> = ({ size = "default", className = "", data }) => {
-  console.log("🚀 ~ data:", data);
-
   //   return <h1>ok</h1>;
 
   const renderSliderGallery = () => {
@@ -92,7 +90,7 @@ const ProductCard: FC<ProductCardProps> = ({ size = "default", className = "", d
       data-nc-id="ProductCard"
     >
       {renderSliderGallery()}
-      <Link href="#">{renderContent()}</Link>
+      <Link href={`/product/${data?.slug ?? ""}`}>{renderContent()}</Link>
     </div>
   );
 };
