@@ -2,11 +2,6 @@
 
 import React, { useState } from "react";
 import ButtonClose from "@/shared/ButtonClose";
-import Logo from "@/shared/Logo";
-import { Disclosure } from "@headlessui/react";
-import SocialsList from "@/shared/SocialsList";
-import SwitchDarkMode from "@/shared/SwitchDarkMode";
-import LangDropdown from "@/app/(client-components)/(Header)/LangDropdown";
 
 export interface CartContentProps {
   onClickClose?: () => void;
@@ -14,33 +9,68 @@ export interface CartContentProps {
 
 const CartContent: React.FC<CartContentProps> = ({ onClickClose }) => {
   const [cartItems, setCartItems] = useState([
-    { id: 1, name: "Eiffel Tower Tour", price: 56, quantity: 1, image: "assets/img/product/4.jpg" },
-    { id: 2, name: "Great Wall of China Tickets", price: 75, quantity: 1, image: "assets/img/product/2.jpg" },
-    { id: 3, name: "Safari Park Attraction", price: 48, quantity: 1, image: "assets/img/product/3.jpg" },
-    { id: 4, name: "Safari Park Attraction", price: 48, quantity: 1, image: "assets/img/product/3.jpg" },
-    { id: 5, name: "Safari Park Attraction", price: 48, quantity: 1, image: "assets/img/product/3.jpg" },
-    { id: 6, name: "Safari Park Attraction", price: 48, quantity: 1, image: "assets/img/product/3.jpg" },
+    {
+      id: 1,
+      name: "Eiffel Tower Tour",
+      package: "VIP Access + Sunset View",
+      startDate: "27 Feb 2025",
+      price: 56,
+      quantity: 2,
+      image: "https://picsum.photos/200/300?random=1",
+      guests: [{ type: "Dewasa", count: 2 }],
+    },
+    {
+      id: 2,
+      name: "Great Wall of China Tickets",
+      package: "Full-Day Guided Tour",
+      startDate: "15 Mar 2025",
+      price: 75,
+      quantity: 1,
+      image: "https://picsum.photos/200/300?random=2",
+      guests: [
+        { type: "Dewasa", count: 1 },
+        { type: "Anak", count: 1 },
+      ],
+    },
+    {
+      id: 3,
+      name: "Safari Park Attraction",
+      package: "Family Package",
+      startDate: "10 Apr 2025",
+      price: 48,
+      quantity: 3,
+      image: "https://picsum.photos/200/300?random=3",
+      guests: [
+        { type: "Dewasa", count: 2 },
+        { type: "Anak", count: 1 },
+      ],
+    },
+    {
+      id: 4,
+      name: "Bali Snorkeling Adventure",
+      package: "All-Inclusive Experience",
+      startDate: "05 May 2025",
+      price: 65,
+      quantity: 1,
+      image: "https://picsum.photos/200/300?random=4",
+      guests: [{ type: "Dewasa", count: 1 }],
+    },
   ]);
 
-  const increaseQuantity = (id: number) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) => (item.id === id ? { ...item, quantity: item.quantity + 1 } : item))
-    );
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const isAllSelected = selectedItems.length === cartItems.length;
+
+  const toggleSelectItem = (id: number) => {
+    setSelectedItems((prev) => (prev.includes(id) ? prev.filter((itemId) => itemId !== id) : [...prev, id]));
   };
 
-  const decreaseQuantity = (id: number) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) => (item.id === id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item))
-    );
+  const toggleSelectAll = () => {
+    setSelectedItems(isAllSelected ? [] : cartItems.map((item) => item.id));
   };
 
-  const removeItem = (id: number) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
-  };
-
-  const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-  const vat = subtotal * 0.2;
-  const total = subtotal + vat;
+  const total = cartItems.reduce((sum, item) => {
+    return selectedItems.includes(item.id) ? sum + item.price * item.quantity : sum;
+  }, 0);
 
   return (
     <div className="w-full h-screen flex flex-col bg-white dark:bg-neutral-900">
@@ -48,51 +78,78 @@ const CartContent: React.FC<CartContentProps> = ({ onClickClose }) => {
       <div className="cart-header sticky top-0 z-10 bg-white dark:bg-neutral-900 border-b border-[#e9e9e9] py-4 px-5">
         <div className="flex justify-between items-center">
           <h6 className="m-0 text-xl font-bold text-[#2b2b2d]">My Cart</h6>
-          <button type="button" className="close-cart text-[#fb5555] text-2xl font-extrabold bg-none border-0">
-            ×
-          </button>
+          <ButtonClose onClick={onClickClose} />
         </div>
       </div>
 
       {/* Content Area */}
       <div className="cart-container flex-grow overflow-y-auto py-6 px-5">
+        <div className="mb-4 flex items-center">
+          <input
+            type="checkbox"
+            checked={isAllSelected}
+            onChange={toggleSelectAll}
+            className="w-5 h-5 rounded-md appearance-none border border-gray-400 checked:bg-primary-700 hover:checked:bg-primary-700 focus:checked:bg-primary-700 focus:outline-none focus:ring-0 cursor-pointer"
+          />
+          <label className="ml-3 font-bold text-gray-700 cursor-pointer">Select All</label>
+        </div>
+
         <ul className="cart-items">
           {cartItems.map((item) => (
-            <li key={item.id} className="cart-item mb-5 pb-5 flex overflow-hidden border-b border-[#e9e9e9]">
-              <a href="product-left-sidebar.html" className="cart-item-image m-auto grow-[1] basis-[20%]">
-                <img src={item.image} alt={item.name} className="max-w-full rounded-md" />
+            <li
+              key={item.id}
+              className="cart-item mb-5 pb-5 flex items-start overflow-hidden border-b border-[#e9e9e9]"
+            >
+              <input
+                type="checkbox"
+                checked={selectedItems.includes(item.id)}
+                onChange={() => toggleSelectItem(item.id)}
+                className="mr-3 w-5 h-5 rounded-md appearance-none border border-gray-400 checked:bg-primary-700 hover:checked:bg-primary-700 focus:checked:bg-primary-700 focus:outline-none focus:ring-0 cursor-pointer"
+              />
+
+              {/* Image */}
+              <a href="product-left-sidebar.html" className="cart-item-image grow-[1] basis-[25%]">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-[85px] h-[85px] rounded-md object-cover object-top"
+                />
               </a>
-              <div className="cart-item-details pl-4 relative grow-[1] basis-[70%]">
-                <a href="product-left-sidebar.html" className="cart-item-title text-ellipsis block text-lg font-normal">
+
+              {/* Details */}
+              <div className="cart-item-details relative grow-[1] basis-[70%]">
+                {/* Tour Name */}
+                <a href="product-left-sidebar.html" className="cart-item-title block text-lg font-normal">
                   {item.name}
                 </a>
-                <span className="cart-item-price mt-1 text-sm block">
-                  <span className="text-[#777] font-bold text-lg">${item.price.toFixed(2)}</span> per ticket
-                </span>
-                <div className="cart-item-quantity mt-1">
-                  <div className="quantity-controls w-[80px] h-[30px] relative overflow-hidden flex bg-white border border-[#e9e9e9] rounded-md items-center justify-between">
-                    <button
-                      type="button"
-                      className="increase-quantity h-[25px] w-[25px] mt-[-2px] border-0 bg-transparent flex justify-center items-center"
-                    >
-                      +
-                    </button>
-                    <input
-                      type="text"
-                      value={item.quantity}
-                      readOnly
-                      className="quantity w-[30px] text-[#444] text-center"
-                    />
-                    <button
-                      type="button"
-                      className="decrease-quantity h-[25px] w-[25px] mt-[-2px] border-0 bg-transparent flex justify-center items-center"
-                    >
-                      -
-                    </button>
-                  </div>
-                </div>
+
+                {/* Package Name */}
+                <p className="pkgName text-sm text-[#444] mt-1">{item.package}</p>
+
+                {/* Start Date */}
+                <p className="startDate text-sm text-[#444] mt-1">
+                  <i className="las la-calendar-alt"></i> {item.startDate}
+                </p>
+
+                {/* Guest Details */}
+                <p className="guestDetails text-sm text-[#444] mt-1">
+                  <i className="las la-user-friends"></i>{" "}
+                  {item.guests.map((guest, index) => (
+                    <span key={index}>
+                      {guest.count} {guest.type}
+                      {index < item.guests.length - 1 ? ", " : ""}
+                    </span>
+                  ))}
+                </p>
+
+                {/* Total Price */}
+                <p className="totalPrice text-sm text-[#444] mt-1 font-bold">
+                  Total: ${(item.price * item.quantity).toFixed(2)}
+                </p>
+
+                {/* Remove Item */}
                 <a href="javascript:void(0)" className="remove-item absolute top-0 right-0 text-lg text-[#fb5555]">
-                  ×
+                  <i className="las la-trash"></i>
                 </a>
               </div>
             </li>
@@ -106,27 +163,28 @@ const CartContent: React.FC<CartContentProps> = ({ onClickClose }) => {
           <table className="table cart-table w-full">
             <tbody>
               <tr>
-                <td className="text-left text-lg text-black">Sub-Total :</td>
-                <td className="text-right text-sm text-black font-bold">${subtotal.toFixed(2)}</td>
-              </tr>
-              <tr>
-                <td className="text-left text-lg text-black">VAT (20%) :</td>
-                <td className="text-right text-sm text-black font-bold">${vat.toFixed(2)}</td>
-              </tr>
-              <tr>
                 <td className="text-left text-lg text-black">Total :</td>
-                <td className="text-right text-sm text-black font-bold">${total.toFixed(2)}</td>
+                <td className="text-right text-lg text-black font-bold">${total.toFixed(2)}</td>
               </tr>
             </tbody>
           </table>
         </div>
         <div className="cart-buttons flex justify-between">
-          <a
-            href="checkout.html"
-            className="w-full checkout-btn h-[40px] font-bold transition-all duration-[0.3s] ease-in-out py-[8px] px-[22px] text-[14px] capitalize leading-[1.2] bg-white text-[#64b496] border border-[#64b496] rounded-md flex items-center justify-center hover:bg-[#64b496] hover:text-white"
+          <button
+            disabled={selectedItems.length === 0}
+            onClick={() => {
+              if (selectedItems.length > 0) {
+                window.location.href = "checkout.html";
+              }
+            }}
+            className={`w-full checkout-btn h-[40px] font-bold transition-all duration-[0.3s] ease-in-out py-[8px] px-[22px] text-[14px] capitalize leading-[1.2] border rounded-md flex items-center justify-center ${
+              selectedItems.length > 0
+                ? "bg-[#64b496] text-white border-[#64b496] hover:bg-[#519c7e]"
+                : "bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed"
+            }`}
           >
             Checkout
-          </a>
+          </button>
         </div>
       </div>
     </div>
