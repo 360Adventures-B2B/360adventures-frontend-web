@@ -375,41 +375,41 @@ export const CUSTOM_NAVIGATION: NavItemType[] = [
     name: "Home",
     children: [],
   },
-  {
-    id: ncNanoId(),
-    href: "/",
-    name: "Categories",
-    type: "dropdown",
-    children: [
-      {
-        id: ncNanoId(),
-        href: "/",
-        name: "Tour",
-      },
-      {
-        id: ncNanoId(),
-        href: "/",
-        name: "Activities",
-      },
-    ],
-  },
-  {
-    id: ncNanoId(),
-    href: "/",
-    name: "Cities",
-    type: "dropdown",
-    children: [
-      {
-        id: ncNanoId(),
-        href: "/",
-        name: "Abu Dhabi",
-      },
-      {
-        id: ncNanoId(),
-        href: "/",
-        name: "Dubai",
-      },
-    ],
-  },
+  // {
+  //   id: ncNanoId(),
+  //   href: "/",
+  //   name: "Categories",
+  //   type: "dropdown",
+  //   children: [
+  //     {
+  //       id: ncNanoId(),
+  //       href: "/",
+  //       name: "Tour",
+  //     },
+  //     {
+  //       id: ncNanoId(),
+  //       href: "/",
+  //       name: "Activities",
+  //     },
+  //   ],
+  // },
+  // {
+  //   id: ncNanoId(),
+  //   href: "/",
+  //   name: "Cities",
+  //   type: "dropdown",
+  //   children: [
+  //     {
+  //       id: ncNanoId(),
+  //       href: "/",
+  //       name: "Abu Dhabi",
+  //     },
+  //     {
+  //       id: ncNanoId(),
+  //       href: "/",
+  //       name: "Dubai",
+  //     },
+  //   ],
+  // },
  
 ];

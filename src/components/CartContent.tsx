@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import ButtonClose from "@/shared/ButtonClose";
+import NcModal from "@/shared/NcModal";
+import ModalDeleteCart from "./ModalDeleteCart";
 
 export interface CartContentProps {
   onClickClose?: () => void;
@@ -148,9 +150,20 @@ const CartContent: React.FC<CartContentProps> = ({ onClickClose }) => {
                 </p>
 
                 {/* Remove Item */}
-                <a href="javascript:void(0)" className="remove-item absolute top-0 right-0 text-lg text-[#fb5555]">
-                  <i className="las la-trash"></i>
-                </a>
+
+                <NcModal
+                  contentExtraClass="w-1/4"
+                  renderTrigger={(openModal) => (
+                    <a
+                      onClick={() => openModal()}
+                      className="remove-item absolute top-0 right-0 text-lg text-[#fb5555]"
+                    >
+                      <i className="las la-trash"></i>
+                    </a>
+                  )}
+                  renderContent={(closeModal) => <ModalDeleteCart closeModal={closeModal} cartId={item.id} />}
+                  modalTitle={"Information"}
+                />
               </div>
             </li>
           ))}
@@ -174,12 +187,12 @@ const CartContent: React.FC<CartContentProps> = ({ onClickClose }) => {
             disabled={selectedItems.length === 0}
             onClick={() => {
               if (selectedItems.length > 0) {
-                window.location.href = "checkout.html";
+                window.location.href = "/checkout";
               }
             }}
             className={`w-full checkout-btn h-[40px] font-bold transition-all duration-[0.3s] ease-in-out py-[8px] px-[22px] text-[14px] capitalize leading-[1.2] border rounded-md flex items-center justify-center ${
               selectedItems.length > 0
-                ? "bg-[#64b496] text-white border-[#64b496] hover:bg-[#519c7e]"
+                ? "bg-primary-6000 hover:bg-primary-700 text-white"
                 : "bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed"
             }`}
           >
