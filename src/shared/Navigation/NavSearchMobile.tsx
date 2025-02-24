@@ -1,20 +1,17 @@
 import React, { useState, Fragment, useEffect } from "react";
 import { Transition, Dialog } from "@headlessui/react";
-import { Bars3Icon } from "@heroicons/react/24/outline";
 import { usePathname } from "next/navigation";
-import NavMobile from "@/shared/Navigation/NavMobile";
 import { ShoppingCartIcon } from "@heroicons/react/24/solid";
-import CartContent from "./CartContent";
+import SearchContent from "@/components/SearchContent";
+import { SearchIcon } from "lucide-react";
 
-export interface CartMenuProps {
+export interface NavSearchMobileProps {
   className?: string;
   iconClassName?: string;
-  cartCount?: number;
 }
-const CartMenu: React.FC<CartMenuProps> = ({
+const NavSearchMobile: React.FC<NavSearchMobileProps> = ({
   className = "p-2.5 rounded-lg text-neutral-700 dark:text-neutral-300",
   iconClassName = "h-8 w-8",
-  cartCount = 2,
 }) => {
   const [isVisable, setIsVisable] = useState(false);
 
@@ -54,7 +51,7 @@ const CartMenu: React.FC<CartMenuProps> = ({
                 leaveTo="opacity-0 translate-x-56"
               >
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden transition-all ">
-                  <CartContent onClickClose={handleCloseMenu} />
+                  <SearchContent onClickClose={handleCloseMenu} />
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -66,24 +63,8 @@ const CartMenu: React.FC<CartMenuProps> = ({
 
   return (
     <>
-      <button
-        onClick={handleOpenMenu}
-        className={`relative focus:outline-none flex items-center justify-center ${className}`}
-      >
-        {/* Icon Shopping Cart */}
-        <div className="relative">
-          <ShoppingCartIcon className={`${iconClassName}`} />
-
-          {/* Badge jumlah item di sudut kanan atas ikon */}
-          {cartCount > 0 && (
-            <span
-              className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full 
-            shadow-md flex items-center justify-center min-w-[18px] min-h-[18px] leading-none"
-            >
-              {cartCount}
-            </span>
-          )}
-        </div>
+      <button onClick={handleOpenMenu} className={`focus:outline-none flex items-center justify-center ${className}`}>
+        <SearchIcon className={`${iconClassName}`} />
       </button>
 
       {renderContent()}
@@ -91,4 +72,4 @@ const CartMenu: React.FC<CartMenuProps> = ({
   );
 };
 
-export default CartMenu;
+export default NavSearchMobile;

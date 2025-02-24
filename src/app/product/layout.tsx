@@ -11,6 +11,7 @@ import { imageGallery as listingStayImageGallery } from "./constant";
 import { imageGallery as listingCarImageGallery } from "./constant";
 import { imageGallery as listingExperienceImageGallery } from "./constant";
 import { Route } from "next";
+import RelatedProduct from "@/components/RelatedProduct";
 
 const DetailtLayout = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
@@ -42,15 +43,14 @@ const DetailtLayout = ({ children }: { children: ReactNode }) => {
       <div className="container py-24 lg:py-32">
         <div className="relative py-16">
           <BackgroundSection />
-          <SectionSliderNewCategories
-            heading="Explore by types of stays"
-            subHeading="Explore houses based on 10 types of stays"
+          <RelatedProduct
+            heading="You might also like "
+            subHeading=""
             categoryCardType="card5"
-            itemPerRow={5}
+            itemPerRow={4}
             sliderStyle="style2"
           />
         </div>
-        <SectionSubscribe2 className="pt-24 lg:pt-32" />
       </div>
 
       {/* STICKY FOOTER MOBILE */}

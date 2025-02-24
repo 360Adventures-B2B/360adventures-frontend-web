@@ -100,40 +100,40 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
         <div className="w-full border-b border-neutral-100 dark:border-neutral-700" />
 
         {/* 6 */}
-        <div className="flex items-center justify-between xl:justify-start space-x-8 xl:space-x-12 text-sm text-neutral-700 dark:text-neutral-300">
-          <div className="flex items-center space-x-3 ">
-            <i className=" las la-user text-2xl "></i>
-            <span className="">
-              6 <span className="hidden sm:inline-block">guests</span>
-            </span>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-neutral-700 dark:text-neutral-300">
+          <div className="flex items-center space-x-3">
+            <i className="las la-check-circle text-2xl"></i>
+            <span>Instant Confirmation</span>
           </div>
           <div className="flex items-center space-x-3">
-            <i className=" las la-bed text-2xl"></i>
-            <span className=" ">
-              6 <span className="hidden sm:inline-block">beds</span>
-            </span>
+            <i className="las la-ban text-2xl"></i>
+            <span>Free Cancellation</span>
           </div>
           <div className="flex items-center space-x-3">
-            <i className=" las la-bath text-2xl"></i>
-            <span className=" ">
-              3 <span className="hidden sm:inline-block">baths</span>
-            </span>
+            <i className="las la-clock text-2xl"></i>
+            <span>Duration</span>
           </div>
           <div className="flex items-center space-x-3">
-            <i className=" las la-door-open text-2xl"></i>
-            <span className=" ">
-              2 <span className="hidden sm:inline-block">bedrooms</span>
-            </span>
+            <i className="las la-shuttle-van text-2xl"></i>
+            <span>Pickup Included</span>
+          </div>
+          <div className="flex items-center space-x-3">
+            <i className="las la-users text-2xl"></i>
+            <span>Max People</span>
+          </div>
+          <div className="flex items-center space-x-3">
+            <i className="las la-child text-2xl"></i>
+            <span>Min Age</span>
           </div>
         </div>
       </div>
     );
   };
 
-  const renderSection2 = () => {
+  const hightlight = () => {
     return (
       <div className="listingSection__wrap">
-        <h2 className="text-2xl font-semibold">Stay information</h2>
+        <h2 className="text-2xl font-semibold">Hightlight</h2>
         <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
         <div className="text-neutral-6000 dark:text-neutral-300">
           <span>
@@ -153,141 +153,147 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
     );
   };
 
-  const renderSection3 = () => {
+  const includeExlcude = () => {
     return (
       <div className="listingSection__wrap">
-        <div>
-          <h2 className="text-2xl font-semibold">Amenities </h2>
-          <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
-            {` About the property's amenities and services`}
-          </span>
-        </div>
-        <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-        {/* 6 */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 text-sm text-neutral-700 dark:text-neutral-300 ">
-          {Amenities_demos.filter((_, i) => i < 12).map((item) => (
-            <div key={item.name} className="flex items-center space-x-3">
-              <i className={`text-3xl las ${item.icon}`}></i>
-              <span className=" ">{item.name}</span>
+        <h2 className="text-2xl font-semibold">What's Included</h2>
+        <div className="w-14 border-b border-neutral-200 dark:border-neutral-700 mb-4"></div>
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Included Section */}
+            <div>
+              <h2 className="font-semibold">Includes</h2>
+              <div className="w-14 border-b border-neutral-200 dark:border-neutral-700 mb-4"></div>
+              <ul className="space-y-2">
+                <li className="flex items-center">
+                  <i className="las la-check-circle text-xl mr-2 text-green-600"></i> Free WiFi
+                </li>
+                <li className="flex items-center">
+                  <i className="las la-check-circle text-xl mr-2 text-green-600"></i> Private Bathroom
+                </li>
+                <li className="flex items-center">
+                  <i className="las la-check-circle text-xl mr-2 text-green-600"></i> Hairdryer & Free Toiletries
+                </li>
+                <li className="flex items-center">
+                  <i className="las la-check-circle text-xl mr-2 text-green-600"></i> Bicycle & Car Rental Service
+                </li>
+              </ul>
             </div>
-          ))}
-        </div>
 
-        {/* ----- */}
-        <div className="w-14 border-b border-neutral-200"></div>
-        <div>
-          <ButtonSecondary onClick={openModalAmenities}>View more 20 amenities</ButtonSecondary>
+            {/* Not Included Section */}
+            <div>
+              <h2 className="font-semibold">Excludes</h2>
+              <div className="w-14 border-b border-neutral-200 dark:border-neutral-700 mb-4"></div>
+              <ul className="space-y-2">
+                <li className="flex items-center">
+                  <i className="las la-times-circle text-xl mr-2 text-red-600"></i> Gratuities
+                </li>
+                <li className="flex items-center">
+                  <i className="las la-times-circle text-xl mr-2 text-red-600"></i> Personal Expenses
+                </li>
+                <li className="flex items-center">
+                  <i className="las la-times-circle text-xl mr-2 text-red-600"></i> Travel Insurance
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
-        {renderMotalAmenities()}
       </div>
     );
   };
 
-  const renderMotalAmenities = () => {
+  const description = () => {
     return (
-      <Transition appear show={isOpenModalAmenities} as={Fragment}>
-        <Dialog as="div" className="fixed inset-0 z-50 overflow-y-auto" onClose={closeModalAmenities}>
-          <div className="min-h-screen px-4 text-center">
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-40" />
-            </Transition.Child>
-
-            {/* This element is to trick the browser into centering the modal contents. */}
-            <span className="inline-block h-screen align-middle" aria-hidden="true">
-              &#8203;
-            </span>
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 scale-95"
-              enterTo="opacity-100 scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95"
-            >
-              <div className="inline-block py-8 h-screen w-full max-w-4xl">
-                <div className="inline-flex pb-2 flex-col w-full text-left align-middle transition-all transform overflow-hidden rounded-2xl bg-white dark:bg-neutral-900 dark:border dark:border-neutral-700 dark:text-neutral-100 shadow-xl h-full">
-                  <div className="relative flex-shrink-0 px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 text-center">
-                    <h3 className="text-lg font-medium leading-6 text-gray-900" id="headlessui-dialog-title-70">
-                      Amenities
-                    </h3>
-                    <span className="absolute left-3 top-3">
-                      <ButtonClose onClick={closeModalAmenities} />
-                    </span>
-                  </div>
-                  <div className="px-8 overflow-auto text-neutral-700 dark:text-neutral-300 divide-y divide-neutral-200">
-                    {Amenities_demos.filter((_, i) => i < 1212).map((item) => (
-                      <div key={item.name} className="flex items-center py-2.5 sm:py-4 lg:py-5 space-x-5 lg:space-x-8">
-                        <i className={`text-4xl text-neutral-6000 las ${item.icon}`}></i>
-                        <span>{item.name}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </Transition.Child>
-          </div>
-        </Dialog>
-      </Transition>
+      <div className="listingSection__wrap">
+        <h2 className="text-2xl font-semibold">Descriptipn</h2>
+        <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
+        <div className="text-neutral-6000 dark:text-neutral-300">
+          <span>
+            Providing lake views, The Symphony 9 Tam Coc in Ninh Binh provides accommodation, an outdoor swimming pool,
+            a bar, a shared lounge, a garden and barbecue facilities. Complimentary WiFi is provided.
+          </span>
+          <br />
+          <br />
+          <span>There is a private bathroom with bidet in all units, along with a hairdryer and free toiletries.</span>
+          <br /> <br />
+          <span>
+            The Symphony 9 Tam Coc offers a terrace. Both a bicycle rental service and a car rental service are
+            available at the accommodation, while cycling can be enjoyed nearby.
+          </span>
+        </div>
+      </div>
     );
   };
 
-  const renderSection8 = () => {
+  const itinerary = () => {
+    const itineraryData = [
+      {
+        title: "The Symphony 9 Tam Coc",
+        duration: "30 mins",
+        admission: "Complimentary WiFi",
+        description:
+          "Providing lake views, The Symphony 9 Tam Coc in Ninh Binh provides accommodation, an outdoor swimming pool, a bar, a shared lounge, a garden and barbecue facilities.",
+      },
+      {
+        title: "Private Bathroom & Facilities",
+        duration: "15 mins",
+        admission: "Free toiletries",
+        description: "There is a private bathroom with bidet in all units, along with a hairdryer and free toiletries.",
+      },
+      {
+        title: "Bicycle & Car Rental",
+        duration: "45 mins",
+        admission: "Rental Service Available",
+        description:
+          "The Symphony 9 Tam Coc offers a terrace. Both a bicycle rental service and a car rental service are available at the accommodation, while cycling can be enjoyed nearby.",
+      },
+    ];
+    const [expandedIndex, setExpandedIndex] = useState(null);
+
+    const toggleExpand = (index: any) => {
+      setExpandedIndex(expandedIndex === index ? null : index);
+    };
     return (
       <div className="listingSection__wrap">
-        {/* HEADING */}
-        <h2 className="text-2xl font-semibold">Things to know</h2>
-        <div className="w-14 border-b border-neutral-200 dark:border-neutral-700" />
+        <h2 className="text-2xl font-semibold">Itinerary</h2>
+        <div className="w-14 border-b border-neutral-200 dark:border-neutral-700 mb-4"></div>
+        <ul className="relative">
+          {itineraryData.map((item, index) => {
+            const isExpanded = expandedIndex === index;
+            const shortText = item.description.slice(0, 100);
+            return (
+              <li key={index} className="flex relative pb-6">
+                {/* Kolom ikon dan garis */}
+                <div className="flex flex-col items-center relative w-8">
+                  {index !== itineraryData.length - 1 && (
+                    <div className="absolute top-6 bottom-0 left-1/2 transform -translate-x-1/2 w-px border-l-2 border-dashed border-gray-400"></div>
+                  )}
+                  <div className="relative z-10">
+                    <div className="bg-white p-1 rounded-full flex items-center justify-center">
+                      <i className="la la-map-marker-alt text-primary-700 text-2xl"></i>
+                    </div>
+                  </div>
+                </div>
 
-        {/* CONTENT */}
-        <div>
-          <h4 className="text-lg font-semibold">Cancellation policy</h4>
-          <span className="block mt-3 text-neutral-500 dark:text-neutral-400">
-            Refund 50% of the booking value when customers cancel the room within 48 hours after successful booking and
-            14 days before the check-in time. <br />
-            Then, cancel the room 14 days before the check-in time, get a 50% refund of the total amount paid (minus the
-            service fee).
-          </span>
-        </div>
-        <div className="w-14 border-b border-neutral-200 dark:border-neutral-700" />
-
-        {/* CONTENT */}
-        <div>
-          <h4 className="text-lg font-semibold">Check-in time</h4>
-          <div className="mt-3 text-neutral-500 dark:text-neutral-400 max-w-md text-sm sm:text-base">
-            <div className="flex space-x-10 justify-between p-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
-              <span>Check-in</span>
-              <span>08:00 am - 12:00 am</span>
-            </div>
-            <div className="flex space-x-10 justify-between p-3">
-              <span>Check-out</span>
-              <span>02:00 pm - 04:00 pm</span>
-            </div>
-          </div>
-        </div>
-        <div className="w-14 border-b border-neutral-200 dark:border-neutral-700" />
-
-        {/* CONTENT */}
-        <div>
-          <h4 className="text-lg font-semibold">Special Note</h4>
-          <div className="prose sm:prose">
-            <ul className="mt-3 text-neutral-500 dark:text-neutral-400 space-y-2">
-              <li>
-                Ban and I will work together to keep the landscape and environment green and clean by not littering, not
-                using stimulants and respecting people around.
+                {/* Konten itinerary */}
+                <div className="ml-4 flex-1">
+                  <p className="font-semibold text-lg">{item.title}</p>
+                  <div className="text-sm text-neutral-500 flex gap-2">
+                    <span>{item.duration}</span>
+                    <span>|</span>
+                    <span>{item.admission}</span>
+                  </div>
+                  <p className="text-neutral-600 dark:text-neutral-300 mt-2">
+                    {isExpanded ? item.description : `${shortText}...`}
+                  </p>
+                  <button className="text-blue-500 hover:underline mt-2" onClick={() => toggleExpand(index)}>
+                    {isExpanded ? "Read Less" : "Read More"}
+                  </button>
+                </div>
               </li>
-              <li>Do not sing karaoke past 11:30</li>
-            </ul>
-          </div>
-        </div>
+            );
+          })}
+        </ul>
       </div>
     );
   };
@@ -371,8 +377,10 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
           {product?.packages?.map((pkg) => (
             <PackageCard key={pkg.id} packageData={pkg} />
           ))}
-          {renderSection2()}
-          {renderSection8()}
+          {hightlight()}
+          {includeExlcude()}
+          {description()}
+          {itinerary()}
         </div>
 
         {/* SIDEBAR */}

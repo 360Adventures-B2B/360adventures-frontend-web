@@ -110,16 +110,12 @@ const CartContent: React.FC<CartContentProps> = ({ onClickClose }) => {
               />
 
               {/* Image */}
-              <a href="product-left-sidebar.html" className="cart-item-image grow-[1] basis-[25%]">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-[85px] h-[85px] rounded-md object-cover object-top"
-                />
+              <a href="#" className="cart-item-image flex-shrink-0 w-[85px] h-[85px]">
+                <img alt={item.name} className="w-full h-full rounded-md object-cover object-top" src={item.image} />
               </a>
 
               {/* Details */}
-              <div className="cart-item-details relative grow-[1] basis-[70%]">
+              <div className="cart-item-details relative flex-1 ml-4 grow-[1] pr-6">
                 {/* Tour Name */}
                 <a href="product-left-sidebar.html" className="cart-item-title block text-lg font-normal">
                   {item.name}
@@ -150,13 +146,12 @@ const CartContent: React.FC<CartContentProps> = ({ onClickClose }) => {
                 </p>
 
                 {/* Remove Item */}
-
                 <NcModal
-                  contentExtraClass="w-1/4"
+                  contentExtraClass="w-full md:w-1/4"
                   renderTrigger={(openModal) => (
                     <a
                       onClick={() => openModal()}
-                      className="remove-item absolute top-0 right-0 text-lg text-[#fb5555]"
+                      className="remove-item absolute top-0 right-1 text-lg text-[#fb5555]"
                     >
                       <i className="las la-trash"></i>
                     </a>
