@@ -56,9 +56,9 @@ export default function SearchView() {
         )}
       </div>
 
-      {!isLoading && products?.total_pages && products.total_pages > 1 && (
+      {!isLoading && (products?.total_pages || 1) > 1 && (
         <div className="flex mt-16 justify-center items-center">
-          <Pagination totalPages={products.total_pages} />
+          <Pagination totalPages={products?.total_pages || 1} />
         </div>
       )}
     </div>

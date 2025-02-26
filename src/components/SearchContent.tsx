@@ -106,7 +106,6 @@ const SearchContent: React.FC<SearchContentProps> = ({ onClickClose }) => {
                 </div>
               </div>
             ) : (
-              // <p className="p-3 text-sm text-gray-500 text-center">No results found.</p>
               <div className="text-center mt-4">
                 <div className="mt-2">
                   <Link href={`/search?keyword=${query}`} onClick={onClickClose}>
