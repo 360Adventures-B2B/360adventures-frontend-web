@@ -22,7 +22,7 @@ export async function GET(req: Request) {
     const destinations = parseArray(searchParams.get("destinations"));
     const bookingOptions = parseArray(searchParams.get("bookingOptions"));
     const categories = parseArray(searchParams.get("categories"));
-    const priceRange = searchParams.get("price_range")?.split(";").map(Number);
+    const priceRange = parseArray(searchParams.get("price_range"));
 
     // Pagination params
     const page = Number(searchParams.get("page")) || 1;
@@ -51,7 +51,6 @@ export async function GET(req: Request) {
           return false;
         }
       }
-
       if (priceRange && (product.price < priceRange[0] || product.price > priceRange[1])) {
         return false;
       }

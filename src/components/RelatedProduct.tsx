@@ -2,9 +2,6 @@
 
 import React, { FC, useEffect, useState } from "react";
 import { TaxonomyType } from "@/data/types";
-import CardCategory3 from "@/components/CardCategory3";
-import CardCategory4 from "@/components/CardCategory4";
-import CardCategory5 from "@/components/CardCategory5";
 import Heading from "@/shared/Heading";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
 import { useSwipeable } from "react-swipeable";
@@ -133,7 +130,8 @@ const RelatedProduct: FC<RelatedProductProps> = ({
     setNumberOfitem(itemPerRow);
   }, [itemPerRow, windowWidth]);
 
-  const { data: products = [], error, isLoading } = useGetProductQuery(undefined);
+  const { data, error, isLoading } = useGetProductQuery(undefined);
+  const products = data?.data || [];
 
   function changeItemId(newVal: number) {
     if (newVal > currentIndex) {
@@ -207,7 +205,7 @@ const RelatedProduct: FC<RelatedProductProps> = ({
             />
           ) : null}
 
-          {products.length > currentIndex + numberOfItems ? (
+          {products?.length > currentIndex + numberOfItems ? (
             <NextBtn
               style={{ transform: "translate3d(0, 0, 0)" }}
               onClick={() => changeItemId(currentIndex + 1)}

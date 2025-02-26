@@ -5,7 +5,7 @@ import Input from "@/shared/Input";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import TabFilters from "./TabFilters";
 
-export default function SearchForm() {
+export default function SearchForm({ totalResults }: { totalResults: number }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const initialKeyword = searchParams.get("keyword") || "";
@@ -40,7 +40,7 @@ export default function SearchForm() {
           <Input
             className="w-full pl-10 rounded-full"
             type="search"
-            placeholder="Type and press enter"
+            placeholder="Tour, activity, or attraction"
             defaultValue={keyword}
             ref={inputRef}
             onInput={(e) => {
@@ -52,18 +52,18 @@ export default function SearchForm() {
           />
         </div>
       </form>
-      <div className="mb-8 lg:mb-11 flex items-center">
-        <h3 className="mr-auto">
+      <div className="mb-8 lg:mb-11 flex flex-wrap items-center justify-between gap-4">
+        <h3 className="w-full sm:w-auto break-words">
           {keyword ? (
             <>
-              526 results for <span className="font-semibold">"{keyword}"</span>
+              {totalResults} results for <span className="font-semibold break-words">"{keyword}"</span>
             </>
           ) : (
-            <>10.000 results</>
+            <>{totalResults} results</>
           )}
         </h3>
 
-        <div className="ml-auto">
+        <div className="w-full sm:w-auto">
           <TabFilters />
         </div>
       </div>

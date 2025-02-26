@@ -22,7 +22,8 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
   const [isChangeDate, setIsChangeDate] = useState(false);
   const [isFirstOpen, setIsFirstOpen] = useState(true);
 
-  const { data: packageData, error, isLoading } = useGetDetailPackageQuery(packageId);
+  const { data, error, isLoading } = useGetDetailPackageQuery(packageId);
+  const packageData = data?.data;
 
   const [selectedTime, setSelectedTime] = useState("");
 

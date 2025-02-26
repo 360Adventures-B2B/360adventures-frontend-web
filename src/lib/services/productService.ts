@@ -13,40 +13,39 @@ type ProductsResponse = {
   data: Product[];
 };
 
+type ProductResponse = {
+  data: Product;
+};
+
+type PackageResponse = {
+  data: Package;
+};
+
 export const productApi = createApi({
   reducerPath: "productApi",
   // baseQuery: createBaseQuery(),
-  baseQuery: fetchBaseQuery({ baseUrl: "/json/" }),
+  baseQuery: fetchBaseQuery({ baseUrl: "/api/" }),
   endpoints: (builder) => ({
-    // getProduct: builder.query<Product[], void>({
-    //   query: () => `${process.env.NEXTAUTH_URL}/api/products`,
-    // }),
     getProduct: builder.query<ProductsResponse, Record<string, unknown> | void>({
       async queryFn(filters = {}, _queryApi, _extraOptions, fetchWithBQ) {
-        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-        const url = new URL(`${baseUrl}/api/products`);
+        const url = new URL(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products`);
 
-        if (filters && typeof filters === "object" && Object.keys(filters).length > 0) {
-          Object.entries(filters).forEach(([key, value]) => {
-            if (value !== undefined && value !== null && value !== "") {
-              url.searchParams.append(key, Array.isArray(value) ? JSON.stringify(value) : String(value));
-            }
-          });
-        }
+        Object.entries(filters ?? {}).forEach(([key, value]) => {
+          if (value != null && value !== "") {
+            url.searchParams.append(key, Array.isArray(value) ? JSON.stringify(value) : String(value));
+          }
+        });
+
         const response = await fetchWithBQ(url.toString());
-        return response.error ? { error: response.error } : { data: response.data as Product[] };
+        return response.error ? { error: response.error } : { data: response.data as ProductsResponse };
       },
     }),
 
-    getDetailProduct: builder.query<Product, number>({
-      query: (id) => `__products_${id}.json`,
+    getDetailProduct: builder.query<ProductResponse, string>({
+      query: (slug) => `products/${slug}`,
     }),
-    getDetailPackage: builder.query<Package, number>({
-      query: (id) => `package/__package_${id}.json`,
-      async transformResponse(response) {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        return response;
-      },
+    getDetailPackage: builder.query<PackageResponse, number>({
+      query: (id) => `packages/${id}`,
     }),
   }),
 });

@@ -37,11 +37,12 @@ export default function SearchView() {
   } = useGetProductQuery(Object.keys(filters).length > 0 ? filters : undefined, {
     refetchOnMountOrArgChange: true,
   });
+  console.log("🚀 ~ SearchView ~ products:", products);
 
   return (
     <div>
       <h2 className="text-4xl font-semibold mb-5">All Product</h2>
-      <SearchForm />
+      <SearchForm totalResults={products?.total || 0} />
 
       <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {isFetching

@@ -1,26 +1,11 @@
 "use client";
 
 import React, { FC, Fragment, useRef, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
 import { ArrowRightIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
-import CommentListing from "@/components/CommentListing";
-import FiveStartIconForRate from "@/components/FiveStartIconForRate";
-import StartRating from "@/components/StartRating";
-import Avatar from "@/shared/Avatar";
-import Badge from "@/shared/Badge";
-import ButtonCircle from "@/shared/ButtonCircle";
-import ButtonPrimary from "@/shared/ButtonPrimary";
-import ButtonSecondary from "@/shared/ButtonSecondary";
-import ButtonClose from "@/shared/ButtonClose";
-import Input from "@/shared/Input";
-import LikeSaveBtns from "@/components/LikeSaveBtns";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { Route } from "next";
 import { Amenities_demos, PHOTOS } from "../constant";
-import StayDatesRangeInput from "../StayDatesRangeInput";
-import GuestsInput from "../GuestsInput";
-import SectionDateRange from "../SectionDateRange";
 import DatePicker from "../(components)/DatePicker";
 import PackageCard from "../(components)/PackageCard";
 import { useGetDetailProductQuery } from "@/lib/services/productService";
@@ -29,20 +14,11 @@ import { formatNumber } from "@/utils/currencyConverter";
 export interface ProductDetailPageProps {}
 
 const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
-  //
+  const { slug } = useParams();
 
-  let [isOpenModalAmenities, setIsOpenModalAmenities] = useState(false);
 
   const thisPathname = usePathname();
   const router = useRouter();
-
-  function closeModalAmenities() {
-    setIsOpenModalAmenities(false);
-  }
-
-  function openModalAmenities() {
-    setIsOpenModalAmenities(true);
-  }
 
   const handleOpenModalImageGallery = () => {
     router.push(`${thisPathname}/?modal=PHOTO_TOUR_SCROLLABLE` as Route);
@@ -64,7 +40,8 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
     }
   };
 
-  const { data: product, error, isLoading } = useGetDetailProductQuery(1);
+  const { data, error, isLoading } = useGetDetailProductQuery(slug as string);
+  const product = data?.data;
 
   const renderSection1 = () => {
     return (
@@ -304,10 +281,14 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
         <div className="flex flex-col space-y-2">
           <span className="text-sm text-gray-500">
             From{" "}
-            <span className="line-through text-gray-400 ml-1">{formatNumber(product?.packages[0]?.cost_price)}</span>
+            <span className="line-through text-gray-400 ml-1">
+              {formatNumber(product?.packages?.[0]?.cost_price ?? 0)}
+            </span>
           </span>
           <div className="flex items-center">
-            <p className="text-lg font-semibold text-gray-900">{formatNumber(product?.packages[0]?.selling_price)}</p>
+            <p className="text-lg font-semibold text-gray-900">
+              {formatNumber(product?.packages?.[0]?.selling_price ?? 0)}
+            </p>
             <div className="ml-2 text-green-600 bg-green-100 rounded-full px-2 py-1 text-xs">-15%</div>
           </div>
           <button
