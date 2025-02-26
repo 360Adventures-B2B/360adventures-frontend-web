@@ -34,18 +34,17 @@ const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
   cardType = "card2",
 }) => {
   const { data: products, error, isLoading } = useGetProductQuery(undefined);
-  console.log("🚀 ~ products:", products);
-
   return (
     <div className="nc-SectionGridFeaturePlaces relative">
       <HeaderFilter tabActive={"New York"} subHeading={subHeading} tabs={tabs} heading={heading} />
-      <div className={`grid gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ${gridClass}`}>
+      <div className={`grid grid-cols-2 gap-6 md:gap-8 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 ${gridClass}`}>
         {isLoading
           ? Array(4)
               .fill(undefined)
               .map((_, index) => <ProductCardSkeleton key={index} />)
           : products?.data?.map((product) => <ProductCard data={product} key={product.id} />)}
       </div>
+
       <div className="flex mt-16 justify-center items-center">
         <ButtonPrimary loading>Show me more</ButtonPrimary>
       </div>

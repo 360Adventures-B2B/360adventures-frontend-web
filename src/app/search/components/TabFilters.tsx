@@ -181,11 +181,12 @@ const TabFilters = () => {
                         <div className="mt-6 relative flex flex-wrap gap-2">
                           {bookingOptionsList.map((bookingOption) => {
                             const isActive = filters.bookingOptions.includes(bookingOption);
+                            const iconClass = bookingOption === "Free Cancellation" ? "la-check" : "la-bolt";
                             return (
                               <FilterCard
                                 key={bookingOption}
                                 label={bookingOption}
-                                icon="la-map-marker"
+                                icon={iconClass}
                                 isActive={isActive}
                                 onClick={() => handleToggleFilter("bookingOptions", bookingOption)}
                                 className={isActive ? "bg-primary-700 text-white" : ""}

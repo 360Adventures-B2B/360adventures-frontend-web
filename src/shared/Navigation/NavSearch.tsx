@@ -84,7 +84,7 @@ export default function NavSearch() {
                   </div>
                   {/* Sticky button */}
                   <div className="sticky bottom-0 bg-white py-2">
-                    <Link href={`/search?keyword=${query}`}>
+                    <Link href={`/search?keyword=${query}`} onClick={() => setQuery("")}>
                       <button className="w-full px-4 py-2 text-sm font-medium text-primary-6000 border border-primary-6000 rounded-lg hover:bg-primary-50 transition">
                         See all results for "{query}"
                       </button>
@@ -95,7 +95,7 @@ export default function NavSearch() {
                 // <p className="p-3 text-sm text-gray-500 text-center">No results found.</p>
                 <div className="text-center mt-4">
                   <div className="mt-2">
-                    <Link href={`/search?keyword=${query}`}>
+                    <Link href={`/search?keyword=${query}`} onClick={() => setQuery("")}>
                       <button className="w-full px-4 py-2 text-sm font-medium text-primary-6000 border border-primary-6000 rounded-lg hover:bg-primary-50 transition">
                         See all results for "{query}"
                       </button>

@@ -6,6 +6,7 @@ import ProductCardSkeleton from "@/components/skeleton/ProductCardSkeleton";
 import ProductCard from "@/components/ProductCard";
 import { useSearchParams } from "next/navigation";
 import SearchForm from "./SearchForm";
+import EmptySearch from "./EmptySearch";
 
 export default function SearchView() {
   const searchParams = useSearchParams();
@@ -37,23 +38,27 @@ export default function SearchView() {
   } = useGetProductQuery(Object.keys(filters).length > 0 ? filters : undefined, {
     refetchOnMountOrArgChange: true,
   });
-  console.log("🚀 ~ SearchView ~ products:", products);
 
   return (
     <div>
       <h2 className="text-4xl font-semibold mb-5">All Product</h2>
       <SearchForm totalResults={products?.total || 0} />
 
-      <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {isFetching
-          ? Array(4)
-              .fill(undefined)
-              .map((_, index) => <ProductCardSkeleton key={index} />)
-          : products?.data?.map((product) => <ProductCard data={product} key={product.id} />)}
+      <div className="grid grid-cols-2 gap-6 md:gap-8 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+        {isFetching ? (
+          Array.from({ length: 4 }).map((_, index) => <ProductCardSkeleton key={index} />)
+        ) : products?.data?.length ? (
+          products.data.map((product) => <ProductCard data={product} key={product.id} />)
+        ) : (
+          <div className="col-span-full">
+            <EmptySearch />
+          </div>
+        )}
       </div>
-      {!isLoading && (products?.total_pages || 1) > 1 && (
+
+      {!isLoading && products?.total_pages && products.total_pages > 1 && (
         <div className="flex mt-16 justify-center items-center">
-          <Pagination totalPages={products?.total_pages || 1} />
+          <Pagination totalPages={products.total_pages} />
         </div>
       )}
     </div>

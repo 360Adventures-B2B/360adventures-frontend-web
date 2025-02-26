@@ -11,11 +11,12 @@ export interface Product {
   name: string;
   slug: string;
   content: string;
-  instant_confirmation: string;
-  cancellation_policy: string;
+  instant_confirmation: boolean;
+  free_cancellation: boolean;
   pickup_included: string;
   voucher_type: string;
   duration: number;
+  original_price: number;
   price: number;
   created_at: string;
   updated_at: string;

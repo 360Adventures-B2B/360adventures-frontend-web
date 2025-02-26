@@ -182,7 +182,7 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
   const description = () => {
     return (
       <div className="listingSection__wrap">
-        <h2 className="text-2xl font-semibold">Descriptipn</h2>
+        <h2 className="text-2xl font-semibold">Description</h2>
         <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
         <div className="text-neutral-6000 dark:text-neutral-300">
           <span>

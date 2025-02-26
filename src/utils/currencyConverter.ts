@@ -2,7 +2,6 @@ interface CurrencyRates {
   [key: string]: number;
 }
 
-// Default rates: Anggap USD = 1, kurs lainnya adalah nilai relatif terhadap USD
 const defaultCurrencyRates: CurrencyRates = {
   USD: 1,
   EUR: 0.85,
@@ -12,7 +11,6 @@ const defaultCurrencyRates: CurrencyRates = {
   AUD: 1.35,
 };
 
-// Simbol mata uang
 const currencySymbols: { [key: string]: string } = {
   USD: "$",
   EUR: "€",
@@ -31,23 +29,29 @@ export const getCurrencyRatesFromLocalStorage = (): CurrencyRates => {
   return rates ? JSON.parse(rates) : defaultCurrencyRates;
 };
 
-// Fungsi untuk mengambil simbol mata uang
 export const getCurrencySymbol = (currency: string): string => {
-  return currencySymbols[currency] || ""; // Mengembalikan simbol mata uang atau kosong jika tidak ada
+  return currencySymbols[currency] || "";
 };
 
-// Fungsi untuk memformat harga sesuai dengan mata uang yang ada di localStorage
 export const formatNumber = (priceInUSD: number): string => {
   const rates = getCurrencyRatesFromLocalStorage();
-  const selectedCurrency = "USD"; // Pilih default mata uang misalnya 'IDR' (atau ambil dari localStorage juga)
+  const selectedCurrency = "USD";
 
   const rate = rates[selectedCurrency];
   const symbol = getCurrencySymbol(selectedCurrency);
-
   if (rate) {
     const priceInCurrency = priceInUSD * rate;
-    return `${selectedCurrency} ${priceInCurrency.toLocaleString()}`; // Mengembalikan harga yang sudah diformat
+    const isWholeNumber = priceInCurrency % 1 === 0;
+
+    if (isWholeNumber) {
+      return `${selectedCurrency} ${Math.floor(priceInCurrency).toLocaleString()}`;
+    } else {
+      return `${selectedCurrency} ${priceInCurrency.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`;
+    }
   } else {
-    return "Kurs tidak ditemukan";
+    return "Currency not found";
   }
 };

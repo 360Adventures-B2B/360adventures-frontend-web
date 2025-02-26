@@ -44,13 +44,14 @@ export async function GET(req: Request) {
       }
 
       if (bookingOptions) {
-        if (bookingOptions.includes("Instant Confirmation") && product.instant_confirmation !== 1) {
+        if (bookingOptions.includes("Instant Confirmation") && !product.instant_confirmation) {
           return false;
         }
-        if (bookingOptions.includes("Free Cancellation") && product.free_cancellation !== 1) {
+        if (bookingOptions.includes("Free Cancellation") && !product.free_cancellation) {
           return false;
         }
       }
+
       if (priceRange && (product.price < priceRange[0] || product.price > priceRange[1])) {
         return false;
       }
