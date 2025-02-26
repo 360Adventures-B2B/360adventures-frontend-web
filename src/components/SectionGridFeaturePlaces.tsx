@@ -44,7 +44,7 @@ const SectionGridFeaturePlaces: FC<SectionGridFeaturePlacesProps> = ({
           ? Array(4)
               .fill(undefined)
               .map((_, index) => <ProductCardSkeleton key={index} />)
-          : products?.map((product) => <ProductCard data={product} key={product.id} />)}
+          : products?.data?.map((product) => <ProductCard data={product} key={product.id} />)}
       </div>
       <div className="flex mt-16 justify-center items-center">
         <ButtonPrimary loading>Show me more</ButtonPrimary>
