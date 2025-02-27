@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "Attractions",
+    "slug": "attractions",
+    "created_at": "2025-02-27 12:00:00",
+    "updated_at": "2025-02-27 12:00:00"
+  },
+  {
+    "id": 2,
+    "name": "Tours",
+    "slug": "tours",
+    "created_at": "2025-02-27 12:00:00",
+    "updated_at": "2025-02-27 12:00:00"
+  },
+  {
+    "id": 3,
+    "name": "Activities & Experiences",
+    "slug": "activities-experiences",
+    "created_at": "2025-02-27 12:00:00",
+    "updated_at": "2025-02-27 12:00:00"
+  },
+  {
+    "id": 4,
+    "name": "SIM Cards",
+    "slug": "sim-cards",
+    "created_at": "2025-02-27 12:00:00",
+    "updated_at": "2025-02-27 12:00:00"
+  }
+]

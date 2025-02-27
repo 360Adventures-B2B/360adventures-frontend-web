@@ -66,30 +66,42 @@ const ProductCard: FC<ProductCardProps> = ({ size = "default", className = "", d
           </div>
         </div>
 
-        <div className="w-14 border-b border-neutral-100 dark:border-neutral-800"></div>
-
-        <div className="flex flex-row justify-between items-center">
-          {/* From & Original Price */}
-          <div className="flex flex-col items-start">
-            <div className="text-[9px] md:text-[10px] text-gray-500 font-medium">
-              <span>From</span>
-              <span className="line-through ml-1 text-[10px] md:text-[11px] text-red-500">
-                {formatNumber(data?.original_price ?? 0)}
-              </span>
-            </div>
-            <div className="flex items-center">
-              <span className="text-xs md:text-sm font-semibold text-primary">{formatNumber(data?.price ?? 0)}</span>
-            </div>
-          </div>
-
-          {/* Free Cancellation - Posisinya di Tengah */}
-          {data?.free_cancellation && (
-            <div className="flex flex-col items-center justify-center md:ml-4 md:mr-4">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between w-full">
+          {/* Free Cancellation - Mobile (di atas harga) */}
+          <div className="mb-1 md:hidden self-start min-h-[20px]">
+            {data?.free_cancellation && (
               <div className="text-[9px] md:text-[10px] font-medium bg-green-100 text-green-600 px-2 md:px-3 py-0 rounded-md shadow-sm">
                 Free Cancellation
               </div>
+            )}
+          </div>
+
+          {/* Wrapper Harga & Free Cancellation Desktop */}
+          <div className="flex w-full items-center justify-between">
+            {/* Harga */}
+            <div className="flex flex-col items-start min-h-[40px] md:min-h-[32px]">
+              <div className="text-[9px] text-gray-500 font-medium">
+                <span>From</span>
+                {data?.original_price ? (
+                  <span className="line-through ml-1 text-[10px] md:text-[11px] text-red-500">
+                    {formatNumber(data?.original_price)}
+                  </span>
+                ) : null}
+              </div>
+              <div className="flex items-center">
+                <span className="text-xs md:text-sm font-semibold text-primary">{formatNumber(data?.price ?? 0)}</span>
+              </div>
             </div>
-          )}
+
+            {/* Free Cancellation - Desktop (di tengah, antara "From" dan Harga) */}
+            <div className="hidden md:flex flex-col items-center justify-center md:mx-4 min-h-[32px]">
+              {data?.free_cancellation && (
+                <div className="text-[9px] font-medium bg-green-100 text-green-600 px-2 md:px-3 py-0 rounded-md shadow-sm">
+                  Free Cancellation
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     );

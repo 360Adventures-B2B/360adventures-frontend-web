@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "name": "Dubai",
+    "slug": "dubai",
+    "image": "https://images.pexels.com/photos/64271/queen-of-liberty-statue-of-liberty-new-york-liberty-statue-64271.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+    "total_product": 100,
+    "created_at": "2025-02-27 12:00:00",
+    "updated_at": "2025-02-27 12:00:00"
+  },
+  {
+    "id": 2,
+    "name": "Sharjah",
+    "slug": "sharjah",
+    "image": "https://images.pexels.com/photos/7740160/pexels-photo-7740160.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+    "total_product": 512,
+    "created_at": "2025-02-27 12:00:00",
+    "updated_at": "2025-02-27 12:00:00"
+  },
+  {
+    "id": 3,
+    "name": "Abu Dhabi",
+    "slug": "abu-dhabi",
+    "image": "https://images.pexels.com/photos/739407/pexels-photo-739407.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+    "total_product": 115,
+    "created_at": "2025-02-27 12:00:00",
+    "updated_at": "2025-02-27 12:00:00"
+  },
+  {
+    "id": 4,
+    "name": "Al Ain",
+    "slug": "al-ain",
+    "image": "https://images.pexels.com/photos/460672/pexels-photo-460672.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+    "total_product": 30,
+    "created_at": "2025-02-27 12:00:00",
+    "updated_at": "2025-02-27 12:00:00"
+  },
+  {
+    "id": 5,
+    "name": "Bali",
+    "slug": "bali",
+    "image": "https://images.pexels.com/photos/4151484/pexels-photo-4151484.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+    "total_product": 87,
+    "created_at": "2025-02-27 12:00:00",
+    "updated_at": "2025-02-27 12:00:00"
+  }
+]

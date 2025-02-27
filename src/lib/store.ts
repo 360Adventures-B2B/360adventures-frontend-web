@@ -3,14 +3,24 @@ import { setupListeners } from "@reduxjs/toolkit/query/react";
 import { authApi } from "./services/authService";
 import { productApi } from "./services/productService";
 import filterReducer from "./features/filterSlices";
+import { locationApi } from "./services/locationsService";
+import { categoryApi } from "./services/categoryService";
 
 export const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
     [productApi.reducerPath]: productApi.reducer,
+    [locationApi.reducerPath]: locationApi.reducer,
+    [categoryApi.reducerPath]: categoryApi.reducer,
     filters: filterReducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([authApi.middleware, productApi.middleware]),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat([
+      authApi.middleware,
+      productApi.middleware,
+      locationApi.middleware,
+      categoryApi.middleware,
+    ]),
 });
 
 setupListeners(store.dispatch);

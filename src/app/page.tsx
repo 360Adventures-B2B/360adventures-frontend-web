@@ -15,6 +15,8 @@ import SectionVideos from "@/components/SectionVideos";
 import SectionClientSay from "@/components/SectionClientSay";
 import SectionHero3 from "./(server-components)/SectionHero3";
 import { useSession } from "next-auth/react";
+import LocationSection from "@/components/LocationSection";
+import ProductSection from "@/components/ProductSection";
 
 const DEMO_CATS: TaxonomyType[] = [
   {
@@ -159,11 +161,12 @@ function PageHome() {
         {/* <SectionHero className="pt-10 lg:pt-16 lg:pb-16" /> */}
         <SectionHero3 className="pt-10 lg:pt-16 lg:pb-16" />
 
-        {/* SECTION 1 */}
-        <SectionSliderNewCategories categories={DEMO_CATS} />
+        {/* Location Section */}
+        <LocationSection />
 
-        <SectionGridFeaturePlaces cardType="card2" />
-       
+        {/* product section  */}
+        <ProductSection />
+
         <div className="relative py-16">
           <BackgroundSection />
           <SectionBecomeAnAuthor />
