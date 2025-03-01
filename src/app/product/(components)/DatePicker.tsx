@@ -7,7 +7,7 @@ import ModalPackage from "./ModalPackage";
 import { useDate } from "@/context/DateContext";
 
 const DatePicker = () => {
-  const { bookingData, updateBookingData } = useBooking();
+  const { bookingData, dispatch } = useBooking();
   const { selectedDate, setSelectedDate, highlightedDate, setHighlightedDate } = useDate();
   const containerRef = useRef(null);
 
@@ -41,7 +41,7 @@ const DatePicker = () => {
     setSelectedDate(date);
     setHighlightedDate(date);
     if (date) {
-      updateBookingData({ start_date: formatDateString(date) });
+      dispatch({ type: "UPDATE_DATE", payload: formatDateString(date) });
     }
   };
 

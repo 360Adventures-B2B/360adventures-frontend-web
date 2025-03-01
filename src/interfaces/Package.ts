@@ -14,7 +14,7 @@ export interface Package {
   time_slot: [];
   quota: number;
   person_types: PersonType[];
-  product?: Product;
+product?: Product;
   created_at?: string;
   updated_at?: string;
 }

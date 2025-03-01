@@ -9,19 +9,18 @@ interface QuantityStepperProps {
 }
 
 const QuantityStepper: React.FC<QuantityStepperProps> = ({ personTypes }) => {
-  const { bookingData, updateBookingData } = useBooking();
-  console.log("🚀 ~ bookingData:", bookingData);
+  const { bookingData, dispatch } = useBooking();
 
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
-  console.log("🚀 ~ quantities:", quantities);
 
   useEffect(() => {
     const total = bookingData.person_types.reduce((acc, personType) => {
       return acc + personType.price * personType.guest;
     }, 0);
 
-    updateBookingData({
-      total_price: total,
+    dispatch({
+      type: "UPDATE_TOTAL_PRICE",
+      payload: total,
     });
   }, [bookingData.person_types]);
 
@@ -30,8 +29,10 @@ const QuantityStepper: React.FC<QuantityStepperProps> = ({ personTypes }) => {
       ...prevQuantities,
       [unitName]: (prevQuantities[unitName] || 0) + 1,
     }));
-    updateBookingData({
-      person_types: bookingData.person_types.map((person) => {
+
+    dispatch({
+      type: "UPDATE_PERSON_TYPES",
+      payload: bookingData.person_types.map((person) => {
         if (person.name === unitName) {
           return { ...person, guest: person.guest + 1 };
         }
@@ -46,8 +47,9 @@ const QuantityStepper: React.FC<QuantityStepperProps> = ({ personTypes }) => {
       [unitName]: Math.max((prevQuantities[unitName] || 0) - 1, 0),
     }));
 
-    updateBookingData({
-      person_types: bookingData.person_types.map((person) => {
+    dispatch({
+      type: "UPDATE_PERSON_TYPES",
+      payload: bookingData.person_types.map((person) => {
         if (person.name === unitName && person.guest > 0) {
           return { ...person, guest: person.guest - 1 };
         }

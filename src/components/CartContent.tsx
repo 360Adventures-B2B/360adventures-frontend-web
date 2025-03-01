@@ -4,74 +4,40 @@ import React, { useState } from "react";
 import ButtonClose from "@/shared/ButtonClose";
 import NcModal from "@/shared/NcModal";
 import ModalDeleteCart from "./ModalDeleteCart";
+import { useGetCartsQuery } from "@/lib/services/cartService";
+import { formatDate, formatDateString } from "@/utils/dateHelper";
+import { calculateTotalPersonType } from "@/utils/calculateTotalPersonType";
+import { formatNumber } from "@/utils/currencyConverter";
 
 export interface CartContentProps {
   onClickClose?: () => void;
 }
 
 const CartContent: React.FC<CartContentProps> = ({ onClickClose }) => {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Eiffel Tower Tour",
-      package: "VIP Access + Sunset View",
-      startDate: "27 Feb 2025",
-      price: 56,
-      quantity: 2,
-      image: "https://picsum.photos/200/300?random=1",
-      guests: [{ type: "Dewasa", count: 2 }],
-    },
-    {
-      id: 2,
-      name: "Great Wall of China Tickets",
-      package: "Full-Day Guided Tour",
-      startDate: "15 Mar 2025",
-      price: 75,
-      quantity: 1,
-      image: "https://picsum.photos/200/300?random=2",
-      guests: [
-        { type: "Dewasa", count: 1 },
-        { type: "Anak", count: 1 },
-      ],
-    },
-    {
-      id: 3,
-      name: "Safari Park Attraction",
-      package: "Family Package",
-      startDate: "10 Apr 2025",
-      price: 48,
-      quantity: 3,
-      image: "https://picsum.photos/200/300?random=3",
-      guests: [
-        { type: "Dewasa", count: 2 },
-        { type: "Anak", count: 1 },
-      ],
-    },
-    {
-      id: 4,
-      name: "Bali Snorkeling Adventure",
-      package: "All-Inclusive Experience",
-      startDate: "05 May 2025",
-      price: 65,
-      quantity: 1,
-      image: "https://picsum.photos/200/300?random=4",
-      guests: [{ type: "Dewasa", count: 1 }],
-    },
-  ]);
+  const { data: carts, isLoading } = useGetCartsQuery();
+
+  const cartItems = carts?.data || [];
 
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
-  const isAllSelected = selectedItems.length === cartItems.length;
+
+  const isAllSelected = cartItems.length > 0 && selectedItems.length === cartItems.length;
 
   const toggleSelectItem = (id: number) => {
     setSelectedItems((prev) => (prev.includes(id) ? prev.filter((itemId) => itemId !== id) : [...prev, id]));
   };
 
   const toggleSelectAll = () => {
-    setSelectedItems(isAllSelected ? [] : cartItems.map((item) => item.id));
+    setSelectedItems(isAllSelected ? [] : cartItems.map((item) => Number(item.id)));
   };
 
-  const total = cartItems.reduce((sum, item) => {
-    return selectedItems.includes(item.id) ? sum + item.price * item.quantity : sum;
+  const total = cartItems.reduce((sum, cart) => {
+    if (!selectedItems.includes(Number(cart.id))) return sum;
+
+    const personTotal = cart.person_types?.reduce((subTotal, person) => {
+      return subTotal + (person.guest > 0 ? (person.price || 0) * person.guest : 0);
+    }, 0);
+
+    return sum + personTotal;
   }, 0);
 
   return (
@@ -97,52 +63,58 @@ const CartContent: React.FC<CartContentProps> = ({ onClickClose }) => {
         </div>
 
         <ul className="cart-items">
-          {cartItems.map((item) => (
+          {carts?.data?.map((item) => (
             <li
               key={item.id}
               className="cart-item mb-5 pb-5 flex items-start overflow-hidden border-b border-[#e9e9e9]"
             >
               <input
                 type="checkbox"
-                checked={selectedItems.includes(item.id)}
-                onChange={() => toggleSelectItem(item.id)}
+                checked={selectedItems.includes(item.id || 0)}
+                onChange={() => toggleSelectItem(item.id || 0)}
                 className="mr-3 w-5 h-5 rounded-md appearance-none border border-gray-400 checked:bg-primary-700 hover:checked:bg-primary-700 focus:checked:bg-primary-700 focus:outline-none focus:ring-0 cursor-pointer"
               />
 
               {/* Image */}
               <a href="#" className="cart-item-image flex-shrink-0 w-[85px] h-[85px]">
-                <img alt={item.name} className="w-full h-full rounded-md object-cover object-top" src={item.image} />
+                <img
+                  alt={item?.package?.product?.name ?? ""}
+                  className="w-full h-full rounded-md object-cover object-top"
+                  src={(item?.package?.product?.product_galleries?.[0] as string) || ""}
+                />
               </a>
 
               {/* Details */}
               <div className="cart-item-details relative flex-1 ml-4 grow-[1] pr-6">
                 {/* Tour Name */}
                 <a href="product-left-sidebar.html" className="cart-item-title block text-lg font-normal">
-                  {item.name}
+                  {item?.package?.product?.name}
                 </a>
 
                 {/* Package Name */}
-                <p className="pkgName text-sm text-[#444] mt-1">{item.package}</p>
+                <p className="pkgName text-sm text-[#444] mt-1">{item?.package?.name}</p>
 
                 {/* Start Date */}
                 <p className="startDate text-sm text-[#444] mt-1">
-                  <i className="las la-calendar-alt"></i> {item.startDate}
+                  <i className="las la-calendar-alt"></i> {item?.start_date && formatDate(item?.start_date)}
                 </p>
 
                 {/* Guest Details */}
                 <p className="guestDetails text-sm text-[#444] mt-1">
                   <i className="las la-user-friends"></i>{" "}
-                  {item.guests.map((guest, index) => (
-                    <span key={index}>
-                      {guest.count} {guest.type}
-                      {index < item.guests.length - 1 ? ", " : ""}
-                    </span>
-                  ))}
+                  {item?.person_types
+                    ?.filter((person_type) => person_type.guest > 0)
+                    .map((person_type, index, filteredArray) => (
+                      <span key={index}>
+                        {person_type.guest} {person_type.name}
+                        {index < filteredArray.length - 1 ? ", " : ""}
+                      </span>
+                    ))}
                 </p>
 
                 {/* Total Price */}
                 <p className="totalPrice text-sm text-[#444] mt-1 font-bold">
-                  Total: ${(item.price * item.quantity).toFixed(2)}
+                  Total: {formatNumber(calculateTotalPersonType(item?.person_types))}
                 </p>
 
                 {/* Remove Item */}
@@ -156,7 +128,7 @@ const CartContent: React.FC<CartContentProps> = ({ onClickClose }) => {
                       <i className="las la-trash"></i>
                     </a>
                   )}
-                  renderContent={(closeModal) => <ModalDeleteCart closeModal={closeModal} cartId={item.id} />}
+                  renderContent={(closeModal) => <ModalDeleteCart closeModal={closeModal} cartId={item?.id || 0} />}
                   modalTitle={"Information"}
                 />
               </div>
@@ -172,7 +144,7 @@ const CartContent: React.FC<CartContentProps> = ({ onClickClose }) => {
             <tbody>
               <tr>
                 <td className="text-left text-lg text-black">Total :</td>
-                <td className="text-right text-lg text-black font-bold">${total.toFixed(2)}</td>
+                <td className="text-right text-lg text-black font-bold">{formatNumber(total)}</td>
               </tr>
             </tbody>
           </table>

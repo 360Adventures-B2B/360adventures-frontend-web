@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import NavMobile from "@/shared/Navigation/NavMobile";
 import { ShoppingCartIcon } from "@heroicons/react/24/solid";
 import CartContent from "./CartContent";
+import { useGetCartsQuery } from "@/lib/services/cartService";
 
 export interface CartMenuProps {
   className?: string;
@@ -26,6 +27,10 @@ const CartMenu: React.FC<CartMenuProps> = ({
 
   const handleOpenMenu = () => setIsVisable(true);
   const handleCloseMenu = () => setIsVisable(false);
+
+  const { data: carts, isLoading } = useGetCartsQuery();
+
+  const totalItemCarts = (carts?.data && carts?.data?.length) || 0;
 
   const renderContent = () => {
     return (
@@ -75,12 +80,12 @@ const CartMenu: React.FC<CartMenuProps> = ({
           <ShoppingCartIcon className={`${iconClassName}`} />
 
           {/* Badge jumlah item di sudut kanan atas ikon */}
-          {cartCount > 0 && (
+          {totalItemCarts > 0 && (
             <span
               className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full 
             shadow-md flex items-center justify-center min-w-[18px] min-h-[18px] leading-none"
             >
-              {cartCount}
+              {totalItemCarts}
             </span>
           )}
         </div>

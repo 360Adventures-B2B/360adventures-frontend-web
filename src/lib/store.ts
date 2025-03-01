@@ -5,6 +5,7 @@ import { productApi } from "./services/productService";
 import filterReducer from "./features/filterSlices";
 import { locationApi } from "./services/locationsService";
 import { categoryApi } from "./services/categoryService";
+import { cartApi } from "./services/cartService";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     [productApi.reducerPath]: productApi.reducer,
     [locationApi.reducerPath]: locationApi.reducer,
     [categoryApi.reducerPath]: categoryApi.reducer,
+    [cartApi.reducerPath]: cartApi.reducer,
     filters: filterReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -20,6 +22,7 @@ export const store = configureStore({
       productApi.middleware,
       locationApi.middleware,
       categoryApi.middleware,
+      cartApi.middleware,
     ]),
 });
 

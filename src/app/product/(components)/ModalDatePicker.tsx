@@ -25,7 +25,7 @@ const ModalDatePicker: FC<ModalDatePickerProps> = ({
   isIconDatePickerClick = false,
 }) => {
   const [monthsShown, setMonthsShown] = useState(1);
-  const { bookingData, updateBookingData } = useBooking();
+  const { bookingData, dispatch } = useBooking();
   const { setHighlightedDate } = useDate();
   const [isChangeDate, setIsChangeDate] = useState(false);
 
@@ -48,7 +48,9 @@ const ModalDatePicker: FC<ModalDatePickerProps> = ({
   const onDateChange = (date: Date) => {
     handleDateSelection(date);
     if (date) {
-      updateBookingData({ start_date: formatDateString(date), time_slot: "" });
+      dispatch({ type: "UPDATE_DATE", payload: formatDateString(date) });
+      dispatch({ type: "UPDATE_TIME_SLOT", payload: "" });
+
       setHighlightedDate(date);
     }
 

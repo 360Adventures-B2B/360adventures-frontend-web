@@ -9,6 +9,10 @@ import ModalDatePicker from "./ModalDatePicker";
 import NcModal from "@/shared/NcModal";
 import { useDate } from "@/context/DateContext";
 import SkeletonPackage from "./SkeletonPackage";
+import { useAddCartMutation } from "@/lib/services/cartService";
+import ButtonPrimary from "@/shared/ButtonPrimary";
+import { toast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 interface ModalPackageProps {
   packageId: number;
@@ -16,7 +20,7 @@ interface ModalPackageProps {
 }
 
 const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: closeModalPackage }) => {
-  const { bookingData, updateBookingData } = useBooking();
+  const { bookingData, dispatch } = useBooking();
   const { selectedDate, setSelectedDate } = useDate();
 
   const [isChangeDate, setIsChangeDate] = useState(false);
@@ -27,24 +31,80 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
 
   const [selectedTime, setSelectedTime] = useState("");
 
+  const [addCart, { isLoading: isLoadingAddCart, isError }] = useAddCartMutation();
+
   const handleTimeSelect = (time: any) => {
     setSelectedTime(time);
-    updateBookingData({ time_slot: time });
+    dispatch({ type: "UPDATE_TIME_SLOT", payload: time });
   };
 
   useEffect(() => {
     if (packageData && packageData.person_types && isFirstOpen) {
-      updateBookingData({
-        ...bookingData,
-        person_types: packageData.person_types,
-        package_id: packageId,
-      });
+      dispatch({ type: "UPDATE_PERSON_TYPES", payload: packageData.person_types });
+      dispatch({ type: "UPDATE_PACKAGE", payload: packageId });
+
       setIsFirstOpen(false);
     }
-  }, [packageData, isFirstOpen, bookingData, updateBookingData]);
+  }, [packageData, isFirstOpen, bookingData, dispatch]);
 
   const handleDateSelection = (date: Date | null) => {
     setSelectedDate(date);
+  };
+
+  const handleAddCart = async () => {
+    try {
+      if (!bookingData.start_date) {
+        toast({
+          className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+          title: "Error",
+          description: "Please select date!",
+          variant: "destructive",
+          duration: 2000,
+        });
+      }
+
+      if (packageData?.time_slot && packageData?.time_slot.length > 0 && !bookingData.time_slot) {
+        toast({
+          className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+          title: "Error",
+          description: "Please select time slot!",
+          variant: "destructive",
+          duration: 2000,
+        });
+      }
+
+      if (!bookingData.person_types.some((person) => person.guest > 0)) {
+        toast({
+          className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+          title: "Error",
+          description: "Please choose guest!",
+          variant: "destructive",
+          duration: 2000,
+        });
+        return;
+      }
+
+      const newCartItem = {
+        package_id: bookingData.package_id,
+        start_date: bookingData.start_date,
+        time_slot: bookingData.time_slot,
+        person_types: bookingData.person_types,
+      };
+
+      const res = await addCart(newCartItem).unwrap();
+      if (res.code === 201) {
+        toast({
+          className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+          title: "Success",
+          description: "Success Add Cart!",
+          variant: "success",
+          duration: 2000,
+        });
+        closeModalPackage();
+      }
+    } catch (error) {
+      console.log("🚀 ~ handleAddCart ~ error:", error);
+    }
   };
 
   if (isLoading) {
@@ -118,14 +178,24 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
 
           {/* Tombol Checkout dan Add Cart */}
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4 sm:mt-0">
-            <button className="bg-primary-6000 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm sm:text-base w-full sm:w-auto">
+            {/* <button className="bg-primary-6000 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm sm:text-base w-full sm:w-auto">
               Checkout
-            </button>
+            </button> */}
+            <ButtonPrimary
+              loading={isLoadingAddCart}
+              className="bg-primary-6000 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm sm:text-base w-full sm:w-auto"
+            >
+              Checkout
+            </ButtonPrimary>
 
             {/* Tombol Add Cart yang tetap sejajar */}
-            <button className="bg-primary-6000 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm sm:text-base w-full sm:w-auto">
+            <ButtonPrimary
+              onClick={handleAddCart}
+              loading={isLoadingAddCart}
+              className="bg-primary-6000 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm sm:text-base w-full sm:w-auto"
+            >
               Add Cart
-            </button>
+            </ButtonPrimary>
           </div>
         </div>
       </div>

@@ -11,7 +11,7 @@ interface PackageCardProps {
 }
 
 const PackageCard: React.FC<PackageCardProps> = ({ packageData }) => {
-  const { bookingData, updateBookingData } = useBooking();
+  const { bookingData } = useBooking();
 
   return (
     <div className="border border-gray-300 rounded-lg p-4 flex flex-col sm:flex-row gap-3">
