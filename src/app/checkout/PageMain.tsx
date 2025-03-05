@@ -6,12 +6,15 @@ import Input from "@/shared/Input";
 import Label from "@/components/Label";
 import Textarea from "@/shared/Textarea";
 import ButtonPrimary from "@/shared/ButtonPrimary";
+import { useSearchParams } from "next/navigation";
 
 export interface CheckOutPagePageMainProps {
   className?: string;
 }
 
 const CheckOutPagePageMain: FC<CheckOutPagePageMainProps> = ({ className = "" }) => {
+  const searchParams = useSearchParams();
+  const orderId = searchParams.get("order_id");
   const cartItems = [
     {
       id: 1,

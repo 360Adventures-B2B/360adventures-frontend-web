@@ -31,6 +31,13 @@ export const cartApi = createApi({
       }),
       invalidatesTags: ["Cart"],
     }),
+    checkoutCart: builder.mutation({
+      query: (cartIds) => ({
+        url: `carts/checkout`,
+        method: "POST",
+        body: { cart_ids: cartIds },
+      }),
+    }),
   }),
 });
-export const { useGetCartsQuery, useAddCartMutation, useDeleteCartMutation } = cartApi;
+export const { useGetCartsQuery, useAddCartMutation, useDeleteCartMutation, useCheckoutCartMutation } = cartApi;
