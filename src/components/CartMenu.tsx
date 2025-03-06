@@ -80,14 +80,12 @@ const CartMenu: React.FC<CartMenuProps> = ({
           <ShoppingCartIcon className={`${iconClassName}`} />
 
           {/* Badge jumlah item di sudut kanan atas ikon */}
-          {totalItemCarts > 0 && (
-            <span
-              className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full 
+          <span
+            className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full 
             shadow-md flex items-center justify-center min-w-[18px] min-h-[18px] leading-none"
-            >
-              {totalItemCarts}
-            </span>
-          )}
+          >
+            {totalItemCarts}
+          </span>
         </div>
       </button>
 

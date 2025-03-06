@@ -4,36 +4,30 @@ import React, { useEffect, useRef, useState } from "react";
 export default function SKeletonDatePicker() {
   const containerRef = useRef(null);
 
-  const totalDays = 7;
+  const cardWidth = 100; 
 
-  const getNextDays = (count: any) => {
-    const today = new Date();
-    const dates = [];
-    for (let i = 0; i < count; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() + i);
-      dates.push(date);
+  const [cardsPerRow, setCardsPerRow] = useState(0);
+
+  const updateGridLayout = () => {
+    if (containerRef.current) {
+      const containerWidth = (containerRef.current as HTMLDivElement).offsetWidth;
+      setCardsPerRow(Math.floor(containerWidth / cardWidth)); 
     }
-    return dates;
   };
 
-  const [dates, setDates] = useState(getNextDays(totalDays));
-
   useEffect(() => {
-    const updateGridLayout = () => {
-      if (containerRef.current) {
-        const containerWidth = (containerRef.current as HTMLDivElement).offsetWidth;
-        const cardWidth = 100;
-        const cardsPerRow = Math.floor(containerWidth / cardWidth);
-        setDates(getNextDays(cardsPerRow));
-      }
-    };
-
     updateGridLayout();
-    window.addEventListener("resize", updateGridLayout);
+
+    const resizeObserver = new ResizeObserver(() => {
+      updateGridLayout(); 
+    });
+
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
 
     return () => {
-      window.removeEventListener("resize", updateGridLayout);
+      resizeObserver.disconnect();
     };
   }, []);
 
@@ -44,7 +38,7 @@ export default function SKeletonDatePicker() {
       </div>
 
       <div ref={containerRef} className="flex gap-2 justify-start flex-nowrap">
-        {dates.map((_, index) => (
+        {Array.from({ length: cardsPerRow }).map((_, index) => (
           <div
             key={index}
             className="w-[80px] h-[80px] rounded-lg flex items-center justify-center flex-col cursor-pointer bg-gray-100"

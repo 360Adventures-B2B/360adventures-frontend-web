@@ -18,6 +18,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ message: "success", data: carts });
   } catch (error) {
-    return NextResponse.json({ message: "Error reading data" }, { status: 500 });
+    return NextResponse.json({ message: "Success", data: [] });
+    // return NextResponse.json({ message: "Error reading data" }, { status: 500 });
   }
 }
