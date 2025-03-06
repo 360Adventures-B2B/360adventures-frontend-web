@@ -4,6 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { PersonType } from "@/interfaces/PersonType";
 import { Product } from "@/interfaces/Product";
 import { Package } from "@/interfaces/Package";
+import { getServerSession } from "next-auth";
+import authOptions from "@/lib/auth";
 
 const cartFilePath = path.join(process.cwd(), "public", "json", "__carts.json");
 const packageFilePath = path.join(process.cwd(), "public", "json", "__packages.json");
@@ -33,12 +35,30 @@ function formatDate(date: Date): string {
 export async function POST(req: NextRequest) {
   try {
     // Ambil data dari request body
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user || !session.user.id) {
+      return NextResponse.json({ message: "User not authenticated" }, { status: 401 });
+    }
+
     const input: CartItemInput = await req.json();
+    const userId = session.user.id;
+
+    // Path untuk file packages dan cart sesuai dengan user_id
+    const packagesFilePath = path.join(process.cwd(), "public/json/__packages.json");
+    const cartDirectoryPath = path.join(process.cwd(), `public/json/carts/${userId}`);
+    const cartFilePath = path.join(cartDirectoryPath, "__carts.json");
+
+    // Pastikan direktori untuk cart ada
+    try {
+      await fs.mkdir(cartDirectoryPath, { recursive: true });
+    } catch (err: any) {
+      return NextResponse.json({ message: "Failed to create cart directory" }, { status: 500 });
+    }
 
     // Ambil data packages dari file __packages.json
     let packages: Package[] = [];
     try {
-      const packageData = await fs.readFile(packageFilePath, "utf-8");
+      const packageData = await fs.readFile(packagesFilePath, "utf-8");
       packages = JSON.parse(packageData);
     } catch (err: any) {
       if (err.code !== "ENOENT") throw err;
@@ -51,7 +71,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: `Package with id ${input.package_id} not found` }, { status: 404 });
     }
 
-    // Baca data cart yang ada dari __carts.json
+    // Baca data cart yang ada dari user-specific __carts.json
     let cart: CartItem[] = [];
     try {
       const cartData = await fs.readFile(cartFilePath, "utf-8");
@@ -81,9 +101,12 @@ export async function POST(req: NextRequest) {
 
     // Tambahkan item baru ke dalam cart dan simpan ke file JSON
     cart.push(newCartItem);
-    await fs.writeFile(cartFilePath, JSON.stringify(cart, null, 2));
-
-    return NextResponse.json({ code: 201, message: "Item added to cart successfully", cart }, { status: 201 });
+    try {
+      await fs.writeFile(cartFilePath, JSON.stringify(cart, null, 2));
+      return NextResponse.json({ code: 201, message: "Cart updated successfully", cart: newCartItem });
+    } catch (err) {
+      return NextResponse.json({ message: "Failed to update cart" }, { status: 500 });
+    }
   } catch (error: any) {
     return NextResponse.json({ message: "Error adding item to cart", error: error.message }, { status: 500 });
   }

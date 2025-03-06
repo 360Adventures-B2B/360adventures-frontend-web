@@ -10,12 +10,15 @@ import DatePicker from "../(components)/DatePicker";
 import PackageCard from "../(components)/PackageCard";
 import { useGetDetailProductQuery } from "@/lib/services/productService";
 import { formatNumber } from "@/utils/currencyConverter";
+import SkeletonHeader from "../skeleton/SkeletonHeader";
+import SkeletonTitle from "../skeleton/SkeletonTitle";
+import SkeletonSidebar from "../skeleton/SkeletonSidebar";
+import SKeletonDatePicker from "../skeleton/SkeletonDatePicker";
 
 export interface ProductDetailPageProps {}
 
 const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
   const { slug } = useParams();
-
 
   const thisPathname = usePathname();
   const router = useRouter();
@@ -43,7 +46,7 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
   const { data, error, isLoading } = useGetDetailProductQuery(slug as string);
   const product = data?.data;
 
-  const renderSection1 = () => {
+  const mainContent = () => {
     return (
       <div className="listingSection__wrap !space-y-6">
         {/* 1 */}
@@ -305,55 +308,66 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
   return (
     <div className="nc-ProductDetailPage">
       {/*  HEADER */}
-      <header className="rounded-md sm:rounded-xl">
-        <div className="relative grid grid-cols-3 sm:grid-cols-4 gap-1 sm:gap-2">
-          <div
-            className="col-span-2 row-span-3 sm:row-span-2 relative rounded-md sm:rounded-xl overflow-hidden cursor-pointer"
-            onClick={handleOpenModalImageGallery}
-          >
-            <Image
-              fill
-              className="object-cover rounded-md sm:rounded-xl"
-              src={PHOTOS[0]}
-              alt=""
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
-            />
-            <div className="absolute inset-0 bg-neutral-900 bg-opacity-20 opacity-0 hover:opacity-100 transition-opacity"></div>
-          </div>
-          {PHOTOS.filter((_, i) => i >= 1 && i < 5).map((item, index) => (
+
+      {isLoading ? (
+        <SkeletonHeader />
+      ) : (
+        <header className="rounded-md sm:rounded-xl">
+          <div className="relative grid grid-cols-3 sm:grid-cols-4 gap-1 sm:gap-2">
             <div
-              key={index}
-              className={`relative rounded-md sm:rounded-xl overflow-hidden ${index >= 3 ? "hidden sm:block" : ""}`}
+              className="col-span-2 row-span-3 sm:row-span-2 relative rounded-md sm:rounded-xl overflow-hidden cursor-pointer"
+              onClick={handleOpenModalImageGallery}
             >
-              <div className="aspect-w-4 aspect-h-3 sm:aspect-w-6 sm:aspect-h-5">
-                <Image fill className="object-cover rounded-md sm:rounded-xl " src={item || ""} alt="" sizes="400px" />
-              </div>
-
-              {/* OVERLAY */}
-              <div
-                className="absolute inset-0 bg-neutral-900 bg-opacity-20 opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
-                onClick={handleOpenModalImageGallery}
+              <Image
+                fill
+                className="object-cover rounded-md sm:rounded-xl"
+                src={PHOTOS[0]}
+                alt=""
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
               />
+              <div className="absolute inset-0 bg-neutral-900 bg-opacity-20 opacity-0 hover:opacity-100 transition-opacity"></div>
             </div>
-          ))}
+            {PHOTOS.filter((_, i) => i >= 1 && i < 5).map((item, index) => (
+              <div
+                key={index}
+                className={`relative rounded-md sm:rounded-xl overflow-hidden ${index >= 3 ? "hidden sm:block" : ""}`}
+              >
+                <div className="aspect-w-4 aspect-h-3 sm:aspect-w-6 sm:aspect-h-5">
+                  <Image
+                    fill
+                    className="object-cover rounded-md sm:rounded-xl "
+                    src={item || ""}
+                    alt=""
+                    sizes="400px"
+                  />
+                </div>
 
-          <button
-            className="absolute hidden md:flex md:items-center md:justify-center left-3 bottom-3 px-4 py-2 rounded-xl bg-neutral-100 text-neutral-500 hover:bg-neutral-200 z-10"
-            onClick={handleOpenModalImageGallery}
-          >
-            <Squares2X2Icon className="w-5 h-5" />
-            <span className="ml-2 text-neutral-800 text-sm font-medium">Show all photos</span>
-          </button>
-        </div>
-      </header>
+                <div
+                  className="absolute inset-0 bg-neutral-900 bg-opacity-20 opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
+                  onClick={handleOpenModalImageGallery}
+                />
+              </div>
+            ))}
+
+            <button
+              className="absolute hidden md:flex md:items-center md:justify-center left-3 bottom-3 px-4 py-2 rounded-xl bg-neutral-100 text-neutral-500 hover:bg-neutral-200 z-10"
+              onClick={handleOpenModalImageGallery}
+            >
+              <Squares2X2Icon className="w-5 h-5" />
+              <span className="ml-2 text-neutral-800 text-sm font-medium">Show all photos</span>
+            </button>
+          </div>
+        </header>
+      )}
 
       {/* MAIN */}
       <main className=" relative z-10 mt-11 flex flex-col lg:flex-row ">
         {/* CONTENT */}
         <div className="w-full lg:w-3/5 xl:w-2/3 space-y-8 lg:space-y-10 lg:pr-10">
-          {renderSection1()}
+          {isLoading ? <SkeletonTitle /> : mainContent()}
+
           <div ref={packageSectionRef} className="package-section">
-            <DatePicker />
+            {isLoading ? <SKeletonDatePicker /> : <DatePicker />}
           </div>
           {product?.packages?.map((pkg) => (
             <PackageCard key={pkg.id} packageData={pkg} />
@@ -366,7 +380,7 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
 
         {/* SIDEBAR */}
         <div className="hidden lg:block flex-grow mt-14 lg:mt-0">
-          <div className="sticky top-28">{renderSidebar()}</div>
+          <div className="sticky top-28">{isLoading ? <SkeletonSidebar /> : renderSidebar()}</div>
         </div>
       </main>
     </div>

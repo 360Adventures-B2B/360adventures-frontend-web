@@ -30,6 +30,7 @@ export default function SearchView() {
         value !== undefined && value !== null && value !== "" && (!Array.isArray(value) || value.length > 0)
     )
   );
+  console.log("🚀 ~ SearchView ~ filters:", filters);
   const {
     data: products,
     error,
