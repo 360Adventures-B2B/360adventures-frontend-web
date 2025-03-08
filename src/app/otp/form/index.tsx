@@ -23,8 +23,8 @@ export default function FormOTP() {
   const schema = yup.object().shape({
     otp: yup
       .string()
-      .length(6, "OTP must be 6 digits")
-      .matches(/^\d{6}$/, "OTP must contain only numbers")
+      .length(4, "OTP must be 4 digits")
+      .matches(/^\d{4}$/, "OTP must contain only numbers")
       .required("OTP is required"),
   });
 

@@ -28,8 +28,14 @@ export const createBaseQuery = () => {
 
     const result = await baseQuery(args, api, extraOptions);
 
-    if (result.error && result.error.status === 403) {
-      if (!args.url.includes("api/auth/verify-otp")) {
+    if (result.error && (result.error.status === 401 || result.error.status === 403)) {
+      const requestUrl = args?.url || args;
+      if (
+        requestUrl &&
+        !requestUrl.includes("api/auth/verify-otp") &&
+        !requestUrl.includes("api/auth/login") &&
+        !requestUrl.includes("api/auth/register")
+      ) {
         await signOut({ redirect: true });
       }
     }

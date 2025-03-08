@@ -6,12 +6,19 @@ import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { useGetUserQuery } from "@/lib/services/authService";
 interface Props {
   className?: string;
 }
 
 export default function AvatarDropdown({ className = "" }: Props) {
   const { user, handleLogout } = useAuth();
+  const { data, error, isLoading } = useGetUserQuery(undefined);
+  const userName = user?.name || "User";
+  const avatarImageUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+    userName
+  )}&size=128&background=random&color=fff`;
+  console.log("🚀 ~ AvatarDropdown ~ data:", data);
   return (
     <>
       <Popover className={`AvatarDropdown relative flex ${className}`}>
@@ -20,7 +27,7 @@ export default function AvatarDropdown({ className = "" }: Props) {
             <Popover.Button
               className={`self-center w-10 h-10 sm:w-12 sm:h-12 rounded-full text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none flex items-center justify-center`}
             >
-              <Avatar sizeClass="w-8 h-8 sm:w-9 sm:h-9" />
+              <Avatar sizeClass="w-8 h-8 sm:w-9 sm:h-9" imgUrl={avatarImageUrl} />
             </Popover.Button>
             <Transition
               as={Fragment}
@@ -35,11 +42,13 @@ export default function AvatarDropdown({ className = "" }: Props) {
                 <div className="overflow-hidden rounded-3xl shadow-lg ring-1 ring-black ring-opacity-5">
                   <div className="relative grid grid-cols-1 gap-6 bg-white dark:bg-neutral-800 py-7 px-6">
                     <div className="flex items-center space-x-3">
-                      <Avatar sizeClass="w-12 h-12" />
+                      <Avatar sizeClass="w-12 h-12" imgUrl={avatarImageUrl} />
 
                       <div className="flex-grow">
                         <h4 className="font-semibold">{user?.name}</h4>
-                        <p className="text-xs mt-0.5">Balance: {user?.creditAmount}</p>
+                        <p className="text-xs mt-0.5">
+                          Balance: {isLoading ? "loading..." : data?.data?.credit_amount}
+                        </p>
                       </div>
                     </div>
 

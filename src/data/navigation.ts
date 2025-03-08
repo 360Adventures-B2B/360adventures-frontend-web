@@ -411,5 +411,40 @@ export const CUSTOM_NAVIGATION: NavItemType[] = [
   //     },
   //   ],
   // },
- 
+];
+
+export const CUSTOM_NAVIGATION_MOBILE: NavItemType[] = [
+  {
+    id: ncNanoId(),
+    href: "/",
+    name: "Home",
+  },
+  {
+    id: ncNanoId(),
+    href: "/",
+    name: "Hi, Makino",
+    children: [
+      {
+        id: ncNanoId(),
+        href: "/",
+        name: "My Account",
+      },
+      {
+        id: ncNanoId(),
+        href: "/",
+        name: "My Bookings",
+      },
+      //
+      {
+        id: ncNanoId(),
+        href: "/",
+        name: "Wishlist",
+      },
+      {
+        id: ncNanoId(),
+        href: "/",
+        name: "Logout",
+      },
+    ],
+  },
 ];

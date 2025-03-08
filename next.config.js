@@ -33,7 +33,14 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "www.ui-avatars.com",
+        port: "",
+        pathname: "/**",
+      },
     ],
+    domains: ["ui-avatars.com"],
   },
 };
 
