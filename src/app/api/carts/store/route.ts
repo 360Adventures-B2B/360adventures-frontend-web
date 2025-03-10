@@ -7,9 +7,6 @@ import { Package } from "@/interfaces/Package";
 import { getServerSession } from "next-auth";
 import authOptions from "@/lib/auth";
 
-const cartFilePath = path.join(process.cwd(), "public", "json", "__carts.json");
-const packageFilePath = path.join(process.cwd(), "public", "json", "__packages.json");
-
 interface CartItemInput {
   package_id: number;
   start_date: string;
@@ -36,6 +33,7 @@ export async function POST(req: NextRequest) {
   try {
     // Ambil data dari request body
     const session = await getServerSession(authOptions);
+    console.log("🚀 ~ POST ~ session:", session);
     if (!session || !session.user || !session.user.id) {
       return NextResponse.json({ message: "User not authenticated" }, { status: 401 });
     }

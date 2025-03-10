@@ -3,7 +3,7 @@ import NextAuth from "next-auth/next";
 declare module "next-auth" {
   interface Session {
     user: {
-      id: number;
+      id: string;
       token: string;
       isVerify: boolean;
     } & DefaultSession["user"];

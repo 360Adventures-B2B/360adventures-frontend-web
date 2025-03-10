@@ -13,7 +13,7 @@ export const authOptions: AuthOptions = {
     Credentials({
       credentials: {
         id: {
-          type: "number",
+          type: "text",
         },
         email: {
           type: "text",
@@ -38,7 +38,7 @@ export const authOptions: AuthOptions = {
   callbacks: {
     jwt: async ({ user, token, trigger, session }) => {
       if (user) {
-        token.id = +user.id;
+        token.id = user.id;
         token.token = user.token;
         token.isVerify = user.isVerify;
       }
@@ -52,7 +52,7 @@ export const authOptions: AuthOptions = {
     },
     session: async ({ session, token }) => {
       if (session?.user) {
-        session.user.id = token.id as string;
+        session.user.id = token.id;
         session.user.token = token.token as string;
         session.user.isVerify = token.isVerify;
       }

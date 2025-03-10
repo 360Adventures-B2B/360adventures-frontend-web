@@ -51,9 +51,8 @@ export default function FormLogin() {
 
       if (res.code == 200) {
         const user = res.data.user;
-
         const result = await signIn("credentials", {
-          id: 1,
+          id: user.ulid,
           email: user.email,
           name: user.name,
           token: res.data.token,

@@ -36,8 +36,10 @@ export async function POST(req: NextRequest) {
       return new Response(JSON.stringify({ error: "Invalid cart IDs" }), { status: 400 });
     }
 
-    const cartsFilePath = path.join(process.cwd(), "public", "json", "__carts.json");
+    const cartDirectoryPath = path.join(process.cwd(), `public/json/carts/${session?.user?.id}`);
+    const cartsFilePath = path.join(cartDirectoryPath, "__carts.json");
     const cartsData = JSON.parse(await fs.readFile(cartsFilePath, "utf-8"));
+
     const foundCarts = cartsData.filter((cart: any) => cart_ids.includes(cart.id));
 
     if (foundCarts.length === 0) {
@@ -54,7 +56,7 @@ export async function POST(req: NextRequest) {
       const totalPrice = calculateTotalPrice(cart.person_types);
 
       return {
-        id: Date.now(),
+        id: crypto.randomUUID(),
         order_id: bookingUUID,
         agent_id: session?.user?.id,
         packages_id: cart.package_id,
@@ -71,6 +73,7 @@ export async function POST(req: NextRequest) {
         voucher_copy: null,
         merchant_name: cart.package.product.name,
         person_types: cart.person_types,
+        package: cart.package,
         name: session?.user?.name || "Guest",
         email: session?.user?.email || "guest@example.com",
         phone: "081234567890",
@@ -88,7 +91,9 @@ export async function POST(req: NextRequest) {
     const bookingFilePath = path.join(bookingDir, `${bookingUUID}.json`);
     await fs.writeFile(bookingFilePath, JSON.stringify(bookingData, null, 2), "utf-8");
 
-    return new Response(JSON.stringify({ code: 200, message: "Checkout successful", userId, order_id: bookingUUID }), { status: 200 });
+    return new Response(JSON.stringify({ code: 200, message: "Checkout successful", userId, order_id: bookingUUID }), {
+      status: 200,
+    });
   } catch (error) {
     console.error("Checkout error:", error);
     return new Response(JSON.stringify({ code: 500, error: "Internal server error" }), { status: 500 });
