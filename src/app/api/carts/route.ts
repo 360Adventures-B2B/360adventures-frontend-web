@@ -15,11 +15,11 @@ export async function GET(req: Request) {
     const filePath = path.join(`${process.env.JSON_PATH}/carts/${userId}/__carts.json`);
     const fileData = await fs.readFile(filePath, "utf8");
     let carts = JSON.parse(fileData);
-
+    console.log("🚀 ~ GET ~ filePath:", filePath);
     return NextResponse.json({ message: "success", data: carts });
   } catch (error) {
     console.log("🚀 ~ GET ~ error:", error);
-    return NextResponse.json({ message: "Success", data: [] });
+    return NextResponse.json({ message: "Failed", data: [] });
     // return NextResponse.json({ message: "Error reading data" }, { status: 500 });
   }
 }
