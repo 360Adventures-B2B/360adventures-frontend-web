@@ -20,7 +20,7 @@ export async function DELETE(_: NextRequest, { params }: { params: { id: string 
       return NextResponse.json({ message: "Invalid ID" }, { status: 400 });
     }
 
-    const cartDirectoryPath = path.join(process.cwd(), `public/json/carts/${userId}`);
+    const cartDirectoryPath = path.join(`${process.env.JSON_PATH}/carts/${userId}`);
     const cartFilePath = path.join(cartDirectoryPath, "__carts.json");
 
     console.log("🚀 ~ DELETE ~ path:", path);

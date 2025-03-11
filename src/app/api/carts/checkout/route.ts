@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
       return new Response(JSON.stringify({ error: "Invalid cart IDs" }), { status: 400 });
     }
 
-    const cartDirectoryPath = path.join(process.cwd(), `public/json/carts/${session?.user?.id}`);
+    const cartDirectoryPath = path.join(`${process.env.JSON_PATH}/carts/${session?.user?.id}`);
     const cartsFilePath = path.join(cartDirectoryPath, "__carts.json");
     const cartsData = JSON.parse(await fs.readFile(cartsFilePath, "utf-8"));
 
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
 
     const userId = session?.user?.id || generateRandomString();
     const fileName = generateRandomString();
-    const bookingDir = path.join(process.cwd(), "public", "json", `booking/${userId}`);
+    const bookingDir = path.join(`${process.env.JSON_PATH}/booking/${userId}`);
     await fs.mkdir(bookingDir, { recursive: true });
 
     const bookingData = foundCarts.map((cart: any) => {

@@ -12,7 +12,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ message: "User not authenticated" }, { status: 401 });
     }
     const userId = session.user.id;
-    const filePath = path.join(process.cwd(), `public/json/carts/${userId}/__carts.json`);
+    const filePath = path.join(`${process.env.JSON_PATH}/carts/${userId}/__carts.json`);
     const fileData = await fs.readFile(filePath, "utf8");
     let carts = JSON.parse(fileData);
 

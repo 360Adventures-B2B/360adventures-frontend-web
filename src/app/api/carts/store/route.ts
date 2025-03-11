@@ -43,8 +43,9 @@ export async function POST(req: NextRequest) {
 
     // Path untuk file packages dan cart sesuai dengan user_id
     const packagesFilePath = path.join(process.cwd(), "public/json/__packages.json");
-    const cartDirectoryPath = path.join(process.cwd(), `public/json/carts/${userId}`);
+    const cartDirectoryPath = path.join(`${process.env.JSON_PATH}/carts/${userId}`);
     const cartFilePath = path.join(cartDirectoryPath, "__carts.json");
+  
 
     // Pastikan direktori untuk cart ada
     try {

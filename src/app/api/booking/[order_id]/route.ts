@@ -3,8 +3,8 @@ import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import authOptions from "@/lib/auth";
-
-const filePath = path.join(process.cwd(), "public/json/booking");
+// const filePath = path.join(process.cwd(), "public/json/booking");
+const filePath = path.join(`${process.env.JSON_PATH}/booking`);
 
 export async function GET(_: NextRequest, { params }: { params: { order_id: string } }) {
   try {
