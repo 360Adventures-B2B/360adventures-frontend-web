@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth";
 import authOptions from "@/lib/auth";
 // const filePath = path.join(process.cwd(), "public/json/booking");
 const filePath = path.join(`${process.env.JSON_PATH}/booking`);
-
+export const dynamic = "force-dynamic";
 export async function GET(_: NextRequest, { params }: { params: { order_id: string } }) {
   try {
     const session = await getServerSession(authOptions);

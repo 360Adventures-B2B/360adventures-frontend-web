@@ -25,7 +25,7 @@ const generateBookingCode = () => {
 const calculateTotalPrice = (personTypes: PersonType[]) => {
   return personTypes.reduce((total, person) => total + person.price * person.guest, 0);
 };
-
+export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);

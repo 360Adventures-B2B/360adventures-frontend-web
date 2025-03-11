@@ -28,7 +28,7 @@ interface CartItem extends CartItemInput {
 function formatDate(date: Date): string {
   return date.toISOString().slice(0, 19).replace("T", " ");
 }
-
+export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   try {
     // Ambil data dari request body
