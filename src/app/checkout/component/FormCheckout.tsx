@@ -250,7 +250,10 @@ export default function FormCheckout() {
                       type="checkbox"
                       id="termsCheckbox"
                       className="w-4 h-4 border-gray-300 rounded checked:bg-primary-700 hover:checked:bg-primary-700 focus:checked:bg-primary-700 focus:outline-none focus:ring-0"
-                      {...field}
+                      checked={field.value ?? false}
+                      onChange={(e) => field.onChange(e.target.checked)}
+                      onBlur={field.onBlur}
+                      ref={field.ref}
                     />
                     <label htmlFor="termsCheckbox" className="ml-2">
                       By continuing, you agree to the

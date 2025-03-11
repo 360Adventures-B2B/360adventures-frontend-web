@@ -5,11 +5,11 @@ import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import twFocusClass from "@/utils/twFocusClass";
 
 export interface PaginationProps {
-  totalPages: number;
+  totalPages?: number;
   className?: string;
 }
 
-const Pagination: FC<PaginationProps> = ({ totalPages, className = "" }) => {
+const Pagination: FC<PaginationProps> = ({ totalPages = 0, className = "" }) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -25,7 +25,11 @@ const Pagination: FC<PaginationProps> = ({ totalPages, className = "" }) => {
   const goToPage = (page: number) => {
     if (page < 1 || page > totalPages) return;
 
-    router.push(createPageUrl(page));
+    const params = new URLSearchParams(searchParams);
+    params.set("page", page.toString());
+    // return `${pathname}?${params.toString()}`;
+
+    router.push(`/search?${params.toString()}`);
   };
 
   useEffect(() => {

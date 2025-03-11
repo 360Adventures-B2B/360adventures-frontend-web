@@ -31,10 +31,11 @@ const ProductSection: FC<ProductSectionProps> = ({
 }) => {
   const { data: categories, error: categoryError, isLoading: isCategoryLoading } = useGetCategoriesQuery();
 
-  const tabsCategories = Array.isArray(categories?.data)
-    ? ["Popular", ...categories.data.map((category) => category.name || "").filter((name) => name.trim() !== "")]
-    : ["Popular"];
-
+  const tabsCategories =
+    categories && Array.isArray(categories.data)
+      ? ["Popular", ...categories.data.map((category) => category?.name?.trim() || "").filter((name) => name !== "")]
+      : ["Popular"];
+      
   const [selectedCategory, setSelectedCategory] = useState("Popular");
   const queryParam = selectedCategory === "Popular" ? {} : { categories: [selectedCategory] };
 

@@ -58,7 +58,7 @@ const TabFilters = () => {
     }
 
     closeModalMoreFilter();
-    router.replace(`${pathname}?${params.toString()}`);
+    router.replace(`/search?${params.toString()}`);
 
     // await revalidateFilters(pathname);
   };

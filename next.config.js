@@ -6,6 +6,7 @@ const nextConfig = {
   reactStrictMode: false,
   experimental: {
     typedRoutes: true,
+    missingSuspenseWithCSRBailout: false,
   },
   images: {
     remotePatterns: [

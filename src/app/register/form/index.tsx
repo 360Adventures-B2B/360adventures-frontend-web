@@ -29,7 +29,7 @@ export default function FormRegister() {
     password: yup.string().min(6).max(32).required(),
     passwordConfirmation: yup
       .string()
-      .oneOf([yup.ref("password"), null], "confirmation password doesn't match")
+      .oneOf([yup.ref("password"), undefined], "confirmation password doesn't match")
       .required("password confirmation is a required field"),
   });
 

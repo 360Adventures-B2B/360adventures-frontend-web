@@ -26,12 +26,15 @@ export const authOptions: AuthOptions = {
         },
         action: { type: "hidden" },
       },
-      authorize: async (credentials, req) => {
-        const extendedCredentials = {
-          ...credentials,
-          isVerify: credentials?.action === "login" ? true : false,
+      authorize: async (credentials: Record<"id" | "name" | "email" | "token" | "action", string> | undefined, req) => {
+        if (!credentials) return null;
+        return {
+          id: credentials.id,
+          name: credentials.name,
+          email: credentials.email,
+          token: credentials.token,
+          isVerify: credentials.action === "login",
         };
-        return extendedCredentials || null;
       },
     }),
   ],

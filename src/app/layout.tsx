@@ -1,4 +1,4 @@
-import { Funnel_Display } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import "@/fonts/line-awesome-1.3.0/css/line-awesome.css";
 import "@/styles/index.scss";
@@ -7,7 +7,7 @@ import { Metadata } from "next";
 import LayoutWrapper from "@/components/LayoutWrapper";
 import { Toaster } from "@/components/ui/toaster";
 
-const funnelDisplay = Funnel_Display({
+const funnelDisplay = Poppins({
   subsets: ["latin"],
   display: "swap",
   weight: ["300", "400", "500", "600", "700"],

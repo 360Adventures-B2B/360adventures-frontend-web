@@ -46,7 +46,7 @@ export default function SearchForm({ totalResults }: { totalResults: number }) {
             onInput={(e) => {
               if (!(e.target as HTMLInputElement).value) {
                 setKeyword("");
-                router.replace(pathname);
+                router.replace('/search');
               }
             }}
           />
