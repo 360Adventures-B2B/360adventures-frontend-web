@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@headlessui/react": "^0.0.0-insiders.0a8de01",
+    "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-label": "^2.1.2",

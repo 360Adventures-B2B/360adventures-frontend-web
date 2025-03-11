@@ -18,6 +18,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ message: "success", data: carts });
   } catch (error) {
+    console.log("🚀 ~ GET ~ error:", error);
     return NextResponse.json({ message: "Success", data: [] });
     // return NextResponse.json({ message: "Error reading data" }, { status: 500 });
   }
