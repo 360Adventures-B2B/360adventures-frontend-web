@@ -8,11 +8,12 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { useLoginUserMutation } from "@/lib/services/authService";
 import { handleError } from "@/lib/handleApiError";
+import { Route } from "next";
 
 export default function FormLogin() {
   const phoneRegex = /^[0-9]{10,15}$/;
@@ -40,6 +41,7 @@ export default function FormLogin() {
   const [loginUser, { isLoading }] = useLoginUserMutation();
 
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   async function onSubmit(formData: FormData) {
     try {
@@ -56,22 +58,25 @@ export default function FormLogin() {
           email: user.email,
           name: user.name,
           token: res.data.token,
-          callbackUrl: "/",
+          callbackUrl: searchParams.get("callbackUrl") || "/",
           action: "login",
           redirect: false,
         });
-        if (result) {
-          router.push("/");
-        } else {
-          toast({
-            className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
-            title: "Error",
-            description: "Something Wrong, Try Again!",
-            variant: "destructive",
-            duration: 5000,
-          });
-          router.push("/login");
-        }
+
+        router.push((result?.url as Route) || "/");
+
+        // if (result?.ok) {
+        //   router.push("/");
+        // } else {
+        //   toast({
+        //     className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+        //     title: "Error",
+        //     description: "Something Wrong, Try Again!",
+        //     variant: "destructive",
+        //     duration: 5000,
+        //   });
+        //   router.push("/login");
+        // }
       } else {
         toast({
           className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
