@@ -10,6 +10,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import ReduxProvider from "@/lib/provider/redux";
 import { BookingProvider } from "@/context/BookingContext";
 import { DateProvider } from "@/context/DateContext";
+import TopLoaderProvider from "./TopLoaderProvider";
 
 const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
@@ -18,21 +19,24 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   const hideLayout = hiddenPaths.includes(pathname);
 
   return (
-    <ReduxProvider>
-      <AuthProvider>
-        <BookingProvider>
-          <DateProvider>
-            <div>
-              {!hideLayout && <ClientCommons />}
-              {!hideLayout && <SiteHeader />}
-              {children}
-              {!hideLayout && <FooterNav />}
-              {!hideLayout && <Footer />}
-            </div>
-          </DateProvider>
-        </BookingProvider>
-      </AuthProvider>
-    </ReduxProvider>
+    <>
+      <TopLoaderProvider />
+      <ReduxProvider>
+        <AuthProvider>
+          <BookingProvider>
+            <DateProvider>
+              <div>
+                {!hideLayout && <ClientCommons />}
+                {!hideLayout && <SiteHeader />}
+                {children}
+                {!hideLayout && <FooterNav />}
+                {!hideLayout && <Footer />}
+              </div>
+            </DateProvider>
+          </BookingProvider>
+        </AuthProvider>
+      </ReduxProvider>
+    </>
   );
 };
 

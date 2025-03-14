@@ -10,6 +10,8 @@ import Textarea from "@/shared/Textarea";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import { useGetUserQuery } from "@/lib/services/authService";
 import ErrorText from "@/components/ErrorText";
+import { useUpdateBookingMutation } from "@/lib/services/bookingService";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 export default function FormCheckout() {
   const { data: user, isLoading: isLoadingUser, isError } = useGetUserQuery(undefined);
 
@@ -62,9 +64,29 @@ export default function FormCheckout() {
     }
   }, [userData, form]);
 
+  const router = useRouter();
+  const [updateBooking, { isLoading }] = useUpdateBookingMutation();
+  const searchParams = useSearchParams();
+  const orderId = searchParams.get("order_id");
+
   async function onSubmit(formData: FormData) {
     try {
-      console.log("🚀 ~ onSubmit ~ formData:", formData);
+      const values = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        country: formData.country,
+        city: formData.city,
+        special_requirement: formData.requirement || null,
+      };
+      const res = await updateBooking({
+        orderId,
+        body: values,
+      }).unwrap();
+
+      if (res.code == 200) {
+        router.push(`/pay-done?order_id=${orderId}`);
+      }
     } catch (error: any) {
       handleError(error);
     }
@@ -269,7 +291,7 @@ export default function FormCheckout() {
             />
 
             <div className="pt-8">
-              <ButtonPrimary type="submit" className="w-full">
+              <ButtonPrimary type="submit" className="w-full" loading={isLoading}>
                 Confirm and pay
               </ButtonPrimary>
             </div>

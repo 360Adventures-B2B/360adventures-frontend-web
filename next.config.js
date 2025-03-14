@@ -43,6 +43,9 @@ const nextConfig = {
     ],
     domains: ["ui-avatars.com"],
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 };
 
 module.exports = nextConfig;

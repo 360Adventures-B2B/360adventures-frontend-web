@@ -12,6 +12,13 @@ export const bookingApi = createApi({
     getBooking: builder.query({
       query: (orderId) => `booking/${orderId}`,
     }),
+    updateBooking: builder.mutation({
+      query: ({ orderId, body }) => ({
+        url: `booking/update/${orderId}`,
+        method: "PUT",
+        body,
+      }),
+    }),
   }),
 });
-export const { useGetBookingQuery } = bookingApi;
+export const { useGetBookingQuery, useUpdateBookingMutation } = bookingApi;

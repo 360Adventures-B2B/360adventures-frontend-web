@@ -2,8 +2,9 @@
 import { Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import Input from "@/shared/Input";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import TabFilters from "./TabFilters";
+import { useRouter } from 'nextjs-toploader/app';
 
 export default function SearchForm({ totalResults }: { totalResults: number }) {
   const searchParams = useSearchParams();

@@ -6,6 +6,7 @@ import "rc-slider/assets/index.css";
 import { Metadata } from "next";
 import LayoutWrapper from "@/components/LayoutWrapper";
 import { Toaster } from "@/components/ui/toaster";
+import NextTopLoader from "nextjs-toploader";
 
 const funnelDisplay = Poppins({
   subsets: ["latin"],
@@ -28,6 +29,7 @@ export default function RootLayout({ children, params }: { children: React.React
   return (
     <html lang="en" className={funnelDisplay.className}>
       <body className="bg-white theme-360adventures text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
+     
         <LayoutWrapper>{children}</LayoutWrapper>
         <Toaster />
       </body>
