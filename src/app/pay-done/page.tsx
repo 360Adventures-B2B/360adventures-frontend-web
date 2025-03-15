@@ -24,6 +24,7 @@ const PayPage: FC<PayPageProps> = () => {
   if (!loading && (!bookingData || Object.keys(bookingData).length === 0)) {
     redirect("/");
   }
+  console.log("🚀 ~ bookingData:", bookingData);
 
   const renderMain = () => {
     return (

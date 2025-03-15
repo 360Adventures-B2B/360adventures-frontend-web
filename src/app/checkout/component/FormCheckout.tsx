@@ -85,7 +85,8 @@ export default function FormCheckout() {
       }).unwrap();
 
       if (res.code == 200) {
-        router.push(`/pay-done?order_id=${orderId}`);
+        // router.push(`/pay-done?order_id=${orderId}`);
+        window.location.href = `/pay-done?order_id=${orderId}`;
       }
     } catch (error: any) {
       handleError(error);

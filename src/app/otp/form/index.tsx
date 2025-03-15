@@ -8,7 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { redirect, useRouter } from "next/navigation";
 import { handleError } from "@/lib/handleApiError";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useAuth } from "@/context/AuthContext";
 import { useLazyValidateUserOtpQuery, useResendUserOtpMutation } from "@/lib/services/authService";
@@ -41,18 +41,22 @@ export default function FormOTP() {
 
   const { updateIsVerify } = useAuth();
 
-  const [trigger, { isLoading }] = useLazyValidateUserOtpQuery();
+  const [trigger, { isLoading, isFetching }] = useLazyValidateUserOtpQuery();
 
   const [resendUserOtp, { isLoading: isLoadingResendOTP }] = useResendUserOtpMutation();
 
   const { showLoading, close } = useSweetAlert();
+
+  const [otp, setOtp] = useState(new Array(4).fill(""));
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   async function onSubmit(formData: FormData) {
     try {
       const res = await trigger({ token: session?.user?.token, otpCode: formData.otp }).unwrap();
       if (res.code === 200) {
         await updateIsVerify(true);
-        router.push("/");
+        // router.push("/");
+        window.location.href = '/';
       }
     } catch (error: any) {
       handleError(error);
@@ -97,6 +101,19 @@ export default function FormOTP() {
     return () => clearInterval(timer);
   }, [secondsLeft, isInitialized]);
 
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  useEffect(() => {
+    if (otp.some((val) => val === "")) {
+      setIsSubmitted(false);
+    }
+
+    if (!isSubmitted && otp.every((val) => val !== "") && otp.join("").length === 4) {
+      setIsSubmitted(true); 
+      form.handleSubmit(onSubmit)();
+    }
+  }, [otp, form, onSubmit, isSubmitted]);
+
   const handleResend = async () => {
     try {
       showLoading("please wait..");
@@ -122,6 +139,27 @@ export default function FormOTP() {
     }
   };
 
+  const handleChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (!isNaN(Number(value)) && value.length <= 1) {
+      const newOtp = [...otp];
+      newOtp[index] = value;
+      setOtp(newOtp);
+
+      if (value && index < 3) {
+        inputRefs.current[index + 1]?.focus();
+      }
+
+      form.setValue("otp", newOtp.join(""));
+    }
+  };
+
+  const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+
   if (!isInitialized) {
     return (
       <div className="flex justify-center">
@@ -133,22 +171,35 @@ export default function FormOTP() {
     <>
       <Form {...form}>
         <form className="grid grid-cols-1 gap-6" onSubmit={form.handleSubmit(onSubmit)}>
-          <label className="block">
-            <span className="text-neutral-800 dark:text-neutral-200">OTP Code</span>
-            <FormField
-              control={form.control}
-              name="otp"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input type="text" placeholder="Enter OTP Code" autoComplete="otp" className="mt-1" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </label>
-          <ButtonPrimary loading={isLoading} type="submit" disabled={isResendDisabled}>
+          <div className="flex justify-center">
+            <span className="text-neutral-800 dark:text-neutral-200 text-center">
+              We sent a verification code to your email {session?.user.email}. Kindly check your email and enter it
+              below.
+            </span>
+          </div>
+
+          <div className="flex justify-center gap-2 mb-6">
+            {otp.map((digit, index) => (
+              <input
+                key={index}
+                ref={(el) => (inputRefs.current[index] = el)}
+                type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                maxLength={1}
+                value={digit}
+                onChange={(e) => handleChange(index, e)}
+                onKeyDown={(e) => handleKeyDown(index, e)}
+                className="w-12 h-12 border border-primary-6000 rounded-lg text-center text-xl focus:outline-none focus:border-transparent focus:ring-2 focus:ring-primary-500"
+              />
+            ))}
+          </div>
+
+          <ButtonPrimary
+            loading={isLoading || isFetching}
+            type="submit"
+            disabled={isLoading || !otp.every((val) => val) || isResendDisabled}
+          >
             Validate
           </ButtonPrimary>
         </form>
