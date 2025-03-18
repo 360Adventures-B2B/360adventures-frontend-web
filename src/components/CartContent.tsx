@@ -166,7 +166,7 @@ const CartContent: React.FC<CartContentProps> = ({ onClickClose }) => {
           </div>
 
           {/* Footer Sticky */}
-          <div className="cart-footer sticky bottom-0 bg-white dark:bg-neutral-900 z-10 p-4 border-t border-[#e9e9e9]">
+          <div className="cart-footer fixed bottom-0 left-0 w-full bg-white dark:bg-neutral-900 z-50 p-4 border-t border-[#e9e9e9]">
             <div className="cart-summary mb-2 flex justify-between">
               <table className="table cart-table w-full">
                 <tbody>
