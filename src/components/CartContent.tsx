@@ -166,32 +166,32 @@ const CartContent: React.FC<CartContentProps> = ({ onClickClose }) => {
           </div>
 
           {/* Footer Sticky */}
-          <div className="cart-footer fixed bottom-0 left-0 w-full mb-5 bg-white dark:bg-neutral-900 z-50 p-4 border-t border-[#e9e9e9] pb-[env(safe-area-inset-bottom,16px)]">
-            <div className="cart-summary mb-2 flex justify-between">
-              <table className="table cart-table w-full">
-                <tbody>
-                  <tr>
-                    <td className="text-left text-lg text-black">Total :</td>
-                    <td className="text-right text-lg text-black font-bold">{formatNumber(total)}</td>
-                  </tr>
-                </tbody>
-              </table>
+          <div className="cart-footer sticky bottom-10 sm:bottom-0 bg-white dark:bg-neutral-900 z-10 p-4 border-t border-[#e9e9e9]">
+              <div className="cart-summary mb-2 flex justify-between">
+                <table className="table cart-table w-full">
+                  <tbody>
+                    <tr>
+                      <td className="text-left text-lg text-black">Total :</td>
+                      <td className="text-right text-lg text-black font-bold">{formatNumber(total)}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="cart-buttons flex justify-between">
+                <ButtonPrimary
+                  disabled={selectedItems.length === 0}
+                  onClick={handleCheckout}
+                  loading={isLoadingCheckoutCart}
+                  className={`w-full checkout-btn h-[40px] font-bold transition-all duration-[0.3s] ease-in-out py-[8px] px-[22px] text-[14px] capitalize leading-[1.2] border rounded-md flex items-center justify-center ${
+                    selectedItems.length > 0
+                      ? "bg-primary-6000 hover:bg-primary-700 text-white"
+                      : "bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed"
+                  }`}
+                >
+                  Checkout
+                </ButtonPrimary>
+              </div>
             </div>
-            <div className="cart-buttons flex justify-between">
-              <ButtonPrimary
-                disabled={selectedItems.length === 0}
-                onClick={handleCheckout}
-                loading={isLoadingCheckoutCart}
-                className={`w-full checkout-btn h-[40px] font-bold transition-all duration-[0.3s] ease-in-out py-[8px] px-[22px] text-[14px] capitalize leading-[1.2] border rounded-md flex items-center justify-center ${
-                  selectedItems.length > 0
-                    ? "bg-primary-6000 hover:bg-primary-700 text-white"
-                    : "bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed"
-                }`}
-              >
-                Checkout
-              </ButtonPrimary>
-            </div>
-          </div>
         </>
       ) : (
         <EmptyCart />

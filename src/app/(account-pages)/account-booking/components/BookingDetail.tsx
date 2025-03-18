@@ -31,33 +31,45 @@ const BookingDetail = () => {
           {activeTab === "booking" && (
             <div className="mt-6">
               <ul className="space-y-4">
-                <li className="flex justify-between">
-                  <span className="font-medium">Booking Status:</span>
-                  <span>Processing</span>
+                <li className="flex flex-col sm:flex-row sm:justify-between">
+                  <span className="font-medium whitespace-nowrap">Booking Status:</span>
+                  <span className="break-words sm:text-right">Processing</span>
                 </li>
-                <li className="flex justify-between">
-                  <span className="font-medium">Booking Date:</span>
-                  <span>02/22/2025</span>
+                <li className="flex flex-col sm:flex-row sm:justify-between">
+                  <span className="font-medium whitespace-nowrap">Booking Date:</span>
+                  <span className="break-words sm:text-right">02/22/2025</span>
                 </li>
-                <li className="flex justify-between">
-                  <span className="font-medium">Payment Method:</span>
-                  <span>Offline Payment</span>
+                <li className="flex flex-col sm:flex-row sm:justify-between">
+                  <span className="font-medium whitespace-nowrap">Payment Method:</span>
+                  <span className="break-words sm:text-right">Offline Payment</span>
                 </li>
-                <li className="flex justify-between">
-                  <span className="font-medium">Start Date:</span>
-                  <span>02/28/2025</span>
+                <li className="flex flex-col sm:flex-row sm:justify-between">
+                  <span className="font-medium whitespace-nowrap">Start Date:</span>
+                  <span className="break-words sm:text-right">02/28/2025</span>
                 </li>
-                <li className="flex justify-between">
-                  <span className="font-medium">Duration:</span>
-                  <span>6 hours</span>
+                <li className="flex flex-col sm:flex-row sm:justify-between">
+                  <span className="font-medium whitespace-nowrap">Timeslot:</span>
+                  <span className="break-words sm:text-right">10:00 AM</span>
                 </li>
-                <li className="flex justify-between">
-                  <span className="font-medium">Quad Bike 250 cc: 1 * 400 USD</span>
-                  <span>400 USD</span>
+                <li className="flex flex-col sm:flex-row sm:justify-between">
+                  <span className="font-medium whitespace-nowrap">Duration:</span>
+                  <span className="break-words sm:text-right">6 hours</span>
                 </li>
-                <li className="flex justify-between">
-                  <span className="font-medium">Total Price:</span>
-                  <span>400 USD</span>
+                <li className="flex flex-col sm:flex-row sm:justify-between">
+                  <span className="font-medium whitespace-nowrap">Quad Bike 250 cc: 1 * 400 USD</span>
+                  <span className="break-words sm:text-right">400 USD</span>
+                </li>
+                <li className="flex flex-col sm:flex-row sm:justify-between">
+                  <span className="font-medium whitespace-nowrap">Quad Bike 250 cc: 1 * 400 USD</span>
+                  <span className="break-words sm:text-right">400 USD</span>
+                </li>
+                <li className="flex flex-col sm:flex-row sm:justify-between">
+                  <span className="font-medium whitespace-nowrap">Quad Bike 250 cc: 1 * 400 USD</span>
+                  <span className="break-words sm:text-right">400 USD</span>
+                </li>
+                <li className="flex flex-col sm:flex-row sm:justify-between">
+                  <span className="font-medium whitespace-nowrap">Total Price:</span>
+                  <span className="break-words sm:text-right">400 USD</span>
                 </li>
               </ul>
             </div>
@@ -66,41 +78,41 @@ const BookingDetail = () => {
           {activeTab === "customer" && (
             <div className="mt-6">
               <ul className="space-y-4">
-                <li className="flex justify-between">
-                  <span className="font-medium">First Name:</span>
-                  <span>Sasuke</span>
+                <li className="flex flex-col sm:flex-row sm:justify-between">
+                  <span className="font-medium whitespace-nowrap">First Name:</span>
+                  <span className="break-words sm:text-right">Sasuke</span>
                 </li>
-                <li className="flex justify-between">
-                  <span className="font-medium">Last Name:</span>
-                  <span>sasuke</span>
+                <li className="flex flex-col sm:flex-row sm:justify-between">
+                  <span className="font-medium whitespace-nowrap">Last Name:</span>
+                  <span className="break-words sm:text-right">Sasuke</span>
                 </li>
-                <li className="flex justify-between">
-                  <span className="font-medium">Email:</span>
-                  <span>sasuke@gmail.com</span>
+                <li className="flex flex-col sm:flex-row sm:justify-between">
+                  <span className="font-medium whitespace-nowrap">Email:</span>
+                  <span className="break-words sm:text-right">sasuke@gmail.com</span>
                 </li>
-                <li className="flex justify-between">
-                  <span className="font-medium">Phone:</span>
-                  <span>087328472884</span>
+                <li className="flex flex-col sm:flex-row sm:justify-between">
+                  <span className="font-medium whitespace-nowrap">Phone:</span>
+                  <span className="break-words sm:text-right">087328472884</span>
                 </li>
-                <li className="flex justify-between">
-                  <span className="font-medium">Address Line 1:</span>
-                  <span>Jl. Kesehatan Bo100</span>
+                <li className="flex flex-col sm:flex-row sm:justify-between">
+                  <span className="font-medium whitespace-nowrap">Address Line 1:</span>
+                  <span className="break-words sm:text-right">Jl. Kesehatan Bo100</span>
                 </li>
-                <li className="flex justify-between">
-                  <span className="font-medium">City:</span>
-                  <span>Jakarta</span>
+                <li className="flex flex-col sm:flex-row sm:justify-between">
+                  <span className="font-medium whitespace-nowrap">City:</span>
+                  <span className="break-words sm:text-right">Jakarta</span>
                 </li>
-                <li className="flex justify-between">
-                  <span className="font-medium">State:</span>
-                  <span>dwad</span>
+                <li className="flex flex-col sm:flex-row sm:justify-between">
+                  <span className="font-medium whitespace-nowrap">State:</span>
+                  <span className="break-words sm:text-right">dwad</span>
                 </li>
-                <li className="flex justify-between">
-                  <span className="font-medium">ZIP Code:</span>
-                  <span>1231321</span>
+                <li className="flex flex-col sm:flex-row sm:justify-between">
+                  <span className="font-medium whitespace-nowrap">ZIP Code:</span>
+                  <span className="break-words sm:text-right">1231321</span>
                 </li>
-                <li className="flex justify-between">
-                  <span className="font-medium">Country:</span>
-                  <span>Indonesia</span>
+                <li className="flex flex-col sm:flex-row sm:justify-between">
+                  <span className="font-medium whitespace-nowrap">Country:</span>
+                  <span className="break-words sm:text-right">Indonesia</span>
                 </li>
               </ul>
             </div>

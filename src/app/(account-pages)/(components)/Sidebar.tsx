@@ -7,9 +7,9 @@ import React from "react";
 export const Sidebar = () => {
   const router = useRouter();
   const pathname = usePathname();
-
   const menuItems = [
     { href: "/account-booking", icon: "la-calendar-check", label: "Booking" },
+    { href: "/account-topup", icon: "la-wallet", label: "Topup" },
     { href: "/account-savelists", icon: "la-heart", label: "Wishlists" },
     { href: "/account", icon: "la-user", label: "Profile" },
     { href: "/account-password", icon: "la-key", label: "Change Password" },

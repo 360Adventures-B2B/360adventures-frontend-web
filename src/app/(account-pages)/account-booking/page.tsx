@@ -1,12 +1,26 @@
 "use client";
 
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import { Tab } from "@headlessui/react";
 import BookingCard from "./components/BookingCard";
+import Pagination from "@/shared/Pagination";
 
 const AccountBooking = () => {
   let [options] = useState(["All", "Upcoming", "Completed", "Cancelled"]);
+
+  const [maxVisible, setMaxVisible] = useState(3);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setMaxVisible(window.innerWidth <= 768 ? 2 : 5);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <div className="space-y-6 sm:space-y-8">
@@ -41,6 +55,11 @@ const AccountBooking = () => {
               <BookingCard />
               <BookingCard />
               <BookingCard />
+              <BookingCard />
+
+              <div className="text-center pt-5">
+                <Pagination totalPages={20} maxVisiblePaging={maxVisible} />
+              </div>
             </Tab.Panel>
           ))}
         </Tab.Panels>

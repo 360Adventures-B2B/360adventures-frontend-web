@@ -7,9 +7,10 @@ import twFocusClass from "@/utils/twFocusClass";
 export interface PaginationProps {
   totalPages?: number;
   className?: string;
+  maxVisiblePaging?: number;
 }
 
-const Pagination: FC<PaginationProps> = ({ totalPages = 0, className = "" }) => {
+const Pagination: FC<PaginationProps> = ({ totalPages = 0, className = "", maxVisiblePaging = 5 }) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -28,7 +29,7 @@ const Pagination: FC<PaginationProps> = ({ totalPages = 0, className = "" }) => 
     const params = new URLSearchParams(searchParams);
     params.set("page", page.toString());
     // return `${pathname}?${params.toString()}`;
-
+    
     router.push(`/search?${params.toString()}`);
   };
 
@@ -38,7 +39,7 @@ const Pagination: FC<PaginationProps> = ({ totalPages = 0, className = "" }) => 
 
   const renderPageNumbers = () => {
     const pages = [];
-    const maxVisible = 5;
+    const maxVisible = maxVisiblePaging;
     let startPage = Math.max(1, currentPage - 2);
     let endPage = Math.min(totalPages, startPage + maxVisible - 1);
 
