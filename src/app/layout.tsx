@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   title: "360Adventures - B2B Platform",
   description: "360Adventures B2B Platform",
   // themeColor: [{ media: "(prefers-color-scheme: dark)", color: "#fff" }],
-  viewport: "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover",
+  // viewport: "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover",
   icons: [
     { rel: "apple-touch-icon", url: "icons/360adventures-favicon.png" },
     { rel: "icon", url: "icons/360adventures-favicon.png" },

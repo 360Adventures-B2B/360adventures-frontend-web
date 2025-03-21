@@ -3,6 +3,7 @@
 import React, { FC, useEffect } from "react";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import twFocusClass from "@/utils/twFocusClass";
+import { Route } from "next";
 
 export interface PaginationProps {
   totalPages?: number;
@@ -13,6 +14,7 @@ export interface PaginationProps {
 const Pagination: FC<PaginationProps> = ({ totalPages = 0, className = "", maxVisiblePaging = 5 }) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  console.log("🚀 ~ pathname:", pathname);
   const router = useRouter();
 
   const currentPage = Number(searchParams.get("page")) || 1;
@@ -26,11 +28,13 @@ const Pagination: FC<PaginationProps> = ({ totalPages = 0, className = "", maxVi
   const goToPage = (page: number) => {
     if (page < 1 || page > totalPages) return;
 
-    const params = new URLSearchParams(searchParams);
-    params.set("page", page.toString());
+    const url = createPageUrl(page);
+
+    router.push(url as Route);
+
+    // const params = new URLSearchParams(searchParams);
+    // params.set("page", page.toString());
     // return `${pathname}?${params.toString()}`;
-    
-    router.push(`/search?${params.toString()}`);
   };
 
   useEffect(() => {
