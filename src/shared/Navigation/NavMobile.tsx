@@ -27,8 +27,9 @@ const NavMobile: React.FC<NavMobileProps> = ({ onClickClose }) => {
     },
     {
       id: ncNanoId(),
-      href: "#",
+      href: "/",
       name: `Hi, ${user?.name || ""}`,
+      type: "dropdown",
       children: [
         {
           id: ncNanoId(),
@@ -53,6 +54,7 @@ const NavMobile: React.FC<NavMobileProps> = ({ onClickClose }) => {
           onClick: () => handleLogout(),
         },
       ],
+      isNew: true,
     },
   ];
   const _renderMenuChild = (item: NavItemType) => {
@@ -84,23 +86,24 @@ const NavMobile: React.FC<NavMobileProps> = ({ onClickClose }) => {
   };
 
   const _renderItem = (item: NavItemType, index: number) => {
+    const Wrapper = item.type === "dropdown" ? "div" : Link;
+
     return (
       <Disclosure key={item.id} as="li" className="text-neutral-900 dark:text-white">
-        <Link
+        <Wrapper
           className="flex w-full px-4 font-medium uppercase tracking-wide text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg"
-          href={{
-            pathname: item.href || undefined,
-          }}
+          {...(item.type !== "dropdown" && { href: item.href || undefined })}
         >
           <span className={`py-2.5 pr-3 ${!item.children ? "block w-full" : ""}`}>{item.name}</span>
+
           {item.children && (
             <span className="flex-1 flex" onClick={(e) => e.preventDefault()}>
-              <Disclosure.Button as="span" className="py-2.5 flex items-center justify-end flex-1 ">
+              <Disclosure.Button as="span" className="py-2.5 flex items-center justify-end flex-1">
                 <ChevronDownIcon className="ml-2 h-4 w-4 text-neutral-500" aria-hidden="true" />
               </Disclosure.Button>
             </span>
           )}
-        </Link>
+        </Wrapper>
         {item.children && <Disclosure.Panel>{_renderMenuChild(item)}</Disclosure.Panel>}
       </Disclosure>
     );
@@ -136,7 +139,9 @@ const NavMobile: React.FC<NavMobileProps> = ({ onClickClose }) => {
               <span className="font-medium text-sm">Balance:</span>
               <span className="font-semibold text-base text-primary-6000">1.000</span>
             </div>
-            <ButtonPrimary className="text-white text-xs py-1.5 px-4 rounded-lg">Top Up</ButtonPrimary>
+            <Link href={"/account-topup"}>
+              <ButtonPrimary className="text-white text-xs py-1.5 px-4 rounded-lg">Top Up</ButtonPrimary>
+            </Link>
           </Link>
         </Disclosure>
       </ul>
