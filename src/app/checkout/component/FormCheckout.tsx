@@ -12,6 +12,8 @@ import { useGetUserQuery } from "@/lib/services/authService";
 import ErrorText from "@/components/ErrorText";
 import { useUpdateBookingMutation } from "@/lib/services/bookingService";
 import { redirect, useRouter, useSearchParams } from "next/navigation";
+import PhoneInput from "@/shared/PhoneInput";
+import CustomPhoneInput from "@/shared/PhoneInput";
 export default function FormCheckout() {
   const { data: user, isLoading: isLoadingUser, isError } = useGetUserQuery(undefined);
 
@@ -153,7 +155,7 @@ export default function FormCheckout() {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input
+                      <CustomPhoneInput
                         type="text"
                         placeholder="Enter your phone number"
                         autoComplete="tel"

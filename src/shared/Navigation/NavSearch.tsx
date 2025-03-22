@@ -3,6 +3,7 @@ import { Search } from "lucide-react";
 import Input from "../Input";
 import Link from "next/link";
 import { useGetProductQuery } from "@/lib/services/productService";
+import { Route } from "next";
 
 export default function NavSearch() {
   const [query, setQuery] = useState<string>("");
@@ -20,6 +21,7 @@ export default function NavSearch() {
     refetchOnMountOrArgChange: true,
   });
 
+  const handleCloseDropdown = () => setQuery("");
   return (
     <div className="relative flex items-center w-full max-w-md">
       <form className="flex items-center w-full rounded-full px-4 py-2">
@@ -40,20 +42,22 @@ export default function NavSearch() {
                 <div className="grid grid-cols-1 gap-2 max-h-[300px] overflow-y-auto">
                   <div className="space-y-2">
                     {products?.data?.map((result) => (
-                      <div
-                        key={result.id}
-                        className="flex items-center p-3 border rounded-lg hover:bg-gray-100 transition"
-                      >
-                        <img
-                          src={(result?.product_galleries?.[0] as string) || ""}
-                          alt={result?.name}
-                          className="w-12 h-12 rounded-md object-cover"
-                        />
-                        <div className="ml-3">
-                          <h4 className="text-sm font-semibold">{result?.name}</h4>
-                          <p className="text-xs text-gray-500">{result?.location?.name}</p>
+                      <Link href={`/product/${result.slug}` as Route} onClick={handleCloseDropdown}>
+                        <div
+                          key={result.id}
+                          className="flex items-center p-3 border rounded-lg hover:bg-gray-100 transition"
+                        >
+                          <img
+                            src={(result?.product_galleries?.[0] as string) || ""}
+                            alt={result?.name}
+                            className="w-12 h-12 rounded-md object-cover"
+                          />
+                          <div className="ml-3">
+                            <h4 className="text-sm font-semibold">{result?.name}</h4>
+                            <p className="text-xs text-gray-500">{result?.location?.name}</p>
+                          </div>
                         </div>
-                      </div>
+                      </Link>
                     ))}
                   </div>
                   {/* Sticky button */}
