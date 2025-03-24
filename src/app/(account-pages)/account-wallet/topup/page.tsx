@@ -49,7 +49,7 @@ const AccountTopup = () => {
         </div>
       </div>
 
-      <h2 className="text-3xl font-semibold">Credit Histories</h2>
+      <h2 className="text-3xl font-semibold">Topup Request</h2>
       <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
       <CreditHistory />
     </div>

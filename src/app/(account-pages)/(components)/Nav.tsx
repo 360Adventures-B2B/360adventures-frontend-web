@@ -10,7 +10,8 @@ export const Nav = () => {
 
   const listNav = [
     { href: "/account-booking", label: "Booking" },
-    { href: "/account-topup", label: "Topup" },
+    { href: "/account-wallet/wallet", label: "Topup" },
+    { href: "/account-wallet/history", label: "Credit History" },
     { href: "/account-savelists", label: "Wishlists" },
     { href: "/account", label: "Profile" },
     { href: "/account-password", label: "Change Password" },

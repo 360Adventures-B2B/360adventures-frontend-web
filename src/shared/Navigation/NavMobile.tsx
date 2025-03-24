@@ -139,7 +139,7 @@ const NavMobile: React.FC<NavMobileProps> = ({ onClickClose }) => {
               <span className="font-medium text-sm">Balance:</span>
               <span className="font-semibold text-base text-primary-6000">1.000</span>
             </div>
-            <Link href={"/account-topup"}>
+            <Link href={"/account-wallet/topup"}>
               <ButtonPrimary className="text-white text-xs py-1.5 px-4 rounded-lg">Top Up</ButtonPrimary>
             </Link>
           </Link>
