@@ -3,43 +3,60 @@ import { formatNumber } from "@/utils/currencyConverter";
 import { formatDate, formatDateTime } from "@/utils/dateHelper";
 import { Tab } from "@headlessui/react";
 import React, { Fragment, useEffect, useState } from "react";
-import CreditHistoryTable from "./CreditHistoryTable";
 import Pagination from "@/shared/Pagination";
+import TopupRequestTable from "./TopupRequestTable";
+import { ITopupRequest } from "@/interfaces/TopupRequest";
 
-const dummyData: CreditHistoryItem[] = [
+const dummyData: ITopupRequest[] = [
   {
-    date: "2025-03-20 10:00:00",
-    information: "Checkout",
-    productName: "Product A",
-    type: "Payment",
-    amount: -50.0,
+    agent_id: 101,
+    bank_id: 5,
+    reference_id: "REF123456",
+    amount: 500000,
+    fee_credit_card: 15000,
+    point_earned: 50,
+    last_amount: 500000,
+    after_amount: 485000,
+    status: "success",
+    payment_method: "payment_gateway",
+    transfer_slip: "https://example.com/slip1.jpg",
+    created_at: "2023-09-19 12:00:00",
+    updated_at: "2023-09-19 12:30:00",
   },
   {
-    date: "2025-03-19 09:15:00",
-    information: "Topup",
-    productName: "",
-    type: "Topup",
-    amount: 100.0,
+    agent_id: 102,
+    bank_id: 3,
+    reference_id: "REF789012",
+    amount: 300000,
+    fee_credit_card: 10000,
+    point_earned: 30,
+    last_amount: 300000,
+    after_amount: 290000,
+    status: "pending",
+    payment_method: "bank_transfer",
+    transfer_slip: null,
+    created_at: "2023-09-19 13:00:00",
+    updated_at: "2023-09-19 13:15:00",
   },
   {
-    date: "2025-03-18 17:45:00",
-    information: "Refund",
-    productName: "Product B",
-    type: "Payment",
-    amount: -20.0,
+    agent_id: 103,
+    bank_id: 7,
+    reference_id: "REF345678",
+    amount: 750000,
+    fee_credit_card: 20000,
+    point_earned: 75,
+    last_amount: 750000,
+    after_amount: 730000,
+    status: "reject",
+    payment_method: "qr_code",
+    transfer_slip: "https://example.com/slip2.jpg",
+    created_at: "2023-09-19 14:00:00",
+    updated_at: "2023-09-19 14:45:00",
   },
 ];
 
-type CreditHistoryItem = {
-  date: string;
-  information: string;
-  productName?: string;
-  type: "Payment" | "Topup";
-  amount: number;
-};
-
-const CreditHistory: React.FC<{}> = () => {
-  let [options] = useState(["All", "Topup", "Payment", "Refund"]);
+const TopupRequest: React.FC<{}> = () => {
+  let [options] = useState(["All", "Pending", "Success", "Reject"]);
 
   const [maxVisible, setMaxVisible] = useState(3);
 
@@ -78,7 +95,7 @@ const CreditHistory: React.FC<{}> = () => {
         <Tab.Panels>
           {options.map((item, index) => (
             <Tab.Panel key={index} className="mt-8">
-              <CreditHistoryTable data={dummyData} />
+              <TopupRequestTable data={dummyData} />
 
               <div className="text-center pt-10">
                 <Pagination totalPages={20} maxVisiblePaging={maxVisible} />
@@ -91,4 +108,4 @@ const CreditHistory: React.FC<{}> = () => {
   );
 };
 
-export default CreditHistory;
+export default TopupRequest;
