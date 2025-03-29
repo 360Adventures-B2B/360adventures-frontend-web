@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
 import { createBaseQuery } from "./baseQuery";
+import { createFormData } from "@/utils/formData";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -19,7 +20,7 @@ export const authApi = createApi({
       query: (credentials) => ({
         url: "api/auth/register",
         method: "POST",
-        body: credentials,
+        body: createFormData(credentials),
       }),
     }),
     validateUserOtp: builder.query({
