@@ -4,21 +4,21 @@ interface FiltersState {
   location: string[];
   booking_option: string[];
   category: string[];
-  priceRange: [number, number];
+  price_range: [number, number];
 }
 
 const initialState: FiltersState = {
   location: [],
   booking_option: [],
   category: [],
-  priceRange: [100, 2000],
+  price_range: [100, 2000],
 };
 
 const filtersSlice = createSlice({
   name: "filters",
   initialState,
   reducers: {
-    toggleFilter: (state, action: PayloadAction<{ key: Exclude<keyof FiltersState, "priceRange">; value: string }>) => {
+    toggleFilter: (state, action: PayloadAction<{ key: Exclude<keyof FiltersState, "price_range">; value: string }>) => {
       const { key, value } = action.payload;
       const currentFilter = state[key] as string[];
 
@@ -30,14 +30,14 @@ const filtersSlice = createSlice({
     },
 
     setPriceRange: (state, action: PayloadAction<[number, number]>) => {
-      state.priceRange = action.payload;
+      state.price_range = action.payload;
     },
     setFiltersFromQuery: (state, action) => {
       const { location, bookingOptions, category, priceRange } = action.payload;
       state.location = location || [];
-      state.bookingOptions = bookingOptions || [];
+      state.booking_option = bookingOptions || [];
       state.category = category || [];
-      state.priceRange = priceRange || [100, 2000];
+      state.price_range = priceRange || [100, 2000];
     },
     resetFilters: () => initialState,
   },

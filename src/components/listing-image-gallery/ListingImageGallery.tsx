@@ -3,7 +3,7 @@
 import "./styles/index.css";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { FC, Fragment, useEffect, useRef } from "react";
+import { FC, Fragment, useEffect, useRef, useState } from "react";
 import Modal from "./components/Modal";
 import type { ListingGalleryImage } from "./utils/types";
 import { useLastViewedPhoto } from "./utils/useLastViewedPhoto";
@@ -23,22 +23,14 @@ const PHOTOS: string[] = [
   "https://images.pexels.com/photos/2861361/pexels-photo-2861361.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
 ];
 
-export const DEMO_IMAGE: ListingGalleryImage[] = [...PHOTOS].map(
-  (item, index): ListingGalleryImage => {
-    return {
-      id: index,
-      url: item,
-    };
-  }
-);
+export const DEMO_IMAGE: ListingGalleryImage[] = [...PHOTOS].map((item, index): ListingGalleryImage => {
+  return {
+    id: index,
+    url: item,
+  };
+});
 
-export const getNewParam = ({
-  paramName = "photoId",
-  value,
-}: {
-  paramName?: string;
-  value: string | number;
-}) => {
+export const getNewParam = ({ paramName = "photoId", value }: { paramName?: string; value: string | number }) => {
   let params = new URLSearchParams(document.location.search);
   params.set(paramName, String(value));
   return params.toString();
@@ -50,11 +42,30 @@ interface Props {
   isShowModal: boolean;
 }
 
-const ListingImageGallery: FC<Props> = ({
-  images = DEMO_IMAGE,
-  onClose,
-  isShowModal,
-}) => {
+const ListingImageGallery: FC<Props> = ({ images = DEMO_IMAGE, onClose, isShowModal }) => {
+  const fallbackUrl = "https://dummyimage.com/1000x1000/000/fff";
+
+  const [imageSrcs, setImageSrcs] = useState<ListingGalleryImage[]>([]);
+
+  const handleImageError = (index: number) => {
+    setImageSrcs((prev) => {
+      const newImages = [...prev];
+      newImages[index].url = fallbackUrl;
+      return newImages;
+    });
+  };
+
+  useEffect(() => {
+    if (images && images.length > 0) {
+      // Ubah data gambar menjadi array objek dengan id dan url
+      const slicedImages = images.map((g) => ({
+        id: g.id,
+        url: g.url,
+      }));
+      setImageSrcs(slicedImages);
+    }
+  }, [images]);
+
   const searchParams = useSearchParams();
   const photoId = searchParams?.get("photoId");
   const router = useRouter();
@@ -79,7 +90,7 @@ const ListingImageGallery: FC<Props> = ({
       <div className=" ">
         {photoId && (
           <Modal
-            images={images}
+            images={imageSrcs}
             onClose={() => {
               // @ts-ignore
               setLastViewedPhoto(photoId);
@@ -91,7 +102,7 @@ const ListingImageGallery: FC<Props> = ({
         )}
 
         <div className="columns-1 gap-4 sm:columns-2 xl:columns-3">
-          {images.map(({ id, url }) => (
+          {imageSrcs.map(({ id, url }, index) => (
             <div
               key={id}
               onClick={() => {
@@ -102,7 +113,7 @@ const ListingImageGallery: FC<Props> = ({
               className="after:content group relative mb-5 block w-full cursor-zoom-in after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight focus:outline-none"
             >
               <Image
-                alt="chisfis listing gallery "
+                alt={`Gallery ${index}`}
                 className="transform rounded-lg brightness-90 transition will-change-auto group-hover:brightness-110 focus:outline-none"
                 style={{
                   transform: "translate3d(0, 0, 0)",
@@ -111,6 +122,7 @@ const ListingImageGallery: FC<Props> = ({
                 width={720}
                 height={480}
                 sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 350px"
+                onError={() => handleImageError(index)}
               />
             </div>
           ))}

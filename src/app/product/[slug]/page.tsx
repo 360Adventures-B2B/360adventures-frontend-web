@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, Fragment, useRef, useState } from "react";
+import React, { FC, Fragment, useEffect, useRef, useState } from "react";
 import { ArrowRightIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useParams, usePathname, useRouter } from "next/navigation";
@@ -14,6 +14,11 @@ import SkeletonHeader from "../skeleton/SkeletonHeader";
 import SkeletonTitle from "../skeleton/SkeletonTitle";
 import SkeletonSidebar from "../skeleton/SkeletonSidebar";
 import SKeletonDatePicker from "../skeleton/SkeletonDatePicker";
+import { Product } from "@/interfaces/Product";
+import SectionContent from "../(components)/SectionContent";
+import Itinerary from "../(components)/Itinerary";
+import IncludeExclude from "../(components)/IncludeExclude";
+import DetailGallery from "./components/DetailGallery";
 
 export interface ProductDetailPageProps {}
 
@@ -24,7 +29,7 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
   const router = useRouter();
 
   const handleOpenModalImageGallery = () => {
-    router.push(`${thisPathname}/?modal=PHOTO_TOUR_SCROLLABLE` as Route);
+    router.push(`${thisPathname}/?modal=GALLERIES` as Route);
   };
 
   const packageSectionRef = useRef<HTMLDivElement | null>(null);
@@ -46,6 +51,26 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
   const { data, error, isLoading } = useGetDetailProductQuery(slug as string);
   const product = data?.data;
 
+  const fallbackUrl = "https://dummyimage.com/1000x1000/000/fff";
+
+  const [firstImgSrc, setFirstImgSrc] = useState(product?.product_galleries[0]?.image || fallbackUrl);
+
+  const [imageSrcs, setImageSrcs] = useState<string[]>([]);
+
+  const handleImageError = (index: number) => {
+    setImageSrcs((prev) => {
+      const newImages = [...prev];
+      newImages[index] = fallbackUrl;
+      return newImages;
+    });
+  };
+
+  useEffect(() => {
+    if (product?.product_galleries) {
+      const slicedImages = product.product_galleries.slice(1, 5).map((g) => g.image);
+      setImageSrcs(slicedImages);
+    }
+  }, [product]);
   const mainContent = () => {
     return (
       <div className="listingSection__wrap !space-y-6">
@@ -81,199 +106,46 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
 
         {/* 6 */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-neutral-700 dark:text-neutral-300">
-          <div className="flex items-center space-x-3">
-            <i className="las la-check-circle text-2xl"></i>
-            <span>Instant Confirmation</span>
-          </div>
-          <div className="flex items-center space-x-3">
-            <i className="las la-ban text-2xl"></i>
-            <span>Free Cancellation</span>
-          </div>
-          <div className="flex items-center space-x-3">
-            <i className="las la-clock text-2xl"></i>
-            <span>Duration</span>
-          </div>
-          <div className="flex items-center space-x-3">
-            <i className="las la-shuttle-van text-2xl"></i>
-            <span>Pickup Included</span>
-          </div>
-          <div className="flex items-center space-x-3">
-            <i className="las la-users text-2xl"></i>
-            <span>Max People</span>
-          </div>
-          <div className="flex items-center space-x-3">
+          {product?.instant_confirmation && (
+            <div className="flex items-center space-x-3">
+              <i className="las la-check-circle text-2xl"></i>
+              <span>Instant Confirmation</span>
+            </div>
+          )}
+
+          {product?.free_cancellation && (
+            <div className="flex items-center space-x-3">
+              <i className="las la-ban text-2xl"></i>
+              <span>Free Cancellation</span>
+            </div>
+          )}
+
+          {product?.duration && (
+            <div className="flex items-center space-x-3">
+              <i className="las la-clock text-2xl"></i>
+              <span>{product.duration} Hours</span>
+            </div>
+          )}
+
+          {product?.pickup_included && (
+            <div className="flex items-center space-x-3">
+              <i className="las la-shuttle-van text-2xl"></i>
+              <span>Pickup Included</span>
+            </div>
+          )}
+
+          {product?.packages[0]?.quota && (
+            <div className="flex items-center space-x-3">
+              <i className="las la-users text-2xl"></i>
+              <span>Max People {product?.packages[0]?.quota}</span>
+            </div>
+          )}
+
+          {/* <div className="flex items-center space-x-3">
             <i className="las la-child text-2xl"></i>
             <span>Min Age</span>
-          </div>
+          </div> */}
         </div>
-      </div>
-    );
-  };
-
-  const hightlight = () => {
-    return (
-      <div className="listingSection__wrap">
-        <h2 className="text-2xl font-semibold">Hightlight</h2>
-        <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-        <div className="text-neutral-6000 dark:text-neutral-300">
-          <span>
-            Providing lake views, The Symphony 9 Tam Coc in Ninh Binh provides accommodation, an outdoor swimming pool,
-            a bar, a shared lounge, a garden and barbecue facilities. Complimentary WiFi is provided.
-          </span>
-          <br />
-          <br />
-          <span>There is a private bathroom with bidet in all units, along with a hairdryer and free toiletries.</span>
-          <br /> <br />
-          <span>
-            The Symphony 9 Tam Coc offers a terrace. Both a bicycle rental service and a car rental service are
-            available at the accommodation, while cycling can be enjoyed nearby.
-          </span>
-        </div>
-      </div>
-    );
-  };
-
-  const includeExlcude = () => {
-    return (
-      <div className="listingSection__wrap">
-        <h2 className="text-2xl font-semibold">What's Included</h2>
-        <div className="w-14 border-b border-neutral-200 dark:border-neutral-700 mb-4"></div>
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Included Section */}
-            <div>
-              <h2 className="font-semibold">Includes</h2>
-              <div className="w-14 border-b border-neutral-200 dark:border-neutral-700 mb-4"></div>
-              <ul className="space-y-2">
-                <li className="flex items-center">
-                  <i className="las la-check-circle text-xl mr-2 text-green-600"></i> Free WiFi
-                </li>
-                <li className="flex items-center">
-                  <i className="las la-check-circle text-xl mr-2 text-green-600"></i> Private Bathroom
-                </li>
-                <li className="flex items-center">
-                  <i className="las la-check-circle text-xl mr-2 text-green-600"></i> Hairdryer & Free Toiletries
-                </li>
-                <li className="flex items-center">
-                  <i className="las la-check-circle text-xl mr-2 text-green-600"></i> Bicycle & Car Rental Service
-                </li>
-              </ul>
-            </div>
-
-            {/* Not Included Section */}
-            <div>
-              <h2 className="font-semibold">Excludes</h2>
-              <div className="w-14 border-b border-neutral-200 dark:border-neutral-700 mb-4"></div>
-              <ul className="space-y-2">
-                <li className="flex items-center">
-                  <i className="las la-times-circle text-xl mr-2 text-red-600"></i> Gratuities
-                </li>
-                <li className="flex items-center">
-                  <i className="las la-times-circle text-xl mr-2 text-red-600"></i> Personal Expenses
-                </li>
-                <li className="flex items-center">
-                  <i className="las la-times-circle text-xl mr-2 text-red-600"></i> Travel Insurance
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const description = () => {
-    return (
-      <div className="listingSection__wrap">
-        <h2 className="text-2xl font-semibold">Description</h2>
-        <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-        <div className="text-neutral-6000 dark:text-neutral-300">
-          <span>
-            Providing lake views, The Symphony 9 Tam Coc in Ninh Binh provides accommodation, an outdoor swimming pool,
-            a bar, a shared lounge, a garden and barbecue facilities. Complimentary WiFi is provided.
-          </span>
-          <br />
-          <br />
-          <span>There is a private bathroom with bidet in all units, along with a hairdryer and free toiletries.</span>
-          <br /> <br />
-          <span>
-            The Symphony 9 Tam Coc offers a terrace. Both a bicycle rental service and a car rental service are
-            available at the accommodation, while cycling can be enjoyed nearby.
-          </span>
-        </div>
-      </div>
-    );
-  };
-
-  const itinerary = () => {
-    const itineraryData = [
-      {
-        title: "The Symphony 9 Tam Coc",
-        duration: "30 mins",
-        admission: "Complimentary WiFi",
-        description:
-          "Providing lake views, The Symphony 9 Tam Coc in Ninh Binh provides accommodation, an outdoor swimming pool, a bar, a shared lounge, a garden and barbecue facilities.",
-      },
-      {
-        title: "Private Bathroom & Facilities",
-        duration: "15 mins",
-        admission: "Free toiletries",
-        description: "There is a private bathroom with bidet in all units, along with a hairdryer and free toiletries.",
-      },
-      {
-        title: "Bicycle & Car Rental",
-        duration: "45 mins",
-        admission: "Rental Service Available",
-        description:
-          "The Symphony 9 Tam Coc offers a terrace. Both a bicycle rental service and a car rental service are available at the accommodation, while cycling can be enjoyed nearby.",
-      },
-    ];
-    const [expandedIndex, setExpandedIndex] = useState(null);
-
-    const toggleExpand = (index: any) => {
-      setExpandedIndex(expandedIndex === index ? null : index);
-    };
-    return (
-      <div className="listingSection__wrap">
-        <h2 className="text-2xl font-semibold">Itinerary</h2>
-        <div className="w-14 border-b border-neutral-200 dark:border-neutral-700 mb-4"></div>
-        <ul className="relative">
-          {itineraryData.map((item, index) => {
-            const isExpanded = expandedIndex === index;
-            const shortText = item.description.slice(0, 100);
-            return (
-              <li key={index} className="flex relative pb-6">
-                {/* Kolom ikon dan garis */}
-                <div className="flex flex-col items-center relative w-8">
-                  {index !== itineraryData.length - 1 && (
-                    <div className="absolute top-6 bottom-0 left-1/2 transform -translate-x-1/2 w-px border-l-2 border-dashed border-gray-400"></div>
-                  )}
-                  <div className="relative z-10">
-                    <div className="bg-white p-1 rounded-full flex items-center justify-center">
-                      <i className="la la-map-marker-alt text-primary-700 text-2xl"></i>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Konten itinerary */}
-                <div className="ml-4 flex-1">
-                  <p className="font-semibold text-lg">{item.title}</p>
-                  <div className="text-sm text-neutral-500 flex gap-2">
-                    <span>{item.duration}</span>
-                    <span>|</span>
-                    <span>{item.admission}</span>
-                  </div>
-                  <p className="text-neutral-600 dark:text-neutral-300 mt-2">
-                    {isExpanded ? item.description : `${shortText}...`}
-                  </p>
-                  <button className="text-blue-500 hover:underline mt-2" onClick={() => toggleExpand(index)}>
-                    {isExpanded ? "Read Less" : "Read More"}
-                  </button>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
       </div>
     );
   };
@@ -284,15 +156,18 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
         <div className="flex flex-col space-y-2">
           <span className="text-sm text-gray-500">
             From{" "}
-            <span className="line-through text-gray-400 ml-1">
-              {formatNumber(product?.packages?.[0]?.cost_price ?? 0)}
+            <span className="text-lg font-semibold text-gray-900 ml-1">
+              {formatNumber(product?.selling_price ?? 0)}
             </span>
+            {/* <span className="line-through text-gray-400 ml-1">
+              {formatNumber(product?.packages?.[0]?.cost_price ?? 0)}
+            </span> */}
           </span>
           <div className="flex items-center">
-            <p className="text-lg font-semibold text-gray-900">
-              {formatNumber(product?.packages?.[0]?.selling_price ?? 0)}
-            </p>
-            <div className="ml-2 text-green-600 bg-green-100 rounded-full px-2 py-1 text-xs">-15%</div>
+            {/* <p className="text-lg font-semibold text-gray-900">
+              {formatNumber(product?.selling_price ?? 0)}
+            </p> */}
+            {/* <div className="ml-2 text-green-600 bg-green-100 rounded-full px-2 py-1 text-xs">-15%</div> */}
           </div>
           <button
             onClick={scrollToPackageSection}
@@ -308,6 +183,7 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
   return (
     <div className="nc-ProductDetailPage">
       {/*  HEADER */}
+      <DetailGallery product_galleries={product?.product_galleries ?? []} />
 
       {isLoading ? (
         <SkeletonHeader />
@@ -321,13 +197,15 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
               <Image
                 fill
                 className="object-cover rounded-md sm:rounded-xl"
-                src={PHOTOS[0]}
-                alt=""
+                src={firstImgSrc}
+                alt="Product Image"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
+                onError={() => setFirstImgSrc(fallbackUrl)}
               />
+
               <div className="absolute inset-0 bg-neutral-900 bg-opacity-20 opacity-0 hover:opacity-100 transition-opacity"></div>
             </div>
-            {PHOTOS.filter((_, i) => i >= 1 && i < 5).map((item, index) => (
+            {/* {PHOTOS.filter((_, i) => i >= 1 && i < 5).map((item, index) => (
               <div
                 key={index}
                 className={`relative rounded-md sm:rounded-xl overflow-hidden ${index >= 3 ? "hidden sm:block" : ""}`}
@@ -339,6 +217,30 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
                     src={item || ""}
                     alt=""
                     sizes="400px"
+                  />
+                </div>
+
+                <div
+                  className="absolute inset-0 bg-neutral-900 bg-opacity-20 opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
+                  onClick={handleOpenModalImageGallery}
+                />
+              </div>
+            ))} */}
+
+            {imageSrcs.map((src, index) => (
+              <div
+                key={index}
+                className={`relative rounded-md sm:rounded-xl overflow-hidden ${index >= 3 ? "hidden sm:block" : ""}`}
+              >
+                <div className="aspect-w-4 aspect-h-3 sm:aspect-w-6 sm:aspect-h-5">
+                  {/* <img src={src} onError={() => handleImageError(index)} className="hidden" alt="" /> */}
+                  <Image
+                    fill
+                    className="object-cover rounded-md sm:rounded-xl"
+                    src={src}
+                    alt={`Gallery Image ${index + 2}`}
+                    sizes="400px"
+                    onError={() => handleImageError(index)}
                   />
                 </div>
 
@@ -372,10 +274,21 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
           {product?.packages?.map((pkg) => (
             <PackageCard key={pkg.id} packageData={pkg} />
           ))}
-          {hightlight()}
-          {includeExlcude()}
-          {description()}
-          {itinerary()}
+          {product?.highlight && <SectionContent title="Highlight" content={product.highlight} />}
+
+          <IncludeExclude includes={product?.includes} excludes={product?.excludes} />
+
+          {product?.description && <SectionContent title="Description" content={product.description} />}
+
+          {product?.itinerary && product.itinerary.length > 0 && <Itinerary itineraryData={product.itinerary} />}
+
+          {product?.cancellation_policy && (
+            <SectionContent title="Cancellation Policy" content={product.cancellation_policy} />
+          )}
+          {product?.how_to_reach && <SectionContent title="How To Reach" content={product.how_to_reach} />}
+          {product?.additional_information && (
+            <SectionContent title="Additional Information" content={product.additional_information} />
+          )}
         </div>
 
         {/* SIDEBAR */}

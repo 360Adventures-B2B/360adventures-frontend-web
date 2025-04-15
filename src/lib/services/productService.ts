@@ -82,10 +82,10 @@ export const productApi = createApi({
     }),
 
     getDetailProduct: builder.query<ProductResponse, string>({
-      query: (slug) => `products/${slug}`,
+      query: (slug) => `api/products/${slug}`,
     }),
     getDetailPackage: builder.query<PackageResponse, number>({
-      query: (id) => `packages/${id}`,
+      query: (id) => `api/packages/${id}`,
     }),
   }),
 });

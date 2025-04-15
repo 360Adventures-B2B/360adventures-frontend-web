@@ -43,7 +43,7 @@ const TabFilters = () => {
   const filteredLocationList = locationList.filter((loc) => loc !== undefined && loc !== null);
 
   const handleToggleFilter = (
-    key: Exclude<"location" | "booking_option" | "category", "priceRange">,
+    key: Exclude<"location" | "booking_option" | "category", "price_range">,
     value: string
   ) => {
     dispatch(toggleFilter({ key, value }));
@@ -63,8 +63,8 @@ const TabFilters = () => {
     if (filters.location.length) params.set("location", JSON.stringify(filters.location));
     if (filters.booking_option.length) params.set("booking_option", JSON.stringify(filters.booking_option));
     if (filters.category.length) params.set("category", JSON.stringify(filters.category));
-    if (filters.priceRange[0] !== 100 || filters.priceRange[1] !== 2000) {
-      params.set("price_range", `${filters.priceRange[0]};${filters.priceRange[1]}`);
+    if (filters.price_range[0] !== 100 || filters.price_range[1] !== 2000) {
+      params.set("price_range", `${filters.price_range[0]};${filters.price_range[1]}`);
     }
 
     closeModalMoreFilter();
@@ -109,7 +109,7 @@ const TabFilters = () => {
     if (filters.location.length) count += filters.location.length;
     if (filters.booking_option.length) count += filters.booking_option.length;
     if (filters.category.length) count += filters.category.length;
-    if (filters.priceRange[0] > 100 || filters.priceRange[1] < 2000) count += 1;
+    if (filters.price_range[0] > 100 || filters.price_range[1] < 2000) count += 1;
 
     return count;
   };
@@ -223,9 +223,9 @@ const TabFilters = () => {
                               <Slider
                                 range
                                 className="text-red-400"
-                                min={100}
+                                min={50}
                                 max={2000}
-                                defaultValue={filters.priceRange}
+                                defaultValue={filters.price_range}
                                 allowCross={false}
                                 onChange={(e) => handlePriceChange(e as [number, number])}
                               />
@@ -241,15 +241,15 @@ const TabFilters = () => {
                                 </label>
                                 <div className="mt-1 relative rounded-md">
                                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <span className="text-neutral-500 sm:text-sm">$</span>
+                                    <span className="text-neutral-500 sm:text-sm font-medium">AED</span>
                                   </div>
                                   <input
                                     type="text"
                                     name="minPrice"
                                     disabled
                                     id="minPrice"
-                                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-3 sm:text-sm border-neutral-200 rounded-full text-neutral-900"
-                                    value={filters.priceRange[0]}
+                                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-12 pr-3 sm:text-sm border-neutral-200 rounded-full text-neutral-900"
+                                    value={filters.price_range[0]}
                                   />
                                 </div>
                               </div>
@@ -262,15 +262,15 @@ const TabFilters = () => {
                                 </label>
                                 <div className="mt-1 relative rounded-md">
                                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <span className="text-neutral-500 sm:text-sm">$</span>
+                                    <span className="text-neutral-500 sm:text-sm font-medium">AED</span>
                                   </div>
                                   <input
                                     type="text"
                                     disabled
                                     name="maxPrice"
                                     id="maxPrice"
-                                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-3 sm:text-sm border-neutral-200 rounded-full text-neutral-900"
-                                    value={filters.priceRange[1]}
+                                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-12 pr-3 sm:text-sm border-neutral-200 rounded-full text-neutral-900"
+                                    value={filters.price_range[1]}
                                   />
                                 </div>
                               </div>
