@@ -44,7 +44,6 @@ export default function SharedModal({
     range(index - 15, index + 15).includes(img.id)
   );
 
-
   const handlers = useSwipeable({
     onSwipedLeft: () => {
       if (index < images?.length - 1) {

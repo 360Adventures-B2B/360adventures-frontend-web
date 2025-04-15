@@ -18,10 +18,11 @@ export default function DetailGallery({ product_galleries }: ProductGalleryProps
   const searchParams = useSearchParams();
   const modal = searchParams?.get("modal");
 
-  const galleryImages = product_galleries.map((g) => ({
-    id: g.id,
+  const galleryImages = product_galleries.map((g, index) => ({
+    id: index,
     url: g.image,
   }));
+  
 
   const handleCloseModalImageGallery = () => {
     let params = new URLSearchParams(document.location.search);
