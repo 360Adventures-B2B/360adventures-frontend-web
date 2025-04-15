@@ -8,11 +8,11 @@ type CategoryResponse = {
 
 export const categoryApi = createApi({
   reducerPath: "categoryApi",
-  // baseQuery: createBaseQuery(),
-  baseQuery: fetchBaseQuery({ baseUrl: "/api/" }),
+  baseQuery: createBaseQuery(),
+  // baseQuery: fetchBaseQuery({ baseUrl: "/api/" }),
   endpoints: (builder) => ({
     getCategories: builder.query<CategoryResponse, void>({
-      query: () => `categories`,
+      query: () => `api/categories`,
     }),
   }),
 });

@@ -16,13 +16,15 @@ export interface ProductCardProps {
 }
 
 const ProductCard: FC<ProductCardProps> = ({ size = "default", className = "", data }) => {
+  const galleryImgs = data?.product_galleries.map((item) => item.image);
+
   const renderSliderGallery = () => {
     return (
       <div className="relative w-full">
         <GallerySlider
           uniqueID={`ProductCard_${data?.id}`}
           ratioClass="aspect-w-4 aspect-h-3 "
-          galleryImgs={data?.product_galleries}
+          galleryImgs={galleryImgs}
           href="#"
           galleryClass={size === "default" ? undefined : ""}
         />
@@ -82,14 +84,14 @@ const ProductCard: FC<ProductCardProps> = ({ size = "default", className = "", d
             <div className="flex flex-col items-start min-h-[40px] md:min-h-[32px]">
               <div className="text-[9px] text-gray-500 font-medium">
                 <span>From</span>
-                {data?.original_price ? (
+                {/* {data?.original_price ? (
                   <span className="line-through ml-1 text-[10px] md:text-[11px] text-red-500">
                     {formatNumber(data?.original_price)}
                   </span>
-                ) : null}
+                ) : null} */}
               </div>
               <div className="flex items-center">
-                <span className="text-xs md:text-sm font-semibold text-primary">{formatNumber(data?.price ?? 0)}</span>
+                <span className="text-xs md:text-sm font-semibold text-primary">{formatNumber(data?.selling_price ?? 0)}</span>
               </div>
             </div>
 

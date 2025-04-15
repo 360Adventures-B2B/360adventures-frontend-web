@@ -3,7 +3,7 @@ export interface Location {
   name?: string;
   slug?: string;
   image?: string;
-  total_product?: number;
+  products_count?: number;
   status?: boolean;
   created_at?: string;
   updated_at?: string;

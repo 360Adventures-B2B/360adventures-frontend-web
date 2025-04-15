@@ -41,7 +41,7 @@ const nextConfig = {
         pathname: "/**",
       },
     ],
-    domains: ["ui-avatars.com"],
+    domains: ["ui-avatars.com", "cdn-360adventures.ravelacode.my.id","dummyimage.com","localhost"],
   },
   typescript: {
     ignoreBuildErrors: true,

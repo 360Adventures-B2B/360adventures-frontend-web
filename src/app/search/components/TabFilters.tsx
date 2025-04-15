@@ -12,18 +12,26 @@ import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { resetFilters, setFiltersFromQuery, setPriceRange, toggleFilter } from "@/lib/features/filterSlices";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/lib/store";
+import { useGetCategoriesQuery } from "@/lib/services/categoryService";
+import { useGetLocationsQuery } from "@/lib/services/locationsService";
 const TabFilters = () => {
   const filters = useSelector((state: RootState) => state.filters);
   const dispatch = useDispatch();
 
-  const categoriesData = [
-    { name: "Attractions", label: "Attractions", defaultChecked: false },
-    { name: "Tours", label: "Tours", defaultChecked: false },
-    { name: "Activities & Experiences", label: "Activities & Experiences", defaultChecked: false },
-    { name: "SIM Cards", label: "SIM Cards", defaultChecked: false },
-  ];
+  const { data: categories, error: categoryError, isLoading: isCategoryLoading } = useGetCategoriesQuery();
 
-  const destinationsList = ["Abu Dhabi", "Sharjah", "Dubai", "Qatar", "Bali"];
+  const categoriesData = Array.isArray(categories?.data)
+    ? categories.data.map((cat) => ({
+        name: cat.name,
+        label: cat.name,
+        defaultChecked: false,
+      }))
+    : [];
+
+  const { data: locations, error: locationError, isLoading: isLocationLoading } = useGetLocationsQuery();
+
+  const locationList = Array.isArray(locations?.data) ? locations.data.map((loc) => loc.name) : [];
+
   const bookingOptionsList = ["Instant Confirmation", "Free Cancellation"];
 
   const [isOpenMoreFilter, setisOpenMoreFilter] = useState(false);
@@ -32,8 +40,10 @@ const TabFilters = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  const filteredLocationList = locationList.filter((loc) => loc !== undefined && loc !== null);
+
   const handleToggleFilter = (
-    key: Exclude<"destinations" | "bookingOptions" | "categories", "priceRange">,
+    key: Exclude<"location" | "booking_option" | "category", "priceRange">,
     value: string
   ) => {
     dispatch(toggleFilter({ key, value }));
@@ -50,9 +60,9 @@ const TabFilters = () => {
     const keyword = currentParams.get("keyword");
     if (keyword) params.set("keyword", keyword);
 
-    if (filters.destinations.length) params.set("destinations", JSON.stringify(filters.destinations));
-    if (filters.bookingOptions.length) params.set("bookingOptions", JSON.stringify(filters.bookingOptions));
-    if (filters.categories.length) params.set("categories", JSON.stringify(filters.categories));
+    if (filters.location.length) params.set("location", JSON.stringify(filters.location));
+    if (filters.booking_option.length) params.set("booking_option", JSON.stringify(filters.booking_option));
+    if (filters.category.length) params.set("category", JSON.stringify(filters.category));
     if (filters.priceRange[0] !== 100 || filters.priceRange[1] !== 2000) {
       params.set("price_range", `${filters.priceRange[0]};${filters.priceRange[1]}`);
     }
@@ -68,9 +78,9 @@ const TabFilters = () => {
 
   useEffect(() => {
     const params = {
-      destinations: searchParams.get("destinations") ? JSON.parse(searchParams.get("destinations")!) : [],
-      bookingOptions: searchParams.get("bookingOptions") ? JSON.parse(searchParams.get("bookingOptions")!) : [],
-      categories: searchParams.get("categories") ? JSON.parse(searchParams.get("categories")!) : [],
+      location: searchParams.get("location") ? JSON.parse(searchParams.get("location")!) : [],
+      booking_option: searchParams.get("booking_option") ? JSON.parse(searchParams.get("booking_option")!) : [],
+      category: searchParams.get("category") ? JSON.parse(searchParams.get("category")!) : [],
       priceRange: searchParams.get("price_range")
         ? searchParams.get("price_range")!.split(";").map(Number)
         : [100, 2000],
@@ -96,9 +106,9 @@ const TabFilters = () => {
   const getActiveFilterCount = () => {
     let count = 0;
 
-    if (filters.destinations.length) count += filters.destinations.length;
-    if (filters.bookingOptions.length) count += filters.bookingOptions.length;
-    if (filters.categories.length) count += filters.categories.length;
+    if (filters.location.length) count += filters.location.length;
+    if (filters.booking_option.length) count += filters.booking_option.length;
+    if (filters.category.length) count += filters.category.length;
     if (filters.priceRange[0] > 100 || filters.priceRange[1] < 2000) count += 1;
 
     return count;
@@ -159,17 +169,17 @@ const TabFilters = () => {
                       <div className="py-7">
                         <h3 className="text-xl font-medium">Destination</h3>
                         <div className="mt-6 relative flex flex-wrap gap-2">
-                          {destinationsList.map((destination) => {
-                            const isActive = filters.destinations.includes(destination);
+                          {filteredLocationList.map((loc) => {
+                            const isActive = filters.location.includes(loc);
 
                             return (
                               <FilterCard
-                                key={destination}
-                                label={destination}
+                                key={loc}
+                                label={loc}
                                 icon="la-map-marker"
                                 isActive={isActive}
                                 onClick={() => {
-                                  handleToggleFilter("destinations", destination);
+                                  handleToggleFilter("location", loc);
                                 }}
                               />
                             );
@@ -180,7 +190,7 @@ const TabFilters = () => {
                         <h3 className="text-xl font-medium">Booking Option</h3>
                         <div className="mt-6 relative flex flex-wrap gap-2">
                           {bookingOptionsList.map((bookingOption) => {
-                            const isActive = filters.bookingOptions.includes(bookingOption);
+                            const isActive = filters.booking_option.includes(bookingOption);
                             const iconClass = bookingOption === "Free Cancellation" ? "la-check" : "la-bolt";
                             return (
                               <FilterCard
@@ -188,7 +198,7 @@ const TabFilters = () => {
                                 label={bookingOption}
                                 icon={iconClass}
                                 isActive={isActive}
-                                onClick={() => handleToggleFilter("bookingOptions", bookingOption)}
+                                onClick={() => handleToggleFilter("booking_option", bookingOption)}
                                 className={isActive ? "bg-primary-700 text-white" : ""}
                               />
                             );
@@ -200,8 +210,8 @@ const TabFilters = () => {
                         <div className="mt-6 relative flex flex-wrap gap-2">
                           <FilterCheckbox
                             categories={categoriesData}
-                            selectedCategories={filters.categories}
-                            onCategoryChange={(cat) => handleToggleFilter("categories", cat)}
+                            selectedCategories={filters.category}
+                            onCategoryChange={(cat) => handleToggleFilter("category", cat)}
                           />
                         </div>
                       </div>

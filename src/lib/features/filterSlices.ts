@@ -1,16 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface FiltersState {
-  destinations: string[];
-  bookingOptions: string[];
-  categories: string[];
-  priceRange: [number, number]; 
+  location: string[];
+  booking_option: string[];
+  category: string[];
+  priceRange: [number, number];
 }
 
 const initialState: FiltersState = {
-  destinations: [],
-  bookingOptions: [],
-  categories: [],
+  location: [],
+  booking_option: [],
+  category: [],
   priceRange: [100, 2000],
 };
 
@@ -33,10 +33,10 @@ const filtersSlice = createSlice({
       state.priceRange = action.payload;
     },
     setFiltersFromQuery: (state, action) => {
-      const { destinations, bookingOptions, categories, priceRange } = action.payload;
-      state.destinations = destinations || [];
+      const { location, bookingOptions, category, priceRange } = action.payload;
+      state.location = location || [];
       state.bookingOptions = bookingOptions || [];
-      state.categories = categories || [];
+      state.category = category || [];
       state.priceRange = priceRange || [100, 2000];
     },
     resetFilters: () => initialState,

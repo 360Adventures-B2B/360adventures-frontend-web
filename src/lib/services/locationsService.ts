@@ -8,11 +8,11 @@ type LocationResponse = {
 
 export const locationApi = createApi({
   reducerPath: "locationApi",
-  // baseQuery: createBaseQuery(),
-  baseQuery: fetchBaseQuery({ baseUrl: "/api/" }),
+  baseQuery: createBaseQuery(),
+  // baseQuery: fetchBaseQuery({ baseUrl: "/api/" }),
   endpoints: (builder) => ({
     getLocations: builder.query<LocationResponse, void>({
-      query: () => `locations`,
+      query: () => `api/locations`,
     }),
   }),
 });

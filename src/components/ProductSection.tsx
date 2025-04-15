@@ -37,7 +37,7 @@ const ProductSection: FC<ProductSectionProps> = ({
       : ["Popular"];
       
   const [selectedCategory, setSelectedCategory] = useState("Popular");
-  const queryParam = selectedCategory === "Popular" ? {} : { categories: [selectedCategory] };
+  const queryParam = selectedCategory === "Popular" ? {} : { category: [selectedCategory] };
 
   const {
     data: products,

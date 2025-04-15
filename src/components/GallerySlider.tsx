@@ -59,6 +59,8 @@ export default function GallerySlider({
   });
 
   let currentImage = images?.[index] ?? null;
+  const fallbackUrl = "https://dummyimage.com/600x400/000/fff";
+  const [imgSrc, setImgSrc] = useState(currentImage || fallbackUrl);
 
   return (
     <MotionConfig
@@ -82,11 +84,16 @@ export default function GallerySlider({
                 className="absolute inset-0"
               >
                 <Image
-                  src={currentImage || ""}
+                  src={imgSrc || ""}
                   fill
                   alt="listing card gallery"
                   className={`object-cover ${imageClass}`}
                   onLoad={() => setLoaded(true)}
+                  onError={() => setImgSrc(fallbackUrl)}
+                  // onError={(e) => {
+                  //   const target = e.target as HTMLImageElement;
+                  //   target.src = fallbackUrl;
+                  // }}
                   sizes="(max-width: 1025px) 100vw, 300px"
                 />
               </motion.div>

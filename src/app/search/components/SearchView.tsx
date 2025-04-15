@@ -19,9 +19,9 @@ export default function SearchView() {
 
   const filters = Object.fromEntries(
     Object.entries({
-      destinations: getParam("destinations"),
-      bookingOptions: getParam("bookingOptions"),
-      categories: getParam("categories"),
+      location: getParam("location"),
+      booking_option: getParam("booking_option"),
+      category: getParam("category"),
       price_range: getParam("price_range", false)?.split(";").map(Number),
       keyword: getParam("keyword", false),
       page: getParam("page", false),

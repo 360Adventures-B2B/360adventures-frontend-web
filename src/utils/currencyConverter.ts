@@ -3,6 +3,7 @@ interface CurrencyRates {
 }
 
 const defaultCurrencyRates: CurrencyRates = {
+  AED: 1,
   USD: 1,
   EUR: 0.85,
   GBP: 0.75,
@@ -12,6 +13,7 @@ const defaultCurrencyRates: CurrencyRates = {
 };
 
 const currencySymbols: { [key: string]: string } = {
+  AED: "AED",
   USD: "$",
   EUR: "€",
   GBP: "£",
@@ -35,7 +37,7 @@ export const getCurrencySymbol = (currency: string): string => {
 
 export const formatNumber = (priceInUSD: number): string => {
   const rates = getCurrencyRatesFromLocalStorage();
-  const selectedCurrency = "USD";
+  const selectedCurrency = "AED";
 
   const rate = rates[selectedCurrency];
   const symbol = getCurrencySymbol(selectedCurrency);
