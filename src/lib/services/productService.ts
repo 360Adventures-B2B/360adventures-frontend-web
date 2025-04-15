@@ -92,14 +92,18 @@ export const productApi = createApi({
       }),
     }),
 
-    getDetailPackage: builder.query<PackageResponse, number>({
-      query: (id) => `api/packages/${id}`,
+    getDetailPackage: builder.mutation<any, { ulid: string; body: any }>({
+      query: ({ ulid, body }) => ({
+        url: `api/packages/${ulid}`,
+        method: "POST",
+        body,
+      }),
     }),
   }),
 });
 export const {
   useGetProductQuery,
   useGetDetailProductQuery,
-  useGetDetailPackageQuery,
+  useGetDetailPackageMutation,
   useCheckAvailableProductMutation,
 } = productApi;

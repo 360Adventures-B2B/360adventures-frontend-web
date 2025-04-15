@@ -5,7 +5,7 @@ import React, { createContext, useContext, useReducer, ReactNode } from "react";
 // Interface untuk Booking Data
 interface BookingData {
   agent_id: string;
-  package_id: number | null;
+  package_id: string | null;
   start_date: string;
   time_slot: string;
   person_types: PersonType[];
@@ -15,7 +15,7 @@ interface BookingData {
 // Action Types
 type BookingAction =
   | { type: "UPDATE_AGENT"; payload: string }
-  | { type: "UPDATE_PACKAGE"; payload: number | null }
+  | { type: "UPDATE_PACKAGE"; payload: string | null }
   | { type: "UPDATE_DATE"; payload: string }
   | { type: "UPDATE_TIME_SLOT"; payload: string }
   | { type: "UPDATE_PERSON_TYPES"; payload: PersonType[] }

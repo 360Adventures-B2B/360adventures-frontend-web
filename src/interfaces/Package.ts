@@ -4,6 +4,7 @@ import { Product } from "./Product";
 
 export interface Package {
   id: number;
+  ulid: string;
   product_id: number;
   name: string;
   description: string;

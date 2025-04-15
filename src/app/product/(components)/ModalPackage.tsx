@@ -2,9 +2,9 @@
 import React, { useEffect, useState } from "react";
 import QuantityStepper from "./QuantityStepper";
 import { useBooking } from "@/context/BookingContext";
-import { useGetDetailPackageQuery } from "@/lib/services/productService";
+import { useGetDetailPackageMutation } from "@/lib/services/productService";
 import { formatNumber } from "@/utils/currencyConverter";
-import { formatDate } from "@/utils/dateHelper";
+import { formatDate, formatDateString } from "@/utils/dateHelper";
 import ModalDatePicker from "./ModalDatePicker";
 import NcModal from "@/shared/NcModal";
 import { useDate } from "@/context/DateContext";
@@ -15,18 +15,31 @@ import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
 interface ModalPackageProps {
-  packageId: number;
+  packageId: string;
   closeModal: () => void;
 }
 
 const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: closeModalPackage }) => {
   const { bookingData, dispatch } = useBooking();
   const { selectedDate, setSelectedDate } = useDate();
+  console.log("🚀 ~ bookingData:", bookingData);
 
   const [isChangeDate, setIsChangeDate] = useState(false);
   const [isFirstOpen, setIsFirstOpen] = useState(true);
 
-  const { data, error, isLoading } = useGetDetailPackageQuery(packageId);
+  const [getDetailPackage, { data, error, isLoading }] = useGetDetailPackageMutation();
+
+  useEffect(() => {
+    if (packageId) {
+      const startDate = selectedDate;
+      getDetailPackage({
+        ulid: packageId,
+        body: {
+          start_date: formatDateString(startDate),
+        },
+      });
+    }
+  }, [packageId, selectedDate]);
   const packageData = data?.data;
 
   const [selectedTime, setSelectedTime] = useState("");
@@ -40,7 +53,12 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
 
   useEffect(() => {
     if (packageData && packageData.person_types && isFirstOpen) {
-      dispatch({ type: "UPDATE_PERSON_TYPES", payload: packageData.person_types });
+      const updatedPersonTypes = packageData.person_types.map((person: any) => ({
+        ...person,
+        guest: 0,
+      }));
+
+      dispatch({ type: "UPDATE_PERSON_TYPES", payload: updatedPersonTypes });
       dispatch({ type: "UPDATE_PACKAGE", payload: packageId });
 
       setIsFirstOpen(false);
@@ -151,7 +169,7 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
         <div className="space-y-4 p-4 rounded-lg bg-gray-100">
           <h4 className="text-lg sm:text-xl font-semibold">Time slots</h4>
           <div className="flex flex-wrap gap-2 justify-start">
-            {packageData?.time_slot.map((time) => (
+            {packageData?.time_slot.map((time: any) => (
               <button
                 key={time}
                 className={`px-4 py-2 rounded-full text-sm sm:text-base ${

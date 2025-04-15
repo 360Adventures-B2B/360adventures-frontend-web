@@ -15,7 +15,7 @@ const QuantityStepper: React.FC<QuantityStepperProps> = ({ personTypes }) => {
 
   useEffect(() => {
     const total = bookingData.person_types.reduce((acc, personType) => {
-      return acc + personType.price * personType.guest;
+      return acc + personType.selling_price * personType.guest;
     }, 0);
 
     dispatch({
@@ -128,7 +128,7 @@ const QuantityStepper: React.FC<QuantityStepperProps> = ({ personTypes }) => {
             </div>
 
             <div className="mt-2">
-              <span className="text-gray-700 font-medium">{formatNumber(unit.price)}</span>
+              <span className="text-gray-700 font-medium">{formatNumber(unit.selling_price)}</span>
             </div>
           </div>
         ))}

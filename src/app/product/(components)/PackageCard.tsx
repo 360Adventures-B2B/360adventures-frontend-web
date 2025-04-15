@@ -78,7 +78,7 @@ const PackageCard: React.FC<PackageCardProps> = ({ packageData }) => {
               if (!bookingData.start_date) {
                 return <ModalDatePicker selectedDate={null} handleDateSelection={() => {}} closeModal={closeModal} />;
               }
-              return <ModalPackage packageId={packageData.id} closeModal={closeModal} />;
+              return <ModalPackage packageId={packageData.ulid} closeModal={closeModal} />;
             }}
             modalTitle={bookingData.start_date ? "Select your preferences" : "Select a Date"}
           />

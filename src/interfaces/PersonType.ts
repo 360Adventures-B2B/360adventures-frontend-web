@@ -4,5 +4,8 @@ export interface PersonType {
   min: number;
   max: number;
   price: number;
+  selling_price: number;
+  cost_price: number;
+  retail_price: number;
   guest: number;
 }
