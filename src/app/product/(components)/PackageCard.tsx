@@ -54,10 +54,11 @@ const PackageCard: React.FC<PackageCardProps> = ({ packageData }) => {
       <div className="flex-col justify-between items-start sm:items-end mt-3 sm:mt-0">
         <div className="pricing">
           <p className="text-md font-semibold text-gray-900">
-            From <span className="line-through text-gray-500 ml-2">{formatNumber(packageData.retail_price)}</span>
+            From
+            {/* <span className="line-through text-gray-500 ml-2">{formatNumber(packageData.retail_price)}</span> */}
           </p>
           <div className="flex items-center gap-1 mt-1">
-            <span className="text-lg font-bold text-green-600">{formatNumber(packageData.cost_price)}</span>
+            <span className="text-lg font-bold text-green-600">{formatNumber(packageData.selling_price)}</span>
             {/* <span className="text-xs text-green-600 bg-green-100 px-1 py-0.5 rounded-full">-15%</span> */}
           </div>
         </div>

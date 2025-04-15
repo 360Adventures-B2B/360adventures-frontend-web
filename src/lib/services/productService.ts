@@ -84,9 +84,22 @@ export const productApi = createApi({
     getDetailProduct: builder.query<ProductResponse, string>({
       query: (slug) => `api/products/${slug}`,
     }),
+    checkAvailableProduct: builder.mutation<any, { ulid: string; body: any }>({
+      query: ({ ulid, body }) => ({
+        url: `/api/products/check-available/${ulid}`,
+        method: "POST",
+        body,
+      }),
+    }),
+
     getDetailPackage: builder.query<PackageResponse, number>({
       query: (id) => `api/packages/${id}`,
     }),
   }),
 });
-export const { useGetProductQuery, useGetDetailProductQuery, useGetDetailPackageQuery } = productApi;
+export const {
+  useGetProductQuery,
+  useGetDetailProductQuery,
+  useGetDetailPackageQuery,
+  useCheckAvailableProductMutation,
+} = productApi;

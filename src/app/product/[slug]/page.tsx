@@ -8,7 +8,7 @@ import { Route } from "next";
 import { Amenities_demos, PHOTOS } from "../constant";
 import DatePicker from "../(components)/DatePicker";
 import PackageCard from "../(components)/PackageCard";
-import { useGetDetailProductQuery } from "@/lib/services/productService";
+import { useCheckAvailableProductMutation, useGetDetailProductQuery } from "@/lib/services/productService";
 import { formatNumber } from "@/utils/currencyConverter";
 import SkeletonHeader from "../skeleton/SkeletonHeader";
 import SkeletonTitle from "../skeleton/SkeletonTitle";
@@ -19,6 +19,8 @@ import SectionContent from "../(components)/SectionContent";
 import Itinerary from "../(components)/Itinerary";
 import IncludeExclude from "../(components)/IncludeExclude";
 import DetailGallery from "./components/DetailGallery";
+import PackageCardSkeleton from "../skeleton/SkeletonPackageCard";
+import { useDate } from "@/context/DateContext";
 
 export interface ProductDetailPageProps {}
 
@@ -56,6 +58,35 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
   const [firstImgSrc, setFirstImgSrc] = useState(product?.product_galleries[0]?.image || fallbackUrl);
 
   const [imageSrcs, setImageSrcs] = useState<string[]>([]);
+  const [packages, setPackages] = useState<any[]>([]);
+
+  // check available product
+  const [checkAvailableProduct, { isLoading: isLoadingCheckAvailableProduct }] = useCheckAvailableProductMutation();
+
+  const today = new Date().toISOString().split("T")[0];
+
+  const { selectedDate } = useDate();
+
+  useEffect(() => {
+    if (product?.ulid) {
+      const fetchProductAvailability = async () => {
+        try {
+          const result = await checkAvailableProduct({
+            ulid: product.ulid,
+            body: { start_date: today },
+          }).unwrap();
+
+          setPackages(result.data);
+        } catch (err) {
+          console.error("Error fetching product availability:", err);
+        }
+      };
+
+      fetchProductAvailability();
+    }
+  }, [product?.ulid, checkAvailableProduct, today, selectedDate]);
+
+  // handle date change
 
   const handleImageError = (index: number) => {
     setImageSrcs((prev) => {
@@ -233,7 +264,6 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
                 className={`relative rounded-md sm:rounded-xl overflow-hidden ${index >= 3 ? "hidden sm:block" : ""}`}
               >
                 <div className="aspect-w-4 aspect-h-3 sm:aspect-w-6 sm:aspect-h-5">
-                  {/* <img src={src} onError={() => handleImageError(index)} className="hidden" alt="" /> */}
                   <Image
                     fill
                     className="object-cover rounded-md sm:rounded-xl"
@@ -271,9 +301,27 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
           <div ref={packageSectionRef} className="package-section">
             {isLoading ? <SKeletonDatePicker /> : <DatePicker />}
           </div>
-          {product?.packages?.map((pkg) => (
-            <PackageCard key={pkg.id} packageData={pkg} />
-          ))}
+
+          <div>
+            {isLoadingCheckAvailableProduct || isLoading ? (
+              <div>
+                {Array.from({ length: 3 }).map((_, idx) => (
+                  <div className="mb-5">
+                    <PackageCardSkeleton key={idx} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              // Tampilkan PackageCard jika data sudah tersedia
+              <div>
+                {packages?.map((pkg) => (
+                  <div className="mb-5">
+                    <PackageCard key={pkg.id} packageData={pkg} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
           {product?.highlight && <SectionContent title="Highlight" content={product.highlight} />}
 
           <IncludeExclude includes={product?.includes} excludes={product?.excludes} />
