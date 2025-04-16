@@ -28,7 +28,8 @@ const CartMenu: React.FC<CartMenuProps> = ({
   const handleOpenMenu = () => setIsVisable(true);
   const handleCloseMenu = () => setIsVisable(false);
 
-  const { data: carts, isLoading } = useGetCartsQuery();
+  //  const [getCart, { data: carts, isLoading }] = useGetCartsMutation();
+  const { data: carts, isLoading } = useGetCartsQuery(undefined);
 
   const totalItemCarts = (carts?.data && carts?.data?.length) || 0;
 

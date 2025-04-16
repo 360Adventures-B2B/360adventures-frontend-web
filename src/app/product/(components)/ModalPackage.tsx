@@ -102,15 +102,30 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
         return;
       }
 
+      const simplifiedPersonTypes = Array.isArray(bookingData.person_types)
+        ? bookingData.person_types
+            .filter((person) => person.guest > 0) // hanya ambil yang guest > 0
+            .map((person) => ({
+              name: person.name,
+              quantity: person.guest.toString(),
+            }))
+        : [];
+
+      const simplifiedExtraPrices = bookingData.extra_prices.map((extra) => {
+        return { name: extra.name };
+      });
+
       const newCartItem = {
         package_id: bookingData.package_id,
         start_date: bookingData.start_date,
-        time_slot: bookingData.time_slot,
-        person_types: bookingData.person_types,
+        person_types: simplifiedPersonTypes,
+        ...(bookingData.time_slot ? { time_slot: bookingData.time_slot } : {}),
+        ...(simplifiedExtraPrices?.length ? { extra_prices: simplifiedExtraPrices } : {}),
       };
+      console.log("🚀 ~ handleAddCart ~ newCartItem:", newCartItem);
 
       const res = await addCart(newCartItem).unwrap();
-      if (res.code === 201) {
+      if (res.code === 200) {
         toast({
           className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
           title: "Success",

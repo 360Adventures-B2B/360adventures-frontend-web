@@ -8,34 +8,39 @@ type CartResponse = {
 
 export const cartApi = createApi({
   reducerPath: "cartApi",
-  // baseQuery: createBaseQuery(),
+  baseQuery: createBaseQuery(),
   tagTypes: ["Cart"],
-  baseQuery: fetchBaseQuery({ baseUrl: "/api/" }),
+  // baseQuery: fetchBaseQuery({ baseUrl: "/api/" }),
   endpoints: (builder) => ({
-    getCarts: builder.query<CartResponse, void>({
-      query: () => `carts`,
+    getCarts: builder.query<CartResponse, { ids?: string[] } | void>({
+      query: (body) => ({
+        url: "/api/carts",
+        method: "POST",
+        body,
+      }),
       providesTags: ["Cart"],
     }),
     addCart: builder.mutation({
       query: (body) => ({
-        url: "carts/store",
+        url: "/api/carts/store",
         method: "POST",
         body: body,
       }),
       invalidatesTags: ["Cart"],
     }),
     deleteCart: builder.mutation({
-      query: (cartId) => ({
-        url: `carts/delete/${cartId}`,
+      query: (body) => ({
+        url: `/api/carts/delete`,
         method: "DELETE",
+        body: body,
       }),
       invalidatesTags: ["Cart"],
     }),
     checkoutCart: builder.mutation({
-      query: (cartIds) => ({
-        url: `carts/checkout`,
+      query: (body) => ({
+        url: `/api/carts/checkout`,
         method: "POST",
-        body: { cart_ids: cartIds },
+        body: body,
       }),
     }),
   }),

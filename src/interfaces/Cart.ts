@@ -1,12 +1,29 @@
-import { Package } from "./Package";
+import { ExtraPrice } from "./ExtraPrice";
 import { PersonType } from "./PersonType";
 
+export interface Package {
+  ulid: string;
+  name: string;
+}
+
+export interface Product {
+  ulid: string;
+  name: string;
+  image: string;
+}
+
+
 export interface Cart {
-  id?: number;
-  start_date?: string;
-  time_slot?: string;
+  ulid: string;
+  agent_id: number;
+  package_id: number;
+  start_date: string;
+  time_slot: string;
   person_types: PersonType[];
+  extra_prices: ExtraPrice[];
   package: Package;
+  total_price: number;
+  product: Product;
   created_at?: string;
   updated_at?: string;
 }

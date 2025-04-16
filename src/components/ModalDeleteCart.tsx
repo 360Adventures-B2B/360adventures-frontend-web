@@ -5,7 +5,7 @@ import ButtonPrimary from "@/shared/ButtonPrimary";
 import React from "react";
 
 interface ModalDeleteCartProps {
-  cartId: number;
+  cartId: string;
   closeModal: () => void;
 }
 
@@ -14,7 +14,9 @@ export default function ModalDeleteCart({ cartId, closeModal }: ModalDeleteCartP
 
   const handleDeleteCart = async () => {
     try {
-      const res = await deleteCart(cartId).unwrap();
+      const res = await deleteCart({
+        ids: [cartId],
+      }).unwrap();
       if (res.code === 200) {
         toast({
           className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),

@@ -11,24 +11,33 @@ import FormCheckout from "./component/FormCheckout";
 import { formatDate, formatDateString } from "@/utils/dateHelper";
 import BookingSummary from "@/components/BookingSummary";
 import BookingSummarySkeleton from "@/components/skeleton/BookingSummarySkeleton";
+import { useGetCartsQuery } from "@/lib/services/cartService";
 export interface CheckOutPagePageMainProps {
   className?: string;
 }
 
 const CheckOutPagePageMain: FC<CheckOutPagePageMainProps> = ({ className = "" }) => {
-  const searchParams = useSearchParams();
-  const orderId = searchParams.get("order_id");
-  const { data: booking, isLoading, isFetching } = useGetBookingQuery(orderId);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]); // State untuk menyimpan selectedItems
 
-  const loading = isLoading || isFetching;
-  const bookingData = booking?.data;
+  useEffect(() => {
+    const savedItems = sessionStorage.getItem("selectedItems");
 
-  if (!loading && (!bookingData || Object.keys(bookingData).length === 0)) {
-    redirect("/");
-  }
+    if (savedItems) {
+      setSelectedItems(JSON.parse(savedItems)); // Parse string JSON menjadi array
+    }
+  }, []);
+
+  const bodyCart = { ids: selectedItems };
+
+  const { data: carts, isLoading: isLoadingGetCart, isFetching: isFetchingGetCart, error } = useGetCartsQuery(bodyCart);
+  const loading = isFetchingGetCart || isLoadingGetCart;
+
+  // if (!loading && carts?.data.length === 0) {
+  //   redirect("/");
+  // }
 
   const renderSidebar = () => {
-    return <BookingSummary bookingData={bookingData} title="Your Item" loading={loading} />;
+    return <BookingSummary bookingData={carts?.data || []} title="Your Item" />;
   };
 
   return (
