@@ -41,10 +41,12 @@ const BookingItemCard: React.FC<BookingItemCardProps> = ({ item }) => {
         </p>
 
         {/* Time Slot */}
-        <p className="timeSlot text-sm text-[#444] mt-1">
-          <i className="las la-clock mr-2"></i>
-          {item?.time_slot}
-        </p>
+        {item?.time_slot && (
+          <p className="timeSlot text-sm text-[#444] mt-1">
+            <i className="las la-clock mr-2"></i>
+            {item.time_slot}
+          </p>
+        )}
 
         {/* Guest Details */}
         <div className="guestDetails text-sm text-[#444] mt-2">

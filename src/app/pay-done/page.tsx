@@ -4,7 +4,7 @@ import ButtonPrimary from "@/shared/ButtonPrimary";
 import Image from "next/image";
 import { CheckCircle } from "lucide-react";
 import { redirect, useRouter, useSearchParams } from "next/navigation";
-import { useGetBookingQuery } from "@/lib/services/bookingService";
+import { useGetBookingQuery, useGetBookingSummaryQuery } from "@/lib/services/bookingService";
 import BookingSummary from "@/components/BookingSummary";
 import { BookingProvider } from "@/context/BookingContext";
 import BookingSummarySkeleton from "@/components/skeleton/BookingSummarySkeleton";
@@ -13,18 +13,19 @@ import InformationSkeleton from "./components/InformationSkeleton";
 export interface PayPageProps {}
 
 const PayPage: FC<PayPageProps> = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const orderId = searchParams.get("order_id");
-  const router = useRouter();
-  const { data: booking, isLoading, isError, isFetching } = useGetBookingQuery(orderId);
+
+  const { data: booking, isLoading, isError, isFetching } = useGetBookingSummaryQuery(orderId);
+  console.log("🚀 ~ booking:", booking);
 
   const bookingData = booking?.data;
   const loading = isLoading || isFetching;
 
-  if (!loading && (!bookingData || Object.keys(bookingData).length === 0)) {
+  if (!loading && (!bookingData || Object.keys(bookingData.bookings).length === 0)) {
     redirect("/");
   }
-  console.log("🚀 ~ bookingData:", bookingData);
 
   const renderMain = () => {
     return (
@@ -38,7 +39,7 @@ const PayPage: FC<PayPageProps> = () => {
               Thank You. Your booking was submitted successfully!
             </h3>
             <p className="text-gray-700">
-              Booking details have been sent to: <span className="font-medium">{bookingData[0]?.email}</span>
+              Booking details have been sent to: <span className="font-medium">{bookingData?.email}</span>
             </p>
           </div>
         </div>
@@ -51,28 +52,28 @@ const PayPage: FC<PayPageProps> = () => {
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
             <div className="flex flex-col">
               <span className="text-neutral-600 dark:text-neutral-400">Name</span>
-              <span className="font-medium text-neutral-900 dark:text-neutral-100">{bookingData[0]?.name}</span>
+              <span className="font-medium text-neutral-900 dark:text-neutral-100">{bookingData?.name}</span>
             </div>
 
             <div className="flex flex-col">
               <span className="text-neutral-600 dark:text-neutral-400">Email</span>
-              <span className="font-medium text-neutral-900 dark:text-neutral-100">{bookingData[0]?.email}</span>
+              <span className="font-medium text-neutral-900 dark:text-neutral-100">{bookingData?.email}</span>
             </div>
 
             <div className="flex flex-col">
               <span className="text-neutral-600 dark:text-neutral-400">Country</span>
-              <span className="font-medium text-neutral-900 dark:text-neutral-100">{bookingData[0]?.country}</span>
+              <span className="font-medium text-neutral-900 dark:text-neutral-100">{bookingData?.country}</span>
             </div>
 
             <div className="flex flex-col">
               <span className="text-neutral-600 dark:text-neutral-400">City</span>
-              <span className="font-medium text-neutral-900 dark:text-neutral-100">{bookingData[0]?.city}</span>
+              <span className="font-medium text-neutral-900 dark:text-neutral-100">{bookingData?.city}</span>
             </div>
 
             <div className="flex flex-col sm:col-span-2 lg:col-span-2">
               <span className="text-neutral-600 dark:text-neutral-400">Special Requirement</span>
               <span className="font-medium text-neutral-900 dark:text-neutral-100">
-                {bookingData[0]?.special_requirement}
+                {bookingData?.special_requirement}
               </span>
             </div>
           </div>
@@ -85,7 +86,7 @@ const PayPage: FC<PayPageProps> = () => {
   };
 
   const renderSidebar = () => {
-    return <BookingSummary bookingData={bookingData} title="Your Booking" />;
+    return <BookingSummary bookingData={bookingData.bookings} title="Your Booking" />;
   };
 
   return (

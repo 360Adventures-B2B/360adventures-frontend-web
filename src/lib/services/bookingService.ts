@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createBaseQuery } from "./baseQuery";
 
 // type CartResponse = {
 //   data: Cart[];
@@ -6,11 +7,14 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const bookingApi = createApi({
   reducerPath: "bookingApi",
-  // baseQuery: createBaseQuery(),
-  baseQuery: fetchBaseQuery({ baseUrl: "/api/" }),
+  baseQuery: createBaseQuery(),
+  // baseQuery: fetchBaseQuery({ baseUrl: "/api/" }),
   endpoints: (builder) => ({
     getBooking: builder.query({
       query: (orderId) => `booking/${orderId}`,
+    }),
+    getBookingSummary: builder.query({
+      query: (orderId) => `/api/bookings/summary/${orderId}`,
     }),
     updateBooking: builder.mutation({
       query: ({ orderId, body }) => ({
@@ -21,4 +25,4 @@ export const bookingApi = createApi({
     }),
   }),
 });
-export const { useGetBookingQuery, useUpdateBookingMutation } = bookingApi;
+export const { useGetBookingQuery, useGetBookingSummaryQuery, useUpdateBookingMutation } = bookingApi;
