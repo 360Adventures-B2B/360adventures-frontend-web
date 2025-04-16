@@ -21,6 +21,7 @@ import IncludeExclude from "../(components)/IncludeExclude";
 import DetailGallery from "./components/DetailGallery";
 import PackageCardSkeleton from "../skeleton/SkeletonPackageCard";
 import { useDate } from "@/context/DateContext";
+import { useBooking } from "@/context/BookingContext";
 
 export interface ProductDetailPageProps {}
 
@@ -102,6 +103,14 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
       setImageSrcs(slicedImages);
     }
   }, [product]);
+
+  const { dispatch } = useBooking();
+  const { resetDate } = useDate();
+
+  useEffect(() => {
+    resetDate();
+    dispatch({ type: "RESET_BOOKING" });
+  }, []);
   const mainContent = () => {
     return (
       <div className="listingSection__wrap !space-y-6">

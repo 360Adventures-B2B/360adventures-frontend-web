@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -14,6 +14,7 @@ import { useUpdateBookingMutation } from "@/lib/services/bookingService";
 import { redirect, useRouter, useSearchParams } from "next/navigation";
 import PhoneInput from "@/shared/PhoneInput";
 import CustomPhoneInput from "@/shared/PhoneInput";
+import { useCheckoutCartMutation } from "@/lib/services/cartService";
 export default function FormCheckout() {
   const { data: user, isLoading: isLoadingUser, isError } = useGetUserQuery(undefined);
 
@@ -67,13 +68,27 @@ export default function FormCheckout() {
   }, [userData, form]);
 
   const router = useRouter();
-  const [updateBooking, { isLoading }] = useUpdateBookingMutation();
+  const [checkoutCart, { isLoading }] = useCheckoutCartMutation();
   const searchParams = useSearchParams();
   const orderId = searchParams.get("order_id");
+
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+  useEffect(() => {
+    const savedItems = sessionStorage.getItem("selectedItems");
+
+    if (savedItems) {
+      setSelectedItems(JSON.parse(savedItems)); // Parse string JSON menjadi array
+    }
+  }, []);
 
   async function onSubmit(formData: FormData) {
     try {
       const values = {
+        ids: selectedItems.map((item) => ({
+          id: item,
+          pickup_location: "",
+        })),
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
@@ -81,14 +96,11 @@ export default function FormCheckout() {
         city: formData.city,
         special_requirement: formData.requirement || null,
       };
-      const res = await updateBooking({
-        orderId,
-        body: values,
-      }).unwrap();
+
+      const res = await checkoutCart(values).unwrap();
 
       if (res.code == 200) {
-        // router.push(`/pay-done?order_id=${orderId}`);
-        window.location.href = `/pay-done?order_id=${orderId}`;
+        window.location.href = `/pay-done?order_id=${res?.data?.order_id || ""}`;
       }
     } catch (error: any) {
       handleError(error);

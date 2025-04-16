@@ -9,6 +9,7 @@ type DateContextType = {
   setSelectedDate: (date: Date | null) => void;
   highlightedDate: Date | null;
   setHighlightedDate: (date: Date | null) => void;
+  resetDate: () => void;
 };
 
 const DateContext = createContext<DateContextType | undefined>(undefined);
@@ -24,9 +25,12 @@ export const useDate = () => {
 export const DateProvider: FC<DateProviderProps> = ({ children }) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [highlightedDate, setHighlightedDate] = useState<Date | null>(null);
-
+  const resetDate = () => {
+    setSelectedDate(null);
+    setHighlightedDate(null);
+  };
   return (
-    <DateContext.Provider value={{ selectedDate, setSelectedDate, highlightedDate, setHighlightedDate }}>
+    <DateContext.Provider value={{ selectedDate, setSelectedDate, highlightedDate, setHighlightedDate, resetDate }}>
       {children}
     </DateContext.Provider>
   );

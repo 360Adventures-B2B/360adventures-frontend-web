@@ -22,7 +22,8 @@ type BookingAction =
   | { type: "UPDATE_TIME_SLOT"; payload: string }
   | { type: "UPDATE_PERSON_TYPES"; payload: PersonType[] }
   | { type: "UPDATE_EXTRA_PRICES"; payload: ExtraPrice[] }
-  | { type: "UPDATE_TOTAL_PRICE"; payload: number };
+  | { type: "UPDATE_TOTAL_PRICE"; payload: number }
+  | { type: "RESET_BOOKING" };
 
 // Initial State
 const initialBookingData: BookingData = {
@@ -52,6 +53,8 @@ const bookingReducer = (state: BookingData, action: BookingAction): BookingData 
       return { ...state, extra_prices: action.payload };
     case "UPDATE_TOTAL_PRICE":
       return { ...state, total_price: action.payload };
+    case "RESET_BOOKING":
+      return { ...initialBookingData };
     default:
       return state;
   }

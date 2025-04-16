@@ -14,6 +14,7 @@ import ButtonPrimary from "@/shared/ButtonPrimary";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import ExtraPriceSelector from "./ExtraPriceSelector";
+import { handleError } from "@/lib/handleApiError";
 
 interface ModalPackageProps {
   packageId: string;
@@ -22,6 +23,7 @@ interface ModalPackageProps {
 
 const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: closeModalPackage }) => {
   const { bookingData, dispatch } = useBooking();
+  console.log("🚀 ~ bookingData:", bookingData);
   const { selectedDate, setSelectedDate } = useDate();
 
   const [isChangeDate, setIsChangeDate] = useState(false);
@@ -60,6 +62,7 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
 
       dispatch({ type: "UPDATE_PERSON_TYPES", payload: updatedPersonTypes });
       dispatch({ type: "UPDATE_PACKAGE", payload: packageId });
+      dispatch({ type: "UPDATE_EXTRA_PRICES", payload: [] });
 
       setIsFirstOpen(false);
     }
@@ -133,10 +136,12 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
           variant: "success",
           duration: 2000,
         });
+        dispatch({ type: "RESET_BOOKING" });
         closeModalPackage();
       }
     } catch (error) {
       console.log("🚀 ~ handleAddCart ~ error:", error);
+      handleError(error);
     }
   };
 
