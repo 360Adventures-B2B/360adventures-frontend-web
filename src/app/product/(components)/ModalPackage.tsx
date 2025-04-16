@@ -13,6 +13,7 @@ import { useAddCartMutation } from "@/lib/services/cartService";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import ExtraPriceSelector from "./ExtraPriceSelector";
 
 interface ModalPackageProps {
   packageId: string;
@@ -22,7 +23,6 @@ interface ModalPackageProps {
 const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: closeModalPackage }) => {
   const { bookingData, dispatch } = useBooking();
   const { selectedDate, setSelectedDate } = useDate();
-  console.log("🚀 ~ bookingData:", bookingData);
 
   const [isChangeDate, setIsChangeDate] = useState(false);
   const [isFirstOpen, setIsFirstOpen] = useState(true);
@@ -31,7 +31,7 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
 
   useEffect(() => {
     if (packageId) {
-      const startDate = selectedDate;
+      const startDate = selectedDate || bookingData.start_date;
       getDetailPackage({
         ulid: packageId,
         body: {
@@ -166,23 +166,29 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
           </div>
         </div>
 
-        <div className="space-y-4 p-4 rounded-lg bg-gray-100">
-          <h4 className="text-lg sm:text-xl font-semibold">Time slots</h4>
-          <div className="flex flex-wrap gap-2 justify-start">
-            {packageData?.time_slot.map((time: any) => (
-              <button
-                key={time}
-                className={`px-4 py-2 rounded-full text-sm sm:text-base ${
-                  selectedTime === time ? "bg-primary-500 text-white" : "bg-gray-200 text-gray-700"
-                }`}
-                onClick={() => handleTimeSelect(time)}
-              >
-                {time}
-              </button>
-            ))}
+        {packageData?.time_slot?.length > 0 && (
+          <div className="space-y-4 p-4 rounded-lg bg-gray-100">
+            <h4 className="text-lg sm:text-xl font-semibold">Time slots</h4>
+
+            <div className="flex flex-wrap gap-2 justify-start">
+              {packageData?.time_slot.map((time: any) => (
+                <button
+                  key={time}
+                  className={`px-4 py-2 rounded-full text-sm sm:text-base ${
+                    selectedTime === time ? "bg-primary-500 text-white" : "bg-gray-200 text-gray-700"
+                  }`}
+                  onClick={() => handleTimeSelect(time)}
+                >
+                  {time}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+
         <QuantityStepper personTypes={packageData?.person_types ?? []} />
+
+        {packageData?.extra_prices?.length > 0 && <ExtraPriceSelector extraPrices={packageData?.extra_prices ?? []} />}
       </div>
       {/* Footer section */}
       <div className="mt-auto bg-white p-4 rounded-lg shadow-lg sticky bottom-0 w-full">

@@ -13,16 +13,17 @@ const QuantityStepper: React.FC<QuantityStepperProps> = ({ personTypes }) => {
 
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
 
-  useEffect(() => {
-    const total = bookingData.person_types.reduce((acc, personType) => {
-      return acc + personType.selling_price * personType.guest;
-    }, 0);
+  // old calculate total price
+  // useEffect(() => {
+  //   const total = bookingData.person_types.reduce((acc, personType) => {
+  //     return acc + personType.selling_price * personType.guest;
+  //   }, 0);
 
-    dispatch({
-      type: "UPDATE_TOTAL_PRICE",
-      payload: total,
-    });
-  }, [bookingData.person_types]);
+  //   dispatch({
+  //     type: "UPDATE_TOTAL_PRICE",
+  //     payload: total,
+  //   });
+  // }, [bookingData.person_types]);
 
   const increment = (unitName: string) => {
     setQuantities((prevQuantities: any) => ({

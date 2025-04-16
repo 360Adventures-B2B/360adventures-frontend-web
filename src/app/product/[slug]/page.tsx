@@ -302,26 +302,24 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
             {isLoading ? <SKeletonDatePicker /> : <DatePicker />}
           </div>
 
-          <div>
-            {isLoadingCheckAvailableProduct || isLoading ? (
-              <div>
-                {Array.from({ length: 3 }).map((_, idx) => (
-                  <div className="mb-5">
-                    <PackageCardSkeleton key={idx} />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              // Tampilkan PackageCard jika data sudah tersedia
-              <div>
-                {packages?.map((pkg) => (
-                  <div className="mb-5">
-                    <PackageCard key={pkg.id} packageData={pkg} />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          {isLoadingCheckAvailableProduct || isLoading ? (
+            <div>
+              {Array.from({ length: 3 }).map((_, idx) => (
+                <div key={idx} className="mb-5">
+                  <PackageCardSkeleton />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div>
+              {packages?.map((pkg) => (
+                <div key={pkg.id} className="mb-5">
+                  <PackageCard packageData={pkg} />
+                </div>
+              ))}
+            </div>
+          )}
+
           {product?.highlight && <SectionContent title="Highlight" content={product.highlight} />}
 
           <IncludeExclude includes={product?.includes} excludes={product?.excludes} />

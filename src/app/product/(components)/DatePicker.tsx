@@ -22,6 +22,19 @@ const DatePicker = () => {
     return dates;
   };
 
+  const getSurroundingDates = (centerDate: Date, range: number): Date[] => {
+    const dates = [];
+    const half = Math.floor(range / 2);
+
+    for (let i = -half; i <= half; i++) {
+      const date = new Date(centerDate);
+      date.setDate(centerDate.getDate() + i);
+      dates.push(date);
+    }
+
+    return dates;
+  };
+
   const [visibleDates, setVisibleDates] = useState<Date[]>([]);
 
   const formatDate = (date: Date) => {
@@ -40,6 +53,7 @@ const DatePicker = () => {
   const handleTileClick = (date: Date) => {
     setSelectedDate(date);
     setHighlightedDate(date);
+
     if (date) {
       dispatch({ type: "UPDATE_DATE", payload: formatDateString(date) });
     }
@@ -53,6 +67,24 @@ const DatePicker = () => {
       setVisibleDates(getNextDays(cardsPerRow));
     }
   };
+
+  // handle effect visible date misal ada perubahan dari selected date
+  useEffect(() => {
+    if (!selectedDate || !containerRef.current) return;
+
+    const firstVisible = visibleDates[0];
+    const lastVisible = visibleDates[visibleDates.length - 1];
+
+    const containerWidth = (containerRef.current as HTMLDivElement).offsetWidth;
+
+    const cardWidth = 100;
+    const cardsPerRow = Math.floor(containerWidth / cardWidth);
+    const range = cardsPerRow - 1;
+
+    if (selectedDate < firstVisible || selectedDate > lastVisible) {
+      setVisibleDates(getSurroundingDates(selectedDate, range));
+    }
+  }, [selectedDate, visibleDates]);
 
   useEffect(() => {
     updateVisibleDates();

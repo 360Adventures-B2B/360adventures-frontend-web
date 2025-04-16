@@ -76,6 +76,7 @@ const ModalDatePicker: FC<ModalDatePickerProps> = ({
         showPopperArrow={false}
         inline
         monthsShown={monthsShown}
+        minDate={new Date()}
         renderCustomHeader={(p) => <DatePickerCustomHeaderTwoMonth {...p} />}
         renderDayContents={(day, date) => <DatePickerCustomDay dayOfMonth={day} date={date} />}
       />
