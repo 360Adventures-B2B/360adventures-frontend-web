@@ -7,6 +7,7 @@ import { locationApi } from "./services/locationsService";
 import { categoryApi } from "./services/categoryService";
 import { cartApi } from "./services/cartService";
 import { bookingApi } from "./services/bookingService";
+import { topupApi } from "./services/topupService";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     [categoryApi.reducerPath]: categoryApi.reducer,
     [cartApi.reducerPath]: cartApi.reducer,
     [bookingApi.reducerPath]: bookingApi.reducer,
+    [topupApi.reducerPath]: topupApi.reducer,
     filters: filterReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -26,6 +28,7 @@ export const store = configureStore({
       categoryApi.middleware,
       cartApi.middleware,
       bookingApi.middleware,
+      topupApi.middleware,
     ]),
 });
 

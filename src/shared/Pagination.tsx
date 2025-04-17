@@ -14,7 +14,6 @@ export interface PaginationProps {
 const Pagination: FC<PaginationProps> = ({ totalPages = 0, className = "", maxVisiblePaging = 5 }) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  console.log("🚀 ~ pathname:", pathname);
   const router = useRouter();
 
   const currentPage = Number(searchParams.get("page")) || 1;

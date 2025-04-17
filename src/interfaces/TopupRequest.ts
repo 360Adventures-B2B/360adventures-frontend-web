@@ -9,7 +9,7 @@ export interface ITopupRequest {
   reference_id: string;
   amount: number;
   fee_credit_card: number;
-  point_earned: number;
+  point_earn: number;
   last_amount: number;
   after_amount: number;
   status: "success" | "reject" | "pending";

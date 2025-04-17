@@ -4,8 +4,12 @@ import ButtonPrimary from "@/shared/ButtonPrimary";
 import NcModal from "@/shared/NcModal";
 import TopUpForm from "./components/TopupForm";
 import TopupRequest from "./components/TopupRequest";
+import { formatNumber } from "@/utils/currencyConverter";
+import { useGetUserQuery } from "@/lib/services/authService";
 
 const AccountTopup = () => {
+  const { data: user, isLoading: isLoadingUser, isError } = useGetUserQuery(undefined);
+  const userData = user?.data;
   return (
     <div className="space-y-6 sm:space-y-8">
       {/* HEADING */}
@@ -20,7 +24,9 @@ const AccountTopup = () => {
 
             <div>
               <h3 className="text-xl font-semibold text-gray-700">Your Balance</h3>
-              <p className="text-3xl font-bold text-primary-6000 mt-4">USD 1,250.00</p>
+              <p className="text-3xl font-bold text-primary-6000 mt-4">
+                {isLoadingUser ? "Loading..." : isError || !userData ? "N/A" : formatNumber(userData?.credit_amount)}
+              </p>
             </div>
           </div>
         </div>
