@@ -49,7 +49,7 @@ const TopupRequestTable: React.FC<TopupRequestTableProps> = ({ data }) => {
       bank_transfer: "Bank Transfer",
       qr_code: "QR Code",
     };
-    return <td className="text-xs sm:text-sm sm:px-4 sm:py-3">{paymentLabels[paymentMethod] || paymentMethod}</td>;
+    return <p className="text-xs sm:text-sm sm:px-4 sm:py-3">{paymentLabels[paymentMethod] || paymentMethod}</p>;
   };
 
   return (
@@ -169,7 +169,9 @@ const TopupRequestTable: React.FC<TopupRequestTableProps> = ({ data }) => {
                   </td>
 
                   <td className="px-4 py-3 text-xs sm:text-sm">{formatAmount(item.point_earn)}</td>
-                  <PaymentMethodCell paymentMethod={item.payment_method} />
+                  <td>
+                    <PaymentMethodCell paymentMethod={item.payment_method} />
+                  </td>
                   <td className="text-xs sm:text-sm text-center">
                     <NcModal
                       contentExtraClass="w-full md:w-1/2"

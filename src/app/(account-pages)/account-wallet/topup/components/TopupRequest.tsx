@@ -38,8 +38,19 @@ const TopupRequest: React.FC<{}> = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+  
+  const [isMobile, setIsMobile] = useState(false);
 
-  const isMobile = window.innerWidth <= 640;
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+
+    handleResize(); // set awal
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex}>

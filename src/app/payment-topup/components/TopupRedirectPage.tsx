@@ -1,24 +1,26 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import SuccessPng from "@/images/success.png"; // pastikan file ini ada
-import FailedPng from "@/images/failed.png"; // pastikan file ini ada
-import PendingPng from "@/images/pending.png"; // gambar untuk status "pending"
+import SuccessPng from "@/images/success.png"; 
+import FailedPng from "@/images/failed.png"; 
+import PendingPng from "@/images/pending.png"; 
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import { Route } from "next";
 import ButtonSecondary from "@/shared/ButtonSecondary";
+import { formatNumber } from "@/utils/currencyConverter";
+import { formatDateTime } from "@/utils/dateHelper";
 
 interface TopupRedirectPageProps {
   description?: string;
   order_id?: string;
   reference_id?: string;
   date?: string;
-  amount?: number | string;
+  amount?: number;
   payment_method?: string;
-  total_paid?: number | string;
+  total_paid?: number;
   status?: string;
   buttonHref?: string;
   buttonText?: string;
-  onRefresh?: () => void; // Function to trigger when refresh button is clicked
+  onRefresh?: () => void; 
   isLoading?: boolean;
 }
 
@@ -36,11 +38,9 @@ const TopupRedirectPage: React.FC<TopupRedirectPageProps> = ({
   onRefresh, // Add this prop
   isLoading,
 }) => {
-  const [loading, setLoading] = useState(false); // Track the loading state
-
-  let statusImage = PendingPng; // Default to pending image
-  let statusColor = "text-yellow-600"; // Default to yellow for pending status
-  let statusText = "Payment is pending"; // Default text for pending
+  let statusImage = PendingPng;
+  let statusColor = "text-yellow-600";
+  let statusText = "Payment is pending";
 
   // Adjust based on actual status
   if (status === "success") {
@@ -74,24 +74,30 @@ const TopupRedirectPage: React.FC<TopupRedirectPageProps> = ({
           </div>
           <div className="flex justify-between text-sm text-gray-600">
             <span className="font-semibold">Date:</span>
-            <span>{date}</span>
+            <span>{formatDateTime(date)}</span>
           </div>
           {amount !== undefined && (
             <div className="flex justify-between text-sm text-gray-600">
               <span className="font-semibold">Top-up Amount:</span>
-              <span>Rp {typeof amount === "number" ? amount.toLocaleString() : amount}</span>
+              <span>{formatNumber(amount)}</span>
             </div>
           )}
           {payment_method && (
             <div className="flex justify-between text-sm text-gray-600">
               <span className="font-semibold">Payment Method:</span>
-              <span>{payment_method}</span>
+              <span>
+                {payment_method === "payment_gateway" && "Payment Gateway"}
+                {payment_method === "bank_transfer" && "Bank Transfer"}
+                {payment_method === "qr_code" && "QR Code"}
+                {!["payment_gateway", "bank_transfer", "qr_code"].includes(payment_method) && payment_method}
+              </span>
             </div>
           )}
+
           {total_paid !== undefined && (
             <div className="flex justify-between text-sm text-gray-600">
               <span className="font-semibold">Total Paid:</span>
-              <span>Rp {typeof total_paid === "number" ? total_paid.toLocaleString() : total_paid}</span>
+              <span>{formatNumber(total_paid)}</span>
             </div>
           )}
           <div className="flex justify-between text-sm text-gray-600">
