@@ -2,12 +2,13 @@
 import React, { useState, useEffect } from "react";
 import TopupRedirectPage from "../components/TopupRedirectPage";
 import { useGetDetailTopupRequestQuery } from "@/lib/services/topupService";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import TopupRedirectPageSkeleton from "../components/TopupRedirectPageSkeleton";
 
 const PaymentTopupSuccessPage = () => {
-  const router = useRouter(); // Gunakan router untuk redireksi
-  const paymentLinkId = new URLSearchParams(window.location.search).get("paymentLinkId");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const paymentLinkId = searchParams.get("paymentLinkId");
 
   const [shouldRetry, setShouldRetry] = useState(true);
 
