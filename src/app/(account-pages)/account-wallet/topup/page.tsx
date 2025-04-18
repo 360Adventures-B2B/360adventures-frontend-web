@@ -44,7 +44,7 @@ const AccountTopup = () => {
                   </ButtonPrimary>
                 )}
                 renderContent={(closeModal) => {
-                  return <TopUpForm />;
+                  return <TopUpForm closeModal={closeModal} />;
                 }}
                 modalTitle="Topup Credit"
               />

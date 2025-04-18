@@ -36,6 +36,13 @@ export default withAuth(
       return NextResponse.next();
     }
 
+    if (path === "/payment-topup/success" || path === "/payment-topup/failure") {
+      const paymentLinkId = searchParams.get("paymentLinkId");
+      if (!paymentLinkId) {
+        return NextResponse.redirect(new URL("/", req.url)); 
+      }
+    }
+
     if (req.nextauth.token && isPublicRoute) {
       return NextResponse.redirect(new URL("/", req.url));
     }

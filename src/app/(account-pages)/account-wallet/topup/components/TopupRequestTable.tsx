@@ -93,7 +93,9 @@ const TopupRequestTable: React.FC<TopupRequestTableProps> = ({ data }) => {
 
               <div className="flex justify-between items-center mt-2">
                 <span className="text-sm sm:text-base font-semibold text-gray-700">Amount:</span>
-                <span className="text-xs sm:text-sm text-gray-600">{formatNumber(item.amount)}</span>
+                <span className="text-xs sm:text-sm text-gray-600">
+                  {formatNumber((item.amount || 0) + (item.fee_credit_card || 0))}
+                </span>
               </div>
               <div className="flex justify-between items-center mt-2">
                 <span className="text-sm sm:text-base font-semibold text-gray-700">Point Earn:</span>
@@ -162,7 +164,10 @@ const TopupRequestTable: React.FC<TopupRequestTableProps> = ({ data }) => {
                   <td className="px-4 py-3 text-xs sm:text-sm">
                     <StatusBadge status={item.status} />
                   </td>
-                  <td className="px-4 py-3 text-xs sm:text-sm">{formatNumber(item.amount)}</td>
+                  <td className="px-4 py-3 text-xs sm:text-sm">
+                    {formatNumber((item.amount || 0) + (item.fee_credit_card || 0))}
+                  </td>
+
                   <td className="px-4 py-3 text-xs sm:text-sm">{formatAmount(item.point_earn)}</td>
                   <PaymentMethodCell paymentMethod={item.payment_method} />
                   <td className="text-xs sm:text-sm text-center">

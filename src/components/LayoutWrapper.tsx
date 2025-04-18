@@ -11,6 +11,7 @@ import ReduxProvider from "@/lib/provider/redux";
 import { BookingProvider } from "@/context/BookingContext";
 import { DateProvider } from "@/context/DateContext";
 import TopLoaderProvider from "./TopLoaderProvider";
+import { TopupProvider } from "@/context/TopupContext";
 
 const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
@@ -25,13 +26,15 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
         <AuthProvider>
           <BookingProvider>
             <DateProvider>
-              <div>
-                {!hideLayout && <ClientCommons />}
-                {!hideLayout && <SiteHeader />}
-                {children}
-                {!hideLayout && <FooterNav />}
-                {!hideLayout && <Footer />}
-              </div>
+              <TopupProvider>
+                <div>
+                  {!hideLayout && <ClientCommons />}
+                  {!hideLayout && <SiteHeader />}
+                  {children}
+                  {!hideLayout && <FooterNav />}
+                  {!hideLayout && <Footer />}
+                </div>
+              </TopupProvider>
             </DateProvider>
           </BookingProvider>
         </AuthProvider>

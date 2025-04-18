@@ -8,7 +8,7 @@ import { categoryApi } from "./services/categoryService";
 import { cartApi } from "./services/cartService";
 import { bookingApi } from "./services/bookingService";
 import { topupApi } from "./services/topupService";
-
+import { bankApi } from "./services/bankService";
 export const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
@@ -18,6 +18,7 @@ export const store = configureStore({
     [cartApi.reducerPath]: cartApi.reducer,
     [bookingApi.reducerPath]: bookingApi.reducer,
     [topupApi.reducerPath]: topupApi.reducer,
+    [bankApi.reducerPath]: bankApi.reducer,
     filters: filterReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -29,6 +30,7 @@ export const store = configureStore({
       cartApi.middleware,
       bookingApi.middleware,
       topupApi.middleware,
+      bankApi.middleware,
     ]),
 });
 
