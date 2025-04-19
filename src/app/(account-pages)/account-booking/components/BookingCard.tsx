@@ -66,7 +66,7 @@ export default function BookingCard({ booking }: { booking: IBooking }) {
               </div>
             )}
             renderContent={(closeModal) => {
-              return <BookingDetail />;
+              return <BookingDetail booking={booking} />;
             }}
             modalTitle="Booking Details"
           />

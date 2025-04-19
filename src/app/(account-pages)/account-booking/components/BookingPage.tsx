@@ -81,9 +81,11 @@ export default function BookingPage() {
                   ))}
 
                   {/* Pagination */}
-                  <div className="text-center pt-5">
-                    <Pagination totalPages={bookings?.pagination.total} maxVisiblePaging={maxVisible} />
-                  </div>
+                  {bookings?.pagination?.last_page > 1 && (
+                    <div className="text-center pt-5">
+                      <Pagination totalPages={bookings?.pagination.total} maxVisiblePaging={maxVisible} />
+                    </div>
+                  )}
                 </>
               ) : (
                 <div className="text-center text-gray-500">No bookings found.</div>

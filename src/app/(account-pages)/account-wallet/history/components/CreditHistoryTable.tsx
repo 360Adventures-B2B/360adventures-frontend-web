@@ -73,28 +73,36 @@ const CreditHistoryTable: React.FC<CreditHistoryTableProps> = ({ data }) => {
             </tr>
           </thead>
           <tbody>
-            {data.map((item, index) => (
-              <tr key={index} className="border-b border-gray-200">
-                <td className="px-4 py-3 text-sm sm:text-base">{index + 1}</td>
-                <td className="px-4 py-3 text-sm sm:text-base">
-                  {item.created_at ? formatDateTime(item.created_at) : "-"}
-                </td>
-                <td className="px-4 py-3 text-sm sm:text-base">
-                  <div>{item.notes ?? "-"}</div>
-                  {item.package?.product?.name && (
-                    <div className="text-xs text-gray-700">{item.package.product.name}</div>
-                  )}
-                  {item.package?.name && <div className="text-xs text-gray-500">{item.package.name}</div>}
-                </td>
-
-                <td className="px-4 py-3 text-sm sm:text-base">
-                  {item.type ? item.type.charAt(0).toUpperCase() + item.type.slice(1) : "-"}
-                </td>
-                <td className="px-4 py-3 text-sm sm:text-base">
-                  {item.amount !== undefined ? formatAmount(item.amount) : "-"}
+            {(data?.length ?? 0) === 0 ? (
+              <tr>
+                <td colSpan={6} className="px-4 py-3 text-center text-xs sm:text-sm text-gray-500">
+                  No Data Available
                 </td>
               </tr>
-            ))}
+            ) : (
+              data.map((item, index) => (
+                <tr key={index} className="border-b border-gray-200">
+                  <td className="px-4 py-3 text-sm sm:text-base">{index + 1}</td>
+                  <td className="px-4 py-3 text-sm sm:text-base">
+                    {item.created_at ? formatDateTime(item.created_at) : "-"}
+                  </td>
+                  <td className="px-4 py-3 text-sm sm:text-base">
+                    <div>{item.notes ?? "-"}</div>
+                    {item.package?.product?.name && (
+                      <div className="text-xs text-gray-700">{item.package.product.name}</div>
+                    )}
+                    {item.package?.name && <div className="text-xs text-gray-500">{item.package.name}</div>}
+                  </td>
+
+                  <td className="px-4 py-3 text-sm sm:text-base">
+                    {item.type ? item.type.charAt(0).toUpperCase() + item.type.slice(1) : "-"}
+                  </td>
+                  <td className="px-4 py-3 text-sm sm:text-base">
+                    {item.amount !== undefined ? formatAmount(item.amount) : "-"}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
