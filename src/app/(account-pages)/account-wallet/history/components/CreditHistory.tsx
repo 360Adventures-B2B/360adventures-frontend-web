@@ -5,43 +5,36 @@ import { Tab } from "@headlessui/react";
 import React, { Fragment, useEffect, useState } from "react";
 import CreditHistoryTable from "./CreditHistoryTable";
 import Pagination from "@/shared/Pagination";
-
-const dummyData: CreditHistoryItem[] = [
-  {
-    date: "2025-03-20 10:00:00",
-    information: "Checkout",
-    productName: "Product A",
-    type: "Payment",
-    amount: -50.0,
-  },
-  {
-    date: "2025-03-19 09:15:00",
-    information: "Topup",
-    productName: "",
-    type: "Topup",
-    amount: 100.0,
-  },
-  {
-    date: "2025-03-18 17:45:00",
-    information: "Refund",
-    productName: "Product B",
-    type: "Payment",
-    amount: -20.0,
-  },
-];
-
-type CreditHistoryItem = {
-  date: string;
-  information: string;
-  productName?: string;
-  type: "Payment" | "Topup";
-  amount: number;
-};
+import { useSearchParams } from "next/navigation";
+import { useGetCreditHistoriesQuery } from "@/lib/services/creditHistoryService";
+import TableMobileSkeleton from "@/components/skeleton/TableMobileSkeleton";
+import TableSkeleton from "@/components/skeleton/TableSkeleton";
 
 const CreditHistory: React.FC<{}> = () => {
-  let [options] = useState(["All", "Topup", "Payment", "Refund"]);
+  const options = ["All", "Topup", "Payment", "Refund"];
+  const searchParams = useSearchParams();
+
+  const page = parseInt(searchParams?.get("page") || "1");
 
   const [maxVisible, setMaxVisible] = useState(3);
+
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const selectedType = options[selectedIndex];
+
+  const {
+    data: creditHistories,
+    error: creditHistoriesError,
+    isLoading: isCreditHistoriesLoading,
+    isFetching: isCreditHistoriesFetching,
+  } = useGetCreditHistoriesQuery(
+    {
+      page,
+      limit: 10,
+      type: selectedType.toLowerCase() === "all" ? "" : selectedType.toLowerCase(),
+    },
+    { refetchOnMountOrArgChange: true }
+  );
 
   useEffect(() => {
     const handleResize = () => {
@@ -56,21 +49,20 @@ const CreditHistory: React.FC<{}> = () => {
 
   return (
     <>
-      <Tab.Group>
+      <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex}>
         <Tab.List className="flex space-x-1 overflow-x-auto w-full">
           {options.map((item) => (
-            <Tab key={item} as={Fragment}>
-              {({ selected }) => (
-                <button
-                  className={`flex-shrink-0 block !leading-none font-medium px-5 py-2.5 text-sm sm:text-base sm:px-6 sm:py-3 capitalize rounded-full focus:outline-none transition-colors ${
-                    selected
-                      ? "bg-primary-6000 text-primary-50"
-                      : "text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-100 hover:text-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                  }`}
-                >
-                  {item}
-                </button>
-              )}
+            <Tab
+              key={item}
+              className={({ selected }) =>
+                `flex-shrink-0 block !leading-none font-medium px-5 py-2.5 text-sm sm:text-base sm:px-6 sm:py-3 capitalize rounded-full focus:outline-none transition-colors ${
+                  selected
+                    ? "bg-primary-6000 text-primary-50"
+                    : "text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-100 hover:text-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                }`
+              }
+            >
+              {item}
             </Tab>
           ))}
         </Tab.List>
@@ -78,11 +70,26 @@ const CreditHistory: React.FC<{}> = () => {
         <Tab.Panels>
           {options.map((item, index) => (
             <Tab.Panel key={index} className="mt-8">
-              <CreditHistoryTable data={dummyData} />
+              {isCreditHistoriesLoading || isCreditHistoriesFetching ? (
+                <>
+                  <div className="sm:hidden">
+                    <TableMobileSkeleton rows={5} />
+                  </div>
 
-              <div className="text-center pt-10">
-                <Pagination totalPages={20} maxVisiblePaging={maxVisible} />
-              </div>
+                  <div className="hidden sm:block">
+                    <TableSkeleton columns={5} rows={5} />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <CreditHistoryTable data={creditHistories?.data} />
+                  {creditHistories?.pagination?.last_page > 1 && (
+                    <div className="text-center pt-10">
+                      <Pagination totalPages={creditHistories?.pagination.total} maxVisiblePaging={maxVisible} />
+                    </div>
+                  )}
+                </>
+              )}
             </Tab.Panel>
           ))}
         </Tab.Panels>

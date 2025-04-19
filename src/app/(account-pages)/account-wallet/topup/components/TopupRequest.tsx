@@ -38,7 +38,7 @@ const TopupRequest: React.FC<{}> = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  
+
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -75,11 +75,14 @@ const TopupRequest: React.FC<{}> = () => {
         {options.map((item, index) => (
           <Tab.Panel key={index} className="mt-8">
             {isTopuRequestLoading || isTopuRequestFetching ? (
-              isMobile ? (
-                <TableMobileSkeleton rows={5} />
-              ) : (
-                <TableSkeleton columns={7} rows={5} />
-              )
+              <>
+                <div className="sm:hidden">
+                  <TableMobileSkeleton rows={5} />
+                </div>
+                <div className="hidden sm:block">
+                  <TableSkeleton columns={7} rows={5} />
+                </div>
+              </>
             ) : (
               <>
                 <TopupRequestTable data={topupRequests?.data} />
