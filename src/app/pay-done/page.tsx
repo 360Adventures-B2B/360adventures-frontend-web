@@ -4,9 +4,8 @@ import ButtonPrimary from "@/shared/ButtonPrimary";
 import Image from "next/image";
 import { CheckCircle } from "lucide-react";
 import { redirect, useRouter, useSearchParams } from "next/navigation";
-import { useGetBookingQuery, useGetBookingSummaryQuery } from "@/lib/services/bookingService";
+import { useGetBookingSummaryQuery } from "@/lib/services/bookingService";
 import BookingSummary from "@/components/BookingSummary";
-import { BookingProvider } from "@/context/BookingContext";
 import BookingSummarySkeleton from "@/components/skeleton/BookingSummarySkeleton";
 import InformationSkeleton from "./components/InformationSkeleton";
 
@@ -79,7 +78,7 @@ const PayPage: FC<PayPageProps> = () => {
           </div>
         </div>
         <div>
-          <ButtonPrimary href="/">Booking History</ButtonPrimary>
+          <ButtonPrimary href="/account-booking">Booking History</ButtonPrimary>
         </div>
       </div>
     );

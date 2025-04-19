@@ -1,10 +1,5 @@
-"use client";
 import React from "react";
-import ButtonPrimary from "@/shared/ButtonPrimary";
-import CreditHistoryTable from "./components/CreditHistoryTable";
 import CreditHistory from "./components/CreditHistory";
-import NcModal from "@/shared/NcModal";
-import TopUpForm from "./components/TopupForm";
 
 const AccountTopup = () => {
   return (

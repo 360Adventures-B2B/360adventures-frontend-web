@@ -1,6 +1,4 @@
 import { StaticImageData } from "next/image";
-import { Category } from "./Category";
-import { Location } from "./Location";
 import { Package } from "./Package";
 
 // export interface Product {

@@ -7,6 +7,6 @@ export interface PersonType {
   selling_price: number;
   cost_price: number;
   retail_price: number;
-  total: number;
+  total?: number;
   guest: number;
 }

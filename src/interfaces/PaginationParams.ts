@@ -3,4 +3,5 @@ export interface PaginationParams {
   limit?: number;
   status?: string;
   type?: string;
+  bookingStatus?: string;
 }

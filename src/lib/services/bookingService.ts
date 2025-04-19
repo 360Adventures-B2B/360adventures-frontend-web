@@ -1,17 +1,14 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { createBaseQuery } from "./baseQuery";
-
-// type CartResponse = {
-//   data: Cart[];
-// };
+import { PaginationParams } from "@/interfaces/PaginationParams";
 
 export const bookingApi = createApi({
   reducerPath: "bookingApi",
   baseQuery: createBaseQuery(),
-  // baseQuery: fetchBaseQuery({ baseUrl: "/api/" }),
   endpoints: (builder) => ({
-    getBooking: builder.query({
-      query: (orderId) => `booking/${orderId}`,
+    getBookings: builder.query({
+      query: ({ page = 1, limit = 10, bookingStatus = "" }: PaginationParams) =>
+        `/api/bookings?page=${page}&limit=${limit}&booking_status=${bookingStatus}`,
     }),
     getBookingSummary: builder.query({
       query: (orderId) => `/api/bookings/summary/${orderId}`,
@@ -25,4 +22,4 @@ export const bookingApi = createApi({
     }),
   }),
 });
-export const { useGetBookingQuery, useGetBookingSummaryQuery, useUpdateBookingMutation } = bookingApi;
+export const { useGetBookingsQuery, useGetBookingSummaryQuery, useUpdateBookingMutation } = bookingApi;

@@ -1,14 +1,8 @@
 "use client";
 
 import React, { FC, Fragment, useEffect, useState } from "react";
-import mastercardPng from "@/images/mastercard.svg";
-
-import { redirect, useRouter, useSearchParams } from "next/navigation";
-import { useGetBookingQuery } from "@/lib/services/bookingService";
-import { formatNumber } from "@/utils/currencyConverter";
 
 import FormCheckout from "./component/FormCheckout";
-import { formatDate, formatDateString } from "@/utils/dateHelper";
 import BookingSummary from "@/components/BookingSummary";
 import BookingSummarySkeleton from "@/components/skeleton/BookingSummarySkeleton";
 import { useGetCartsQuery } from "@/lib/services/cartService";
