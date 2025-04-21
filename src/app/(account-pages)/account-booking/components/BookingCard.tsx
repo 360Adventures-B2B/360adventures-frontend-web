@@ -6,6 +6,8 @@ import BookingDetail from "./BookingDetail";
 import { IBooking } from "@/interfaces/Booking";
 import { formatDate, formatDateTime } from "@/utils/dateHelper";
 import Image from "next/image";
+import ModalCancelBooking from "./ModalCancelBooking";
+import { useLazyDownloadTicketQuery } from "@/lib/services/bookingService";
 
 export default function BookingCard({ booking }: { booking: IBooking }) {
   const statusColors: Record<string, string> = {
@@ -17,6 +19,30 @@ export default function BookingCard({ booking }: { booking: IBooking }) {
 
   const fallbackUrl = "https://dummyimage.com/500x500/000/fff";
   const [imgSrc, setImgSrc] = useState(booking.package?.product?.image || fallbackUrl);
+
+  const [triggerDownloadTicket, { isFetching }] = useLazyDownloadTicketQuery();
+  const handleDownload = async () => {
+    try {
+      const res = await triggerDownloadTicket(booking?.ulid || "").unwrap();
+      const fileUrl = res?.data?.url;
+
+      if (!fileUrl) {
+        console.warn("No URL found in response");
+        return;
+      }
+
+      const newWindow = window.open(fileUrl, "_blank");
+
+      if (!newWindow) {
+        console.error("Failed to open the file. Pop-up might be blocked.");
+        return;
+      }
+
+      newWindow.focus();
+    } catch (error) {
+      console.error("Download failed:", error);
+    }
+  };
 
   return (
     <div>
@@ -83,16 +109,38 @@ export default function BookingCard({ booking }: { booking: IBooking }) {
           </p>
 
           <div className="mt-10 flex flex-col lg:flex-row items-center gap-2">
-            <Button
-              sizeClass="px-4 py-2"
-              fontSize="text-sm"
-              className="w-full lg:w-auto  border rounded-lg text-red-500 border-red-300 hover:bg-red-100"
-            >
-              Cancel booking
-            </Button>
-            <ButtonPrimary fontSize="text-sm" sizeClass="px-4 py-2" className="w-full lg:w-auto border rounded-lg">
-              Download voucher
-            </ButtonPrimary>
+            {/* Cek status booking */}
+            {(booking?.booking_status === "confirmed" || booking?.booking_status === "unconfirmed") && (
+              <NcModal
+                contentExtraClass="w-full md:w-1/4"
+                renderTrigger={(openModal) => (
+                  <Button
+                    onClick={() => openModal()}
+                    sizeClass="px-4 py-2"
+                    fontSize="text-sm"
+                    className="w-full lg:w-auto border rounded-lg text-red-500 border-red-300 hover:bg-red-100"
+                  >
+                    Cancel booking
+                  </Button>
+                )}
+                renderContent={(closeModal) => (
+                  <ModalCancelBooking closeModal={closeModal} bookingId={booking?.ulid || ""} />
+                )}
+                modalTitle={"Information"}
+              />
+            )}
+
+            {(booking?.booking_status === "confirmed" || booking?.booking_status === "completed") && (
+              <ButtonPrimary
+                loading={isFetching}
+                onClick={handleDownload}
+                fontSize="text-sm"
+                sizeClass="px-4 py-2"
+                className={`w-full lg:w-auto border rounded-lg lg:ml-auto`}
+              >
+                Download voucher
+              </ButtonPrimary>
+            )}
           </div>
         </div>
       </div>

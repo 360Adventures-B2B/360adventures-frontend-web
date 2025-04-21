@@ -58,6 +58,19 @@ export const authApi = createApi({
         body: credentials,
       }),
     }),
+    changePasswordUser: builder.mutation({
+      query: (body) => ({
+        url: "api/user/change-password",
+        method: "POST",
+        body: body,
+      }),
+    }),
+    logoutUser: builder.mutation({
+      query: (body) => ({
+        url: "api/auth/loogout",
+        method: "POST",
+      }),
+    }),
   }),
 });
 export const {
@@ -69,4 +82,6 @@ export const {
   useResetUserPasswordMutation,
   useGetUserQuery,
   useUpdateUserMutation,
+  useChangePasswordUserMutation,
+  useLogoutUserMutation,
 } = authApi;

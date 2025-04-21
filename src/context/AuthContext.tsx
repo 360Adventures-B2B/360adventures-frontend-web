@@ -4,6 +4,8 @@ import { signOut, useSession } from "next-auth/react";
 import { User } from "@/interfaces/User";
 import { useRouter } from "next/navigation";
 
+export let globalUpdateToken: (token: string) => Promise<void> = async () => {};
+
 interface AuthProviderProps {
   children: ReactNode;
 }
@@ -13,6 +15,7 @@ type AuthContextType = {
   status: "loading" | "authenticated" | "unauthenticated";
   handleLogout: () => Promise<void>;
   updateIsVerify: (isVerify: boolean) => Promise<void>;
+  updateToken: (token: string) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -49,7 +52,23 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  return <AuthContext.Provider value={{ user, status, handleLogout, updateIsVerify }}>{children}</AuthContext.Provider>;
+  const updateToken = async (token: string): Promise<void> => {
+    if (session?.user) {
+      await update({
+        token: token,
+      });
+    }
+  };
+
+  useEffect(() => {
+    globalUpdateToken = updateToken;
+  }, [updateToken]);
+
+  return (
+    <AuthContext.Provider value={{ user, status, handleLogout, updateIsVerify, updateToken }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 // Custom hook untuk mengakses AuthContext di komponen lain

@@ -40,7 +40,7 @@ const CartItem: React.FC<CartItemProps> = ({ item, selectedItems, toggleSelectIt
       {/* Details */}
       <div className="cart-item-details relative flex-1 ml-6 pr-6">
         {/* Tour Name */}
-        <a href="product-left-sidebar.html" className="cart-item-title block text-lg font-semibold text-gray-800">
+        <a href={`/product/${item?.product?.slug}`} className="cart-item-title block text-lg font-semibold text-gray-800">
           {item?.product?.name}
         </a>
 

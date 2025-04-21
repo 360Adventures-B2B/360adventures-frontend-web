@@ -40,6 +40,7 @@ export interface Package {
 export interface Product {
   ulid: string;
   name: string;
+  slug: string;
   duration: number;
   instant_confirmation: boolean;
   free_cancellation: boolean;

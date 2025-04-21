@@ -3,6 +3,7 @@ import { signOut } from "next-auth/react";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { globalUpdateToken } from "@/context/AuthContext";
 
 export const createBaseQuery = () => {
   return async (args: any, api: any, extraOptions: any) => {
@@ -29,14 +30,45 @@ export const createBaseQuery = () => {
     const result = await baseQuery(args, api, extraOptions);
 
     if (result.error && (result.error.status === 401 || result.error.status === 403)) {
+      const session = await getSession();
+      const refreshToken = session?.user?.token;
+
       const requestUrl = args?.url || args;
+
       if (
         requestUrl &&
         !requestUrl.includes("api/auth/verify-otp") &&
         !requestUrl.includes("api/auth/login") &&
         !requestUrl.includes("api/auth/register")
       ) {
-        await signOut({ redirect: true });
+        if (refreshToken) {
+          try {
+            // Memanggil API untuk refresh token
+            const refreshResult = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh-token`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "x-api-key": process.env.NEXT_PUBLIC_API_KEY || "",
+                Authorization: `Bearer ${refreshToken}`,
+              },
+            });
+
+            if (refreshResult.ok) {
+              const data = await refreshResult.json();
+
+              if (data.code === 200 && data.data?.token) {
+                const newAccessToken = data.data.token;
+
+                await globalUpdateToken(newAccessToken);
+
+                return await baseQuery(args, api, extraOptions);
+              }
+            }
+          } catch (error) {
+            console.error("Refresh token failed", error);
+          }
+        }
+        // await signOut({ redirect: true });
       }
     }
 

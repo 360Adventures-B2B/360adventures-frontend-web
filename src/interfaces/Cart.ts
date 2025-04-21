@@ -9,6 +9,7 @@ export interface Package {
 export interface Product {
   ulid: string;
   name: string;
+  slug: string;
   image: string;
 }
 

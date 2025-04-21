@@ -47,7 +47,8 @@ export const authOptions: AuthOptions = {
       }
 
       if (trigger === "update") {
-        token.isVerify = session.isVerify;
+        token.isVerify = session.isVerify || token.isVerify;
+        token.token = session.token || token.token;
         // return { ...token, ...session.user };
       }
 

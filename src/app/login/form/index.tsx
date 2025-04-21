@@ -63,7 +63,7 @@ export default function FormLogin() {
           redirect: false,
         });
 
-        window.location.href = (result?.url || "/")
+        window.location.href = result?.url || "/";
         // router.push((result?.url as Route) || "/");
 
         // if (result?.ok) {

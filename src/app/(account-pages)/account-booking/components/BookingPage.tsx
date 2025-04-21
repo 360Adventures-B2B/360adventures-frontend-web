@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import BookingCard from "./BookingCard";
 import { useGetBookingsQuery } from "@/lib/services/bookingService";
 import BookingCardSkeleton from "./BookingCardSkeleton";
+import { IBooking } from "@/interfaces/Booking";
 
 export default function BookingPage() {
   const options = ["All", "Confirmed", "Unconfirmed", "Completed", "Cancelled"];
@@ -76,8 +77,8 @@ export default function BookingPage() {
               ) : bookings?.data?.length > 0 ? (
                 <>
                   {/* BookingCard list */}
-                  {bookings.data.map((booking: any) => (
-                    <BookingCard key={booking.id} booking={booking} />
+                  {bookings.data.map((booking: IBooking) => (
+                    <BookingCard key={booking.ulid} booking={booking} />
                   ))}
 
                   {/* Pagination */}

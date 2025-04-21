@@ -2,7 +2,7 @@
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import Input from "@/shared/Input";
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -16,21 +16,33 @@ import { handleError } from "@/lib/handleApiError";
 
 export default function FormRegister() {
   const phoneRegex = /^[0-9]{10,15}$/;
+
   const schema = yup.object().shape({
-    name: yup.string().min(3, "full name must be at least 3 characters").required("full name is a required field"),
-    username: yup.string().min(5, "username must be at least 5 characters").required("username is a required field"),
+    name: yup.string().min(3, "Full name must be at least 3 characters").required("Full name is a required field"),
+
+    username: yup.string().min(5, "Username must be at least 5 characters").required("Username is a required field"),
+
     email: yup
       .string()
-      .test("email-or-phone", "email or phone invalid", (value) => {
+      .test("email-or-phone", "Email or phone is invalid", (value) => {
         if (!value) return false;
         return yup.string().email().isValidSync(value) || phoneRegex.test(value);
       })
-      .required(),
-    password: yup.string().min(6).max(32).required(),
+      .required("Email or phone is a required field"),
+
+    password: yup
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+      .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+      .matches(/[0-9]/, "Password must contain at least one number")
+      .matches(/[^a-zA-Z0-9]/, "Password must contain at least one special character")
+      .required("Password is a required field"),
+
     passwordConfirmation: yup
       .string()
-      .oneOf([yup.ref("password"), undefined], "confirmation password doesn't match")
-      .required("password confirmation is a required field"),
+      .oneOf([yup.ref("password"), undefined], "Confirmation password doesn't match")
+      .required("Password confirmation is a required field"),
   });
 
   type FormData = yup.InferType<typeof schema>;
