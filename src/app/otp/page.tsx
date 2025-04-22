@@ -1,10 +1,17 @@
+"use client";
 import React, { FC } from "react";
 import Logo from "@/shared/Logo";
 import FormOTP from "./form";
+import { useSearchParams } from "next/navigation";
 
 export interface PageOTPProps {}
 
 const PageOTP: FC<PageOTPProps> = ({}) => {
+  const searchParams = useSearchParams();
+  const modeParam = searchParams.get("mode");
+
+  const mode = modeParam === "reset-password" ? "reset-password" : "register";
+
   return (
     <div className={`nc-PageOTP`}>
       <div className="container mb-24 lg:mb-32">
@@ -16,7 +23,7 @@ const PageOTP: FC<PageOTPProps> = ({}) => {
         </h2>
         <div className="max-w-md mx-auto space-y-6">
           {/* FORM */}
-          <FormOTP />
+          <FormOTP mode={mode} />
           {/* ==== */}
         </div>
       </div>

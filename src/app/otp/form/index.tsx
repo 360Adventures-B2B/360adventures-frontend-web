@@ -16,8 +16,11 @@ import { useSession } from "next-auth/react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import useSweetAlert from "@/hooks/useSweetAlert";
+import { useForgotPassword } from "@/context/ForgotPasswordContext";
 
-export default function FormOTP() {
+export default function FormOTP({ mode }: { mode: "register" | "reset-password" }) {
+  const { token: tokenForgotPassword } = useForgotPassword();
+
   const { data: session } = useSession();
 
   const schema = yup.object().shape({
@@ -52,16 +55,33 @@ export default function FormOTP() {
 
   async function onSubmit(formData: FormData) {
     try {
-      const res = await trigger({ token: session?.user?.token, otpCode: formData.otp }).unwrap();
+      const params =
+        mode === "reset-password"
+          ? {
+              token: tokenForgotPassword,
+              otpCode: formData.otp,
+              is_reset_password: true,
+            }
+          : {
+              token: session?.user?.token,
+              otpCode: formData.otp,
+            };
+
+      const res = await trigger(params).unwrap();
+
       if (res.code === 200) {
-        await updateIsVerify(true);
-        // router.push("/");
-        window.location.href = '/';
+        if (mode === "reset-password") {
+          window.location.href = `/reset-password?token=${tokenForgotPassword}&otp=${formData.otp}`;
+        } else {
+          await updateIsVerify(true);
+          window.location.href = "/";
+        }
       }
     } catch (error: any) {
       handleError(error);
     }
   }
+
   const [isInitialized, setIsInitialized] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(0);
   const [isResendDisabled, setIsResendDisabled] = useState(false);
@@ -109,7 +129,7 @@ export default function FormOTP() {
     }
 
     if (!isSubmitted && otp.every((val) => val !== "") && otp.join("").length === 4) {
-      setIsSubmitted(true); 
+      setIsSubmitted(true);
       form.handleSubmit(onSubmit)();
     }
   }, [otp, form, onSubmit, isSubmitted]);
@@ -173,8 +193,9 @@ export default function FormOTP() {
         <form className="grid grid-cols-1 gap-6" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="flex justify-center">
             <span className="text-neutral-800 dark:text-neutral-200 text-center">
-              We sent a verification code to your email {session?.user.email}. Kindly check your email and enter it
-              below.
+              {mode === "register"
+                ? "We sent a verification code to your email. Kindly check and enter it below."
+                : "Enter the OTP code sent to you to reset your password."}
             </span>
           </div>
 

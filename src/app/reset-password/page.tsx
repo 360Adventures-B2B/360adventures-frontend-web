@@ -19,8 +19,8 @@ export interface PageResetPasswordProps {}
 //   }
 // }
 
-export default async function PageResetPassword({ searchParams }: { searchParams: { token: string } }) {
-  const { token } = searchParams;
+export default async function PageResetPassword() {
+  // const { token } = searchParams;
   // const isValidToken = await validateResetToken(token);
 
   // if (!isValidToken) {

@@ -24,9 +24,13 @@ export const authApi = createApi({
       }),
     }),
     validateUserOtp: builder.query({
-      query: ({ token, otpCode }) => ({
-        url: `api/auth/verify-otp?token=${token}&otp_code=${otpCode}`,
-      }),
+      query: ({ token, otpCode, is_reset_password }) => {
+        let url = `api/auth/verify-otp?token=${token}&otp_code=${otpCode}`;
+        if (is_reset_password !== undefined) {
+          url += `&is_reset_password=${is_reset_password}`;
+        }
+        return { url };
+      },
     }),
     resendUserOtp: builder.mutation({
       query: () => ({
@@ -42,8 +46,8 @@ export const authApi = createApi({
       }),
     }),
     resetUserPassword: builder.mutation({
-      query: ({ credentials, token }) => ({
-        url: `api/auth/reset-password?token=${token}`,
+      query: ({ credentials, token, otp }) => ({
+        url: `api/auth/reset-password?token=${token}&otp_code=${otp}`,
         method: "POST",
         body: credentials,
       }),

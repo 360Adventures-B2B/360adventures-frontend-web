@@ -11,9 +11,14 @@ import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { useRequestUserResetPasswordMutation } from "@/lib/services/authService";
 import { handleError } from "@/lib/handleApiError";
+import { useRouter } from "next/navigation";
+import { useForgotPassword } from "@/context/ForgotPasswordContext";
 
 export default function FormForgotPassword() {
   const phoneRegex = /^[0-9]{10,15}$/;
+  const router = useRouter();
+  const { setStep, setToken } = useForgotPassword(); // ✅ Pakai context
+
   const schema = yup.object().shape({
     email: yup
       .string()
@@ -42,10 +47,12 @@ export default function FormForgotPassword() {
         toast({
           className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
           title: "Success",
-          description: "Check Email Your Reset Password Link",
+          description: "Check your email for the reset password link.",
           variant: "success",
           duration: 5000,
         });
+        setToken(res?.data?.token || null);
+        setStep("otp");
       } else {
         toast({
           className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),

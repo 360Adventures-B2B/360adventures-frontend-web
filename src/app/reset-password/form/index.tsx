@@ -16,6 +16,7 @@ import { handleError } from "@/lib/handleApiError";
 export default function FormResetPassword() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+  const otp = searchParams.get("otp");
 
   const schema = yup.object().shape({
     password: yup.string().min(6).max(32).required(),
@@ -43,7 +44,9 @@ export default function FormResetPassword() {
       const values = {
         password: formData.password,
       };
-      const res = await resetUserPassword({ credentials: values, token }).unwrap();
+      const res = await resetUserPassword({ credentials: values, token, otp }).unwrap();
+      console.log("🚀 ~ onSubmit ~ res:", res);
+
       if (res.code === 200) {
         toast({
           className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),

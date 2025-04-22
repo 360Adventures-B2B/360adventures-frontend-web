@@ -38,6 +38,7 @@ export const createBaseQuery = () => {
       if (
         requestUrl &&
         !requestUrl.includes("api/auth/verify-otp") &&
+        !requestUrl.includes("api/auth/reset-password") &&
         !requestUrl.includes("api/auth/login") &&
         !requestUrl.includes("api/auth/register")
       ) {
@@ -68,7 +69,7 @@ export const createBaseQuery = () => {
             console.error("Refresh token failed", error);
           }
         }
-        // await signOut({ redirect: true });
+        await signOut({ redirect: true });
       }
     }
 
