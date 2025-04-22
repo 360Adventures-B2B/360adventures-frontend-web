@@ -4,6 +4,8 @@ import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { globalUpdateToken } from "@/context/AuthContext";
+import { useForgotPassword } from "@/context/ForgotPasswordContext";
+import { getForgotPasswordToken } from "@/utils/globalToken";
 
 export const createBaseQuery = () => {
   return async (args: any, api: any, extraOptions: any) => {
@@ -16,9 +18,12 @@ export const createBaseQuery = () => {
       prepareHeaders: async (headers) => {
         const session = await getSession();
 
-        if (session?.user?.token) {
-          headers.set("Authorization", `Bearer ${session.user.token}`);
+        let token = session?.user?.token || getForgotPasswordToken();
+
+        if (token) {
+          headers.set("Authorization", `Bearer ${token}`);
         }
+
         if (apiKey) {
           headers.set("x-api-key", apiKey);
         }

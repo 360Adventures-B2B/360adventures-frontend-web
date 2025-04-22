@@ -1,5 +1,6 @@
 "use client";
-import { createContext, useContext, useState } from "react";
+import { setForgotPasswordToken } from "@/utils/globalToken";
+import { createContext, useContext, useEffect, useState } from "react";
 
 type Step = "otp" | "reset-password";
 
@@ -15,6 +16,10 @@ const ForgotPasswordContext = createContext<ForgotPasswordContextType | undefine
 export const ForgotPasswordProvider = ({ children }: { children: React.ReactNode }) => {
   const [step, setStep] = useState<Step>("reset-password");
   const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    setForgotPasswordToken(token);
+  }, [token]);
 
   return (
     <ForgotPasswordContext.Provider value={{ step, setStep, token, setToken }}>
