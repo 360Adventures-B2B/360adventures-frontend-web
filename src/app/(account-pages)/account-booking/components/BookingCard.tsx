@@ -48,10 +48,10 @@ export default function BookingCard({ booking }: { booking: IBooking }) {
     <div>
       <div className="flex flex-col lg:flex-row items-start p-4 border rounded-lg shadow-sm relative overflow-hidden bg-white mb-4">
         {/* Gambar */}
-        <div className="absolute left-0 top-0 bottom-0 w-full h-80 sm:h-96 lg:w-48 lg:h-48">
+        <div className="absolute left-0 top-0 bottom-0 w-full h-56 sm:h-64 lg:w-48 lg:h-48">
           <Image
             src={imgSrc}
-            className="object-cover w-full h-full "
+            className="object-cover w-full h-full"
             alt={booking.package?.product?.name || "Package Image"}
             sizes="(max-width: 400px) 100vw, 300px"
             onError={() => setImgSrc(fallbackUrl)}
@@ -61,7 +61,7 @@ export default function BookingCard({ booking }: { booking: IBooking }) {
         </div>
 
         {/* Informasi Tiket */}
-        <div className="ml-0 lg:ml-52 mt-80 sm:mt-96 lg:mt-0 flex-1 p-0 text-left">
+        <div className="ml-0 lg:ml-52 mt-[14rem] sm:mt-[16rem] lg:mt-0 flex-1 p-0 text-left">
           <h2 className="text-xs text-gray-500">{booking.package?.name}</h2>
           <h1 className="text-base font-semibold text-sm">{booking.package?.product?.name}</h1>
 
@@ -99,44 +99,50 @@ export default function BookingCard({ booking }: { booking: IBooking }) {
         </div>
 
         {/* Informasi Booking */}
-        <div className="ml-auto lg:absolute lg:right-4 lg:top-4 text-left lg:text-right w-full lg:w-auto mt-4 lg:mt-0">
+        <div className="w-full lg:w-auto mt-4 lg:mt-0 flex flex-col lg:absolute lg:right-4 lg:top-4 text-left lg:text-right items-start lg:items-end">
+          {/* Booking ID */}
           <p className="text-sm text-gray-500">
             Booking ID: <span className="px-2 py-1 font-semibold text-sm">{booking.booking_reference_id}</span>
           </p>
 
+          {/* Booking Status */}
           <p className={`font-semibold text-sm ${statusColors[booking.booking_status] || "text-gray-500"}`}>
             {booking.booking_status.charAt(0).toUpperCase() + booking.booking_status.slice(1)}
           </p>
 
-          <div className="mt-10 flex flex-col lg:flex-row items-center gap-2">
-            {/* Cek status booking */}
+          {/* Action Buttons */}
+          <div className="mt-10 flex flex-col lg:flex-row items-start lg:items-end gap-2 w-full">
+            {/* Cancel Booking Button */}
             {(booking?.booking_status === "confirmed" || booking?.booking_status === "unconfirmed") && (
-              <NcModal
-                contentExtraClass="w-full md:w-1/4"
-                renderTrigger={(openModal) => (
-                  <Button
-                    onClick={() => openModal()}
-                    sizeClass="px-4 py-2"
-                    fontSize="text-sm"
-                    className="w-full lg:w-auto border rounded-lg text-red-500 border-red-300 hover:bg-red-100"
-                  >
-                    Cancel booking
-                  </Button>
-                )}
-                renderContent={(closeModal) => (
-                  <ModalCancelBooking closeModal={closeModal} bookingId={booking?.ulid || ""} />
-                )}
-                modalTitle={"Information"}
-              />
+              <div className="w-full lg:w-auto">
+                <NcModal
+                  contentExtraClass="w-full md:w-1/4"
+                  renderTrigger={(openModal) => (
+                    <Button
+                      onClick={() => openModal()}
+                      sizeClass="px-4 py-2"
+                      fontSize="text-sm"
+                      className="w-full lg:w-auto border rounded-lg text-red-500 border-red-300 hover:bg-red-100"
+                    >
+                      Cancel booking
+                    </Button>
+                  )}
+                  renderContent={(closeModal) => (
+                    <ModalCancelBooking closeModal={closeModal} bookingId={booking?.ulid || ""} />
+                  )}
+                  modalTitle={"Information"}
+                />
+              </div>
             )}
 
+            {/* Download Voucher Button */}
             {(booking?.booking_status === "confirmed" || booking?.booking_status === "completed") && (
               <ButtonPrimary
                 loading={isFetching}
                 onClick={handleDownload}
                 fontSize="text-sm"
                 sizeClass="px-4 py-2"
-                className={`w-full lg:w-auto border rounded-lg lg:ml-auto`}
+                className="w-full lg:w-auto border rounded-lg"
               >
                 Download voucher
               </ButtonPrimary>
