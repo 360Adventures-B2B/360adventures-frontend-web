@@ -24,7 +24,20 @@ export const topupApi = createApi({
       }),
       invalidatesTags: ["TopupRequest"],
     }),
+    updateTopupRequest: builder.mutation({
+      query: ({ id, body }) => ({
+        url: `/api/topup/request/${id}`,
+        method: "PUT",
+        body: createFormData(body),
+      }),
+      invalidatesTags: ["TopupRequest"],
+    }),
   }),
 });
 
-export const { useGetTopupRequestQuery, useGetDetailTopupRequestQuery, useStoreTopupRequestMutation } = topupApi;
+export const {
+  useGetTopupRequestQuery,
+  useGetDetailTopupRequestQuery,
+  useStoreTopupRequestMutation,
+  useUpdateTopupRequestMutation,
+} = topupApi;

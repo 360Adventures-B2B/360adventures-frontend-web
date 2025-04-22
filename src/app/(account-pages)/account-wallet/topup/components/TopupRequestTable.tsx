@@ -122,7 +122,8 @@ const TopupRequestTable: React.FC<TopupRequestTableProps> = ({ data }) => {
                     </button>
                   )}
                   renderContent={
-                    (closeModal) => (selectedData ? <TopupDetail item={selectedData} /> : <div>Loading...</div>) // Kondisi menunggu data
+                    (closeModal) =>
+                      selectedData ? <TopupDetail closeModal={closeModal} item={selectedData} /> : <div>Loading...</div> // Kondisi menunggu data
                   }
                   modalTitle="Topup Details"
                 />

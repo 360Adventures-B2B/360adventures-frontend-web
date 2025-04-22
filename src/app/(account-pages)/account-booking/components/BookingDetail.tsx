@@ -87,7 +87,7 @@ const BookingDetail = ({ booking }: { booking: IBooking }) => {
                     {booking.person_types.map((person, idx) => (
                       <li key={idx} className="flex justify-between font-medium">
                         <span className="font-medium">
-                          {person.name} ({person.guest} × {formatNumber(person.selling_price)} USD)
+                          {person.name} ({person.guest} × {formatNumber(person.selling_price)})
                         </span>
                         <span className="font-medium">{formatNumber(person.total || 0)}</span>
                       </li>
