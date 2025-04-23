@@ -4,6 +4,8 @@ import Input from "../Input";
 import Link from "next/link";
 import { useGetProductQuery } from "@/lib/services/productService";
 import { Route } from "next";
+import { Product } from "@/interfaces/Product";
+import SearchItem from "@/components/SearchItem";
 
 export default function NavSearch() {
   const [query, setQuery] = useState<string>("");
@@ -11,7 +13,7 @@ export default function NavSearch() {
     if (!query) return;
   }, [query]);
 
-  let queryParam = { keyword: query };
+  let queryParam = { q: query };
 
   const {
     data: products,
@@ -41,23 +43,8 @@ export default function NavSearch() {
               {products?.data && products?.data?.length > 0 ? (
                 <div className="grid grid-cols-1 gap-2 max-h-[300px] overflow-y-auto">
                   <div className="space-y-2">
-                    {products?.data?.map((result) => (
-                      <Link href={`/product/${result.slug}` as Route} onClick={handleCloseDropdown}>
-                        <div
-                          key={result.id}
-                          className="flex items-center p-3 border rounded-lg hover:bg-gray-100 transition"
-                        >
-                          <img
-                            src={(result?.product_galleries?.[0] as string) || ""}
-                            alt={result?.name}
-                            className="w-12 h-12 rounded-md object-cover"
-                          />
-                          <div className="ml-3">
-                            <h4 className="text-sm font-semibold">{result?.name}</h4>
-                            <p className="text-xs text-gray-500">{result?.location?.name}</p>
-                          </div>
-                        </div>
-                      </Link>
+                    {products?.data?.map((product: Product) => (
+                      <SearchItem key={product.id} product={product} handleCloseDropdown={handleCloseDropdown} />
                     ))}
                   </div>
                   {/* Sticky button */}

@@ -8,6 +8,7 @@ import { formatDateString } from "@/utils/dateHelper";
 import NcModal from "@/shared/NcModal";
 import ModalPackage from "./ModalPackage";
 import { useDate } from "@/context/DateContext";
+import { useUnavailableDates } from "@/context/ProductUnavailableContext";
 
 interface ModalDatePickerProps {
   selectedDate: Date | null;
@@ -65,6 +66,8 @@ const ModalDatePicker: FC<ModalDatePickerProps> = ({
     }
   }
 
+  const { unavailableDates } = useUnavailableDates();
+
   return (
     <div>
       <div className="text-lg font-semibold mb-4">Select a date</div>
@@ -79,6 +82,7 @@ const ModalDatePicker: FC<ModalDatePickerProps> = ({
         minDate={new Date()}
         renderCustomHeader={(p) => <DatePickerCustomHeaderTwoMonth {...p} />}
         renderDayContents={(day, date) => <DatePickerCustomDay dayOfMonth={day} date={date} />}
+        excludeDates={unavailableDates}
       />
 
       <div className="mt-4 flex justify-end">

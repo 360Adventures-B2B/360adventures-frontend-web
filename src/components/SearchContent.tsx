@@ -6,6 +6,8 @@ import { Search } from "lucide-react";
 import Input from "@/shared/Input";
 import Link from "next/link";
 import { useGetProductQuery } from "@/lib/services/productService";
+import { Product } from "@/interfaces/Product";
+import SearchItem from "./SearchItem";
 
 export interface SearchContentProps {
   onClickClose?: () => void;
@@ -17,7 +19,7 @@ const SearchContent: React.FC<SearchContentProps> = ({ onClickClose }) => {
     if (!query) return;
   }, [query]);
 
-  let queryParam = { keyword: query };
+  let queryParam = { q: query };
 
   const {
     data: products,
@@ -52,21 +54,8 @@ const SearchContent: React.FC<SearchContentProps> = ({ onClickClose }) => {
             {products?.data && products?.data?.length > 0 ? (
               <div className="grid grid-cols-1 gap-2 max-h-[500px] overflow-y-auto">
                 <div className="space-y-2">
-                  {products?.data?.map((result) => (
-                    <div
-                      key={result.id}
-                      className="flex items-center p-3 border rounded-lg hover:bg-gray-100 transition"
-                    >
-                      <img
-                        src={(result?.product_galleries?.[0] as string) || ""}
-                        alt={result?.name}
-                        className="w-12 h-12 rounded-md object-cover"
-                      />
-                      <div className="ml-3">
-                        <h4 className="text-sm font-semibold">{result?.name}</h4>
-                        <p className="text-xs text-gray-500">{result?.location?.name}</p>
-                      </div>
-                    </div>
+                  {products?.data?.map((product: Product) => (
+                    <SearchItem key={product.id} product={product} />
                   ))}
                 </div>
                 {/* Sticky button */}

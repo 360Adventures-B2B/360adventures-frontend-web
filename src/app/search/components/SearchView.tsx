@@ -42,7 +42,7 @@ export default function SearchView() {
   return (
     <div>
       <h2 className="text-4xl font-semibold mb-5">All Product</h2>
-      <SearchForm totalResults={products?.total || 0} />
+      <SearchForm totalResults={products?.pagination?.total || 0} />
 
       <div className="grid grid-cols-2 gap-6 md:gap-8 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
         {isFetching ? (

@@ -13,6 +13,7 @@ import { DateProvider } from "@/context/DateContext";
 import TopLoaderProvider from "./TopLoaderProvider";
 import { TopupProvider } from "@/context/TopupContext";
 import { ForgotPasswordProvider } from "@/context/ForgotPasswordContext";
+import { UnavailableDatesProvider } from "@/context/ProductUnavailableContext";
 
 const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
@@ -29,13 +30,15 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
             <DateProvider>
               <TopupProvider>
                 <ForgotPasswordProvider>
-                  <div>
-                    {!hideLayout && <ClientCommons />}
-                    {!hideLayout && <SiteHeader />}
-                    {children}
-                    {!hideLayout && <FooterNav />}
-                    {!hideLayout && <Footer />}
-                  </div>
+                  <UnavailableDatesProvider>
+                    <div>
+                      {!hideLayout && <ClientCommons />}
+                      {!hideLayout && <SiteHeader />}
+                      {children}
+                      {!hideLayout && <FooterNav />}
+                      {!hideLayout && <Footer />}
+                    </div>
+                  </UnavailableDatesProvider>
                 </ForgotPasswordProvider>
               </TopupProvider>
             </DateProvider>

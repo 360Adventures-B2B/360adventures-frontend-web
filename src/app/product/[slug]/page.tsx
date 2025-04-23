@@ -22,6 +22,7 @@ import DetailGallery from "./components/DetailGallery";
 import PackageCardSkeleton from "../skeleton/SkeletonPackageCard";
 import { useDate } from "@/context/DateContext";
 import { useBooking } from "@/context/BookingContext";
+import { useUnavailableDates } from "@/context/ProductUnavailableContext";
 
 export interface ProductDetailPageProps {}
 
@@ -111,6 +112,20 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
     resetDate();
     dispatch({ type: "RESET_BOOKING" });
   }, []);
+
+  // for unavailabl date
+  const { setUnavailableDates } = useUnavailableDates();
+
+  useEffect(() => {
+    if (product?.product_unavailabilities) {
+      const dates = product.product_unavailabilities.map(
+        (item: { blocked_date: string }) => new Date(item.blocked_date)
+      );
+      setUnavailableDates(dates);
+    }
+  }, [product, setUnavailableDates]);
+
+  
   const mainContent = () => {
     return (
       <div className="listingSection__wrap !space-y-6">

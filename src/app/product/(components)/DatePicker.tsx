@@ -5,10 +5,12 @@ import { useBooking } from "@/context/BookingContext";
 import { formatDateString } from "@/utils/dateHelper";
 import ModalPackage from "./ModalPackage";
 import { useDate } from "@/context/DateContext";
+import { useUnavailableDates } from "@/context/ProductUnavailableContext";
 
 const DatePicker = () => {
   const { bookingData, dispatch } = useBooking();
   const { selectedDate, setSelectedDate, highlightedDate, setHighlightedDate } = useDate();
+
   const containerRef = useRef(null);
 
   const getNextDays = (count: number) => {
@@ -96,25 +98,42 @@ const DatePicker = () => {
     };
   }, []);
 
+  const { unavailableDates } = useUnavailableDates();
+
+  // for block date
+  const isDateBlocked = (date: Date) => {
+    return unavailableDates.some((blockedDate) => blockedDate.toDateString() === date.toDateString());
+  };
+
   return (
     <div className="space-y-6 listingSection__wrap">
       <div className="text-lg font-semibold">Next available dates</div>
       <div ref={containerRef} className="flex gap-2 justify-start flex-nowrap">
-        {visibleDates.map((date: Date, index) => (
-          <div
-            key={index}
-            className={`w-24 h-20 rounded-lg flex items-center justify-center flex-col cursor-pointer transition-all duration-200 ease-in-out 
-            ${
-              highlightedDate && date.toDateString() === highlightedDate.toDateString()
-                ? "bg-primary-500 text-white"
-                : "bg-gray-100"
-            }`}
-            onClick={() => handleTileClick(date)}
-          >
-            <div className="text-xs md:text-sm">{date.toLocaleDateString("en-US", { weekday: "short" })}</div>
-            <div className="font-bold text-xs md:text-sm">{formatDate(date)}</div>
-          </div>
-        ))}
+        {visibleDates.map((date: Date, index) => {
+          const blocked = isDateBlocked(date);
+
+          return (
+            <div
+              key={index}
+              className={`w-24 h-20 rounded-lg flex items-center justify-center cursor-pointer transition-all duration-200 ease-in-out
+        ${
+          highlightedDate && date.toDateString() === highlightedDate.toDateString()
+            ? "bg-primary-500 text-white"
+            : "bg-gray-100"
+        }
+        ${blocked ? "bg-gray-300 cursor-not-allowed opacity-60" : ""}`}
+              onClick={() => !blocked && handleTileClick(date)}
+            >
+              <div className="flex flex-col items-center justify-center text-center h-full space-y-1">
+                <div className="text-xs md:text-sm">{date.toLocaleDateString("en-US", { weekday: "short" })}</div>
+                <div className="font-bold text-xs md:text-sm">{formatDate(date)}</div>
+                <div className={`text-[10px] text-red-500 leading-tight ${blocked ? "visible" : "invisible"}`}>
+                  Not available
+                </div>
+              </div>
+            </div>
+          );
+        })}
 
         <NcModal
           className="w-24 h-20 bg-gray-100 rounded-lg flex items-center justify-center cursor-pointer"
