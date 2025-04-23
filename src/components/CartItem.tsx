@@ -16,15 +16,25 @@ const CartItem: React.FC<CartItemProps> = ({ item, selectedItems, toggleSelectIt
   const fallbackUrl = "https://dummyimage.com/1000x1000/000/fff";
   const [imgSrc, setImgSrc] = useState(item?.product.image || fallbackUrl);
   return (
-    <li className="cart-item mb-5 pb-5 flex items-start overflow-hidden border-b border-[#e9e9e9] last:border-0">
+    <li
+      className={`cart-item mb-5 pb-5 flex items-start overflow-hidden border-b border-[#e9e9e9] last:border-0 ${
+        item.is_expired ? "opacity-50 pointer-events-none" : ""
+      }`}
+    >
       {/* Checkbox */}
       <input
         type="checkbox"
-        checked={selectedItems.includes(item.ulid || "")}
-        onChange={() => toggleSelectItem(item.ulid || "")}
-        className="mr-3 w-5 h-5 rounded-md border border-gray-400 checked:bg-primary-700 hover:checked:bg-primary-700 focus:ring-0 cursor-pointer"
+        checked={!item.is_expired && selectedItems.includes(item.ulid || "")}
+        onChange={() => {
+          if (!item.is_expired) {
+            toggleSelectItem(item.ulid || "");
+          }
+        }}
+        disabled={item.is_expired}
+        className={`mr-3 w-5 h-5 rounded-md border border-gray-400 checked:bg-primary-700 hover:checked:bg-primary-700 focus:ring-0 ${
+          item.is_expired ? "cursor-not-allowed" : "cursor-pointer"
+        }`}
       />
-
       {/* Image */}
       <a href="#" className="cart-item-image flex-shrink-0 w-[100px] h-[100px]">
         <Image
@@ -40,10 +50,16 @@ const CartItem: React.FC<CartItemProps> = ({ item, selectedItems, toggleSelectIt
       {/* Details */}
       <div className="cart-item-details relative flex-1 ml-6 pr-6">
         {/* Tour Name */}
-        <a href={`/product/${item?.product?.slug}`} className="cart-item-title block text-lg font-semibold text-gray-800">
+        <a
+          href={`/product/${item?.product?.slug}`}
+          className="cart-item-title block text-lg font-semibold text-gray-800"
+        >
           {item?.product?.name}
         </a>
 
+        {item.is_expired && (
+          <p className="text-sm text-red-600 font-semibold mt-1">Expired – This item cannot be selected</p>
+        )}
         {/* Package Name */}
         <p className="pkgName text-sm text-[#444] mt-1">{item?.package?.name}</p>
 
@@ -67,7 +83,7 @@ const CartItem: React.FC<CartItemProps> = ({ item, selectedItems, toggleSelectIt
                       {person_type.guest} {person_type.name}
                     </span>
                     <span className="font-semibold text-right min-w-[80px] text-gray-800">
-                      {formatNumber(person_type.total)}
+                      {formatNumber(person_type.total || 0)}
                     </span>
                   </div>
                 </div>
@@ -114,7 +130,8 @@ const CartItem: React.FC<CartItemProps> = ({ item, selectedItems, toggleSelectIt
           renderTrigger={(openModal) => (
             <a
               onClick={() => openModal()}
-              className="remove-item absolute top-0 right-2 text-lg text-[#fb5555] hover:text-[#e63946] transition"
+              className="remove-item absolute top-0 right-2 text-lg text-[#fb5555] hover:text-[#e63946] transition opacity-100"
+              style={{ pointerEvents: "auto" }}
             >
               <i className="las la-trash"></i>
             </a>

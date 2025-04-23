@@ -25,6 +25,7 @@ export interface Cart {
   package: Package;
   total_price: number;
   product: Product;
+  is_expired?: boolean;
   created_at?: string;
   updated_at?: string;
 }

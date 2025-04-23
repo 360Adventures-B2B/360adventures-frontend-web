@@ -28,16 +28,18 @@ const CartContent: React.FC<CartContentProps> = ({ onClickClose }) => {
 
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
-  const isAllSelected = cartItems.length > 0 && selectedItems.length === cartItems.length;
+  const isAllSelected =
+    cartItems.filter((item) => !item.is_expired).length > 0 &&
+    selectedItems.length === cartItems.filter((item) => !item.is_expired).map((item) => item.ulid).length;
 
   const [isLoadingCheckoutCart, setLoadingCheckoutCart] = useState(false);
 
   const toggleSelectItem = (id: string) => {
     setSelectedItems((prev) => (prev.includes(id) ? prev.filter((itemId) => itemId !== id) : [...prev, id]));
   };
-
   const toggleSelectAll = () => {
-    setSelectedItems(isAllSelected ? [] : cartItems.map((item) => item.ulid));
+    const nonExpiredItems = cartItems.filter((item) => !item.is_expired).map((item) => item.ulid);
+    setSelectedItems(isAllSelected ? [] : nonExpiredItems);
   };
 
   const total = cartItems.reduce((sum, cart) => {
