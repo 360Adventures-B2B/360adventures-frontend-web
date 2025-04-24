@@ -61,6 +61,7 @@ export interface Product {
   author: Author;
   product_galleries: ProductGallery[];
   product_unavailabilities: any[]; // Define detail if needed
+  product_quota_full: any[]; // Define detail if needed
   product_blocks: any[]; // Define detail if needed
   packages: Package[];
 }

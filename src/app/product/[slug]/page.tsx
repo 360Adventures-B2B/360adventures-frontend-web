@@ -1,11 +1,10 @@
 "use client";
 
-import React, { FC, Fragment, useEffect, useRef, useState } from "react";
-import { ArrowRightIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
+import React, { FC, useEffect, useRef, useState } from "react";
+import { Squares2X2Icon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { Route } from "next";
-import { Amenities_demos, PHOTOS } from "../constant";
 import DatePicker from "../(components)/DatePicker";
 import PackageCard from "../(components)/PackageCard";
 import { useCheckAvailableProductMutation, useGetDetailProductQuery } from "@/lib/services/productService";
@@ -23,6 +22,7 @@ import PackageCardSkeleton from "../skeleton/SkeletonPackageCard";
 import { useDate } from "@/context/DateContext";
 import { useBooking } from "@/context/BookingContext";
 import { useUnavailableDates } from "@/context/ProductUnavailableContext";
+import { formatDateString } from "@/utils/dateHelper";
 
 export interface ProductDetailPageProps {}
 
@@ -65,17 +65,21 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
   // check available product
   const [checkAvailableProduct, { isLoading: isLoadingCheckAvailableProduct }] = useCheckAvailableProductMutation();
 
-  const today = new Date().toISOString().split("T")[0];
-
   const { selectedDate } = useDate();
 
   useEffect(() => {
-    if (product?.ulid) {
+    if (product?.packages) {
+      setPackages(product.packages);
+    }
+  }, [product]);
+
+  useEffect(() => {
+    if (product?.ulid && selectedDate) {
       const fetchProductAvailability = async () => {
         try {
           const result = await checkAvailableProduct({
             ulid: product.ulid,
-            body: { start_date: today },
+            body: { start_date: formatDateString(selectedDate) },
           }).unwrap();
 
           setPackages(result.data);
@@ -86,7 +90,7 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
 
       fetchProductAvailability();
     }
-  }, [product?.ulid, checkAvailableProduct, today, selectedDate]);
+  }, [product?.ulid, checkAvailableProduct, selectedDate]);
 
   // handle date change
 
@@ -117,15 +121,22 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
   const { setUnavailableDates } = useUnavailableDates();
 
   useEffect(() => {
-    if (product?.product_unavailabilities) {
-      const dates = product.product_unavailabilities.map(
-        (item: { blocked_date: string }) => new Date(item.blocked_date)
-      );
-      setUnavailableDates(dates);
+    if (product) {
+      const unavailableDatesFromUnavailabilities =
+        product.product_unavailabilities?.map((item) => new Date(item.blocked_date)) || [];
+
+      const unavailableDatesFromQuotaFull = product.product_quota_full?.map((date) => new Date(date)) || [];
+
+      const allUnavailableDates = [...unavailableDatesFromUnavailabilities, ...unavailableDatesFromQuotaFull];
+
+      const uniqueUnavailableDates = [...new Set(allUnavailableDates.map((date) => date.toISOString()))];
+
+      const finalDates = uniqueUnavailableDates.map((date) => new Date(date));
+
+      setUnavailableDates(finalDates);
     }
   }, [product, setUnavailableDates]);
 
-  
   const mainContent = () => {
     return (
       <div className="listingSection__wrap !space-y-6">
