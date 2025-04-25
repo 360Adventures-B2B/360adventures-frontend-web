@@ -102,8 +102,17 @@ export default function FormCheckout() {
       if (res.code == 200) {
         window.location.href = `/pay-done?order_id=${res?.data?.order_id || ""}`;
       }
+
+      if (res.code == 409) {
+        window.location.reload();
+      }
     } catch (error: any) {
       handleError(error);
+      if (error.data.code === 409) {
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } 
     }
   }
 

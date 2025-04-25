@@ -97,7 +97,7 @@ const BookingDetail = ({ booking }: { booking: IBooking }) => {
               )}
 
               {/* Extra Prices */}
-              {booking.extra_prices.length > 0 && (
+              {booking.extra_prices && booking.extra_prices.length > 0 && (
                 <div className="mt-4">
                   <h3 className="text-lg font-semibold mb-2">Extra Add-ons</h3>
                   <ul className="space-y-2">

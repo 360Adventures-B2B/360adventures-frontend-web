@@ -82,6 +82,7 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
           variant: "destructive",
           duration: 2000,
         });
+        return;
       }
 
       if (packageData?.time_slot && packageData?.time_slot.length > 0 && !bookingData.time_slot) {
@@ -92,6 +93,7 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
           variant: "destructive",
           duration: 2000,
         });
+        return;
       }
 
       if (!bookingData.person_types.some((person) => person.guest > 0)) {

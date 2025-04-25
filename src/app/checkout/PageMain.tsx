@@ -6,6 +6,7 @@ import FormCheckout from "./component/FormCheckout";
 import BookingSummary from "@/components/BookingSummary";
 import BookingSummarySkeleton from "@/components/skeleton/BookingSummarySkeleton";
 import { useGetCartsQuery } from "@/lib/services/cartService";
+import { redirect } from "next/navigation";
 export interface CheckOutPagePageMainProps {
   className?: string;
 }
@@ -26,9 +27,9 @@ const CheckOutPagePageMain: FC<CheckOutPagePageMainProps> = ({ className = "" })
   const { data: carts, isLoading: isLoadingGetCart, isFetching: isFetchingGetCart, error } = useGetCartsQuery(bodyCart);
   const loading = isFetchingGetCart || isLoadingGetCart;
 
-  // if (!loading && carts?.data.length === 0) {
-  //   redirect("/");
-  // }
+  if (!loading && carts?.data.length === 0) {
+    redirect("/");
+  }
 
   const renderSidebar = () => {
     return <BookingSummary bookingData={carts?.data || []} title="Your Item" />;
