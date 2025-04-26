@@ -72,7 +72,7 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
     setSelectedDate(date);
   };
 
-  const handleAddCart = async () => {
+  const handleCheckout = async (action: "addCart" | "instant") => {
     try {
       if (!bookingData.start_date) {
         toast({
@@ -127,19 +127,32 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
         ...(bookingData.time_slot ? { time_slot: bookingData.time_slot } : {}),
         ...(simplifiedExtraPrices?.length ? { extra_prices: simplifiedExtraPrices } : {}),
       };
-      console.log("🚀 ~ handleAddCart ~ newCartItem:", newCartItem);
 
-      const res = await addCart(newCartItem).unwrap();
+      const is_instant = action === "instant" ? "true" : "false";
+
+      const res = await addCart({ body: newCartItem, is_instant }).unwrap();
       if (res.code === 200) {
-        toast({
-          className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
-          title: "Success",
-          description: "Success Add Cart!",
-          variant: "success",
-          duration: 2000,
-        });
-        dispatch({ type: "RESET_BOOKING" });
-        closeModalPackage();
+        if (action === "addCart") {
+          toast({
+            className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+            title: "Success",
+            description: "Success Add Cart!",
+            variant: "success",
+            duration: 2000,
+          });
+          dispatch({ type: "RESET_BOOKING" });
+          closeModalPackage();
+        }
+
+        if (action === "instant") {
+          const ulid = res?.data?.ulid;
+
+          const selectedItems = [ulid];
+
+          sessionStorage.setItem("selectedItems", JSON.stringify(selectedItems));
+
+          window.location.href = "/checkout?type=instant";
+        }
       }
     } catch (error) {
       console.log("🚀 ~ handleAddCart ~ error:", error);
@@ -228,6 +241,7 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
               Checkout
             </button> */}
             <ButtonPrimary
+              onClick={async () => handleCheckout("instant")}
               loading={isLoadingAddCart}
               className="bg-primary-6000 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm sm:text-base w-full sm:w-auto"
             >
@@ -236,7 +250,7 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
 
             {/* Tombol Add Cart yang tetap sejajar */}
             <ButtonPrimary
-              onClick={handleAddCart}
+              onClick={async () => handleCheckout("addCart")}
               loading={isLoadingAddCart}
               className="bg-primary-6000 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm sm:text-base w-full sm:w-auto"
             >

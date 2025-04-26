@@ -12,17 +12,21 @@ export const cartApi = createApi({
   tagTypes: ["Cart"],
   // baseQuery: fetchBaseQuery({ baseUrl: "/api/" }),
   endpoints: (builder) => ({
-    getCarts: builder.query<CartResponse, { ids?: string[] } | void>({
-      query: (body) => ({
-        url: "/api/carts",
-        method: "POST",
-        body,
-      }),
+    getCarts: builder.query<CartResponse, { ids?: string[]; is_instant?: boolean } | void>({
+      query: (args) => {
+        const ids = args?.ids;
+        const is_instant = args?.is_instant ?? false;
+        return {
+          url: `/api/carts?is_instant=${is_instant}`,
+          method: "POST",
+          body: { ids },
+        };
+      },
       providesTags: ["Cart"],
     }),
     addCart: builder.mutation({
-      query: (body) => ({
-        url: "/api/carts/store",
+      query: ({ body, is_instant }) => ({
+        url: `/api/carts/store?is_instant=${is_instant}`,
         method: "POST",
         body: body,
       }),
@@ -37,8 +41,8 @@ export const cartApi = createApi({
       invalidatesTags: ["Cart"],
     }),
     checkoutCart: builder.mutation({
-      query: (body) => ({
-        url: `/api/carts/checkout`,
+      query: ({ body, is_instant }) => ({
+        url: `/api/carts/checkout?is_instant=${is_instant}`,
         method: "POST",
         body: body,
       }),

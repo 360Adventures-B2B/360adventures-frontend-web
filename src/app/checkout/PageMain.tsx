@@ -6,13 +6,15 @@ import FormCheckout from "./component/FormCheckout";
 import BookingSummary from "@/components/BookingSummary";
 import BookingSummarySkeleton from "@/components/skeleton/BookingSummarySkeleton";
 import { useGetCartsQuery } from "@/lib/services/cartService";
-import { redirect } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 export interface CheckOutPagePageMainProps {
   className?: string;
 }
 
 const CheckOutPagePageMain: FC<CheckOutPagePageMainProps> = ({ className = "" }) => {
+  const searchParams = useSearchParams();
   const [selectedItems, setSelectedItems] = useState<string[]>([]); // State untuk menyimpan selectedItems
+  const type = searchParams.get("type");
 
   useEffect(() => {
     const savedItems = sessionStorage.getItem("selectedItems");
@@ -22,9 +24,16 @@ const CheckOutPagePageMain: FC<CheckOutPagePageMainProps> = ({ className = "" })
     }
   }, []);
 
-  const bodyCart = { ids: selectedItems };
+  const {
+    data: carts,
+    isLoading: isLoadingGetCart,
+    isFetching: isFetchingGetCart,
+    error,
+  } = useGetCartsQuery({
+    ids: selectedItems,
+    is_instant: type === "instant" ? true : false,
+  });
 
-  const { data: carts, isLoading: isLoadingGetCart, isFetching: isFetchingGetCart, error } = useGetCartsQuery(bodyCart);
   const loading = isFetchingGetCart || isLoadingGetCart;
 
   if (!loading && carts?.data.length === 0) {

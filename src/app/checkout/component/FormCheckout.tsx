@@ -66,11 +66,11 @@ export default function FormCheckout() {
       });
     }
   }, [userData, form]);
-
   const router = useRouter();
-  const [checkoutCart, { isLoading }] = useCheckoutCartMutation();
   const searchParams = useSearchParams();
-  const orderId = searchParams.get("order_id");
+  const type = searchParams.get("type");
+
+  const [checkoutCart, { isLoading }] = useCheckoutCartMutation();
 
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
@@ -97,7 +97,7 @@ export default function FormCheckout() {
         special_requirement: formData.requirement || null,
       };
 
-      const res = await checkoutCart(values).unwrap();
+      const res = await checkoutCart({ body: values, is_instant: type === "instant" ? true : false }).unwrap();
 
       if (res.code == 200) {
         window.location.href = `/pay-done?order_id=${res?.data?.order_id || ""}`;
@@ -112,7 +112,7 @@ export default function FormCheckout() {
         setTimeout(() => {
           window.location.reload();
         }, 2000);
-      } 
+      }
     }
   }
 
