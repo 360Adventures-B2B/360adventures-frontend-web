@@ -45,6 +45,7 @@ const PaymentTopupSuccessPage = () => {
       date={topupData?.created_at}
       amount={topupData?.amount}
       payment_method={topupData?.payment_method}
+      payment_type={topupData?.payment_type}
       total_paid={(topupData?.amount || 0) + (topupData?.fee_credit_card || 0)}
       description={
         topupData?.status === "success" ? "Your top-up was successful!" : "Your payment is pending. Please wait..."

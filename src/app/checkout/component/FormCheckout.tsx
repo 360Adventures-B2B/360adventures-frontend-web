@@ -95,11 +95,17 @@ export default function FormCheckout() {
         country: formData.country,
         city: formData.city,
         special_requirement: formData.requirement || null,
+        payment_method: formData.payment_gateway,
+        platform: "web",
       };
 
       const res = await checkoutCart({ body: values, is_instant: type === "instant" ? true : false }).unwrap();
 
       if (res.code == 200) {
+        if (values.payment_method === "payment_gateway" && res?.data?.payment_url) {
+          window.location.href = res?.data?.payment_url;
+          return;
+        }
         window.location.href = `/pay-done?order_id=${res?.data?.order_id || ""}`;
       }
 
@@ -254,8 +260,8 @@ export default function FormCheckout() {
                         <div className="flex items-center space-x-3">
                           <input
                             type="radio"
-                            value="credit_balance"
-                            checked={field.value === "credit_balance"}
+                            value="credit_amount"
+                            checked={field.value === "credit_amount"}
                             onChange={field.onChange}
                             className="form-radio h-5 w-5 checked:bg-primary-700 hover:checked:bg-primary-700 focus:checked:bg-primary-700 focus:outline-none focus:ring-0 accent-primary-700"
                           />
@@ -270,8 +276,8 @@ export default function FormCheckout() {
                         <div className="flex items-center space-x-3">
                           <input
                             type="radio"
-                            value="visa_mastercard"
-                            checked={field.value === "visa_mastercard"}
+                            value="payment_gateway"
+                            checked={field.value === "payment_gateway"}
                             onChange={field.onChange}
                             className="form-radio h-5 w-5 checked:bg-primary-700 hover:checked:bg-primary-700 focus:checked:bg-primary-700 focus:outline-none focus:ring-0 accent-primary-700"
                           />

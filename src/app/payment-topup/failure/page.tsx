@@ -40,6 +40,7 @@ const PaymentTopupFailedPage = () => {
       date={topupData?.created_at}
       amount={topupData?.amount}
       payment_method={topupData?.payment_method}
+      payment_type={topupData?.payment_type}
       total_paid={(topupData?.amount || 0) + (topupData?.fee_credit_card || 0)}
       description="Oops! Something went wrong with your top-up. Please try again."
     />

@@ -61,6 +61,20 @@ const BookingDetail = ({ booking }: { booking: IBooking }) => {
                 <span>{booking.payment_status}</span>
               </li>
               <li className="flex justify-between">
+                <span className="font-medium">Payment Method:</span>
+                <span>
+                  {booking.payment_method === "payment_gateway"
+                    ? "Payment Gateway"
+                    : booking.payment_method === "credit_amount"
+                    ? "Credit Balance"
+                    : booking.payment_method}
+                </span>
+              </li>
+              <li className="flex justify-between">
+                <span className="font-medium">Payment Type:</span>
+                <span>{booking.payment_type ?? "-"}</span>
+              </li>
+              <li className="flex justify-between">
                 <span className="font-medium">Start Date:</span>
                 <span>{formatDate(booking.start_date)}</span>
               </li>

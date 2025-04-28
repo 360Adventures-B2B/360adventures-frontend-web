@@ -16,6 +16,8 @@ export interface IBooking {
   api_partner_name: string | null;
   booking_status: string;
   payment_status: string;
+  payment_method: string;
+  payment_type: string;
   name: string;
   email: string;
   phone: string;

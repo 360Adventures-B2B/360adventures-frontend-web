@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import SuccessPng from "@/images/success.png"; 
-import FailedPng from "@/images/failed.png"; 
-import PendingPng from "@/images/pending.png"; 
+import SuccessPng from "@/images/success.png";
+import FailedPng from "@/images/failed.png";
+import PendingPng from "@/images/pending.png";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import { Route } from "next";
 import ButtonSecondary from "@/shared/ButtonSecondary";
@@ -16,11 +16,12 @@ interface TopupRedirectPageProps {
   date?: string;
   amount?: number;
   payment_method?: string;
+  payment_type?: string;
   total_paid?: number;
   status?: string;
   buttonHref?: string;
   buttonText?: string;
-  onRefresh?: () => void; 
+  onRefresh?: () => void;
   isLoading?: boolean;
 }
 
@@ -31,6 +32,7 @@ const TopupRedirectPage: React.FC<TopupRedirectPageProps> = ({
   date = "-",
   amount,
   payment_method = "-",
+  payment_type = "-",
   total_paid,
   status = "pending", // Default status is 'pending' when transaction is not successful
   buttonHref = "/account-wallet/topup",
@@ -91,6 +93,13 @@ const TopupRedirectPage: React.FC<TopupRedirectPageProps> = ({
                 {payment_method === "qr_code" && "QR Code"}
                 {!["payment_gateway", "bank_transfer", "qr_code"].includes(payment_method) && payment_method}
               </span>
+            </div>
+          )}
+
+          {payment_type && (
+            <div className="flex justify-between text-sm text-gray-600">
+              <span className="font-semibold">Payment Type:</span>
+              <span>{payment_type}</span>
             </div>
           )}
 
