@@ -17,6 +17,7 @@ import SectionHero3 from "./(server-components)/SectionHero3";
 import { useSession } from "next-auth/react";
 import LocationSection from "@/components/LocationSection";
 import ProductSection from "@/components/ProductSection";
+import DealsSection from "@/components/DealsSection";
 
 const DEMO_CATS: TaxonomyType[] = [
   {
@@ -160,6 +161,8 @@ function PageHome() {
         {/* SECTION HERO */}
         {/* <SectionHero className="pt-10 lg:pt-16 lg:pb-16" /> */}
         <SectionHero3 className="pt-10 lg:pt-16 lg:pb-16" />
+
+        {/* <DealsSection /> */}
 
         {/* Location Section */}
         <LocationSection />

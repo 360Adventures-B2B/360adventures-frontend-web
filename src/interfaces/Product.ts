@@ -43,6 +43,9 @@ export interface Product {
   slug: string;
   duration: number;
   selling_price: number;
+  selling_price_deal: number;
+  selling_price_deal_percent: number | null;
+  is_deal: boolean;
   instant_confirmation: boolean;
   free_cancellation: boolean;
   pickup_included: boolean;
@@ -113,7 +116,7 @@ export interface ProductPackage {
   selling_price: number;
   person_types: PersonType[];
   extra_prices: ExtraPrice[];
-  product: any; 
+  product: any;
   quota_left: number;
 }
 

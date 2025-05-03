@@ -29,7 +29,9 @@ const ProductCard: FC<ProductCardProps> = ({ size = "default", className = "", d
           galleryClass={size === "default" ? undefined : ""}
         />
         <BtnLikeIcon className="absolute right-3 top-3 z-[1]" />
-        {/* {true && <SaleOffBadge className="absolute left-3 top-3" />} */}
+        {data?.is_deal && (
+          <SaleOffBadge className="absolute left-3 top-3" desc={`-${data?.selling_price_deal_percent}% today`} />
+        )}
       </div>
     );
   };
@@ -84,14 +86,16 @@ const ProductCard: FC<ProductCardProps> = ({ size = "default", className = "", d
             <div className="flex flex-col items-start min-h-[40px] md:min-h-[32px]">
               <div className="text-[9px] text-gray-500 font-medium">
                 <span>From</span>
-                {/* {data?.original_price ? (
+                {data?.is_deal && data.selling_price ? (
                   <span className="line-through ml-1 text-[10px] md:text-[11px] text-red-500">
-                    {formatNumber(data?.original_price)}
+                    {formatNumber(data.selling_price)}
                   </span>
-                ) : null} */}
+                ) : null}
               </div>
               <div className="flex items-center">
-                <span className="text-xs md:text-sm font-semibold text-primary">{formatNumber(data?.selling_price ?? 0)}</span>
+                <span className="text-xs md:text-sm font-semibold text-primary">
+                  {formatNumber(data?.is_deal ? data?.selling_price_deal : data?.selling_price ?? 0)}
+                </span>
               </div>
             </div>
 
