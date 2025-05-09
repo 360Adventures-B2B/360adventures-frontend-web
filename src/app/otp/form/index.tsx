@@ -219,7 +219,7 @@ export default function FormOTP({ mode }: { mode: "register" | "reset-password" 
           <ButtonPrimary
             loading={isLoading || isFetching}
             type="submit"
-            disabled={isLoading || !otp.every((val) => val) || isResendDisabled}
+            disabled={isLoading}
           >
             Validate
           </ButtonPrimary>

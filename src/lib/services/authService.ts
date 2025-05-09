@@ -54,6 +54,7 @@ export const authApi = createApi({
     }),
     getUser: builder.query({
       query: () => "api/user",
+      providesTags: ["User"],
     }),
     updateUser: builder.mutation({
       query: (credentials) => ({
@@ -61,6 +62,7 @@ export const authApi = createApi({
         method: "POST",
         body: credentials,
       }),
+      invalidatesTags: ["User"], 
     }),
     changePasswordUser: builder.mutation({
       query: (body) => ({
