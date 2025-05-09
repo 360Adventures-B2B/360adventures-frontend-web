@@ -14,6 +14,8 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { handleError } from "@/lib/handleApiError";
+import NcModal from "@/shared/NcModal";
+import ModalChangeContact from "../components/ModalChangeContact";
 
 export default function FormAccount() {
   const { data: user, isLoading: isLoadingData, isError } = useGetUserQuery(undefined);
@@ -151,9 +153,20 @@ export default function FormAccount() {
               <Label>Email</Label>
               <div className="flex items-center gap-2">
                 <Input className="mt-1.5" type="email" placeholder="Email" readOnly value={user.data.email || ""} />
-                <ButtonPrimary type="button" className="h-8 w-8 p-0 flex items-center justify-center">
-                  <i className="las la-pen text-base"></i>
-                </ButtonPrimary>
+                <NcModal
+                  contentExtraClass="w-full md:w-1/4"
+                  renderTrigger={(openModal) => (
+                    <ButtonPrimary
+                      type="button"
+                      onClick={() => openModal()}
+                      className="h-8 w-8 p-0 flex items-center justify-center"
+                    >
+                      <i className="las la-pen text-base"></i>
+                    </ButtonPrimary>
+                  )}
+                  renderContent={(closeModal) => <ModalChangeContact type="email" closeModal={closeModal} />}
+                  modalTitle={"Change Email"}
+                />
               </div>
             </FormItem>
             {/* Phone Number */}
@@ -167,9 +180,20 @@ export default function FormAccount() {
                   readOnly
                   value={user.data.phone || ""}
                 />
-                <ButtonPrimary type="button" className="h-8 w-8 p-0 flex items-center justify-center">
-                  <i className="las la-pen text-base"></i>
-                </ButtonPrimary>
+                <NcModal
+                  contentExtraClass="w-full md:w-1/4 overflow-visible"
+                  renderTrigger={(openModal) => (
+                    <ButtonPrimary
+                      type="button"
+                      onClick={() => openModal()}
+                      className="h-8 w-8 p-0 flex items-center justify-center"
+                    >
+                      <i className="las la-pen text-base"></i>
+                    </ButtonPrimary>
+                  )}
+                  renderContent={(closeModal) => <ModalChangeContact type="phone" closeModal={closeModal} />}
+                  modalTitle={"Change Phone Number"}
+                />
               </div>
             </FormItem>
 

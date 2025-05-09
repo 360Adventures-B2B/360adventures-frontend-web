@@ -55,6 +55,14 @@ const CustomPhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
             type,
             ...args,
           }}
+          style={{
+            position: 'relative',
+            zIndex: 9999, // ensure dropdown appears above other modal content
+          }}
+          dropdownStyle={{
+            position: 'absolute',
+            zIndex: 9999, // ensure the dropdown is visible above other modal content
+          }}
         />
       </div>
     );
