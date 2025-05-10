@@ -93,7 +93,7 @@ export default function FormAccount() {
         toast({
           className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
           title: "Success",
-          description: "Update User!",
+          description: "Update succesfully!",
           variant: "success",
           duration: 5000,
         });
@@ -124,7 +124,7 @@ export default function FormAccount() {
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-4xl space-y-6">
+        <form className="max-w-4xl space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Full Name */}
             <FormField
@@ -325,7 +325,9 @@ export default function FormAccount() {
 
           {/* Submit Button - Full Width */}
           <div className="pt-2">
-            <ButtonPrimary type="submit" loading={isLoadingUpdate}>
+            <ButtonPrimary 
+                onClick={form.handleSubmit(onSubmit)}
+            type="submit" loading={isLoadingUpdate} >
               Submit
             </ButtonPrimary>
           </div>

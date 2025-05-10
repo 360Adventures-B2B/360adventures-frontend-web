@@ -62,7 +62,7 @@ export const authApi = createApi({
         method: "POST",
         body: credentials,
       }),
-      invalidatesTags: ["User"], 
+      invalidatesTags: ["User"],
     }),
     changePasswordUser: builder.mutation({
       query: (body) => ({
@@ -72,10 +72,25 @@ export const authApi = createApi({
       }),
     }),
     logoutUser: builder.mutation({
-      query: (body) => ({
-        url: "api/auth/loogout",
+      query: () => ({
+        url: "api/auth/logout",
         method: "POST",
       }),
+    }),
+    requestUpdateContact: builder.mutation({
+      query: (body) => ({
+        url: "api/user/request-update-contact",
+        method: "POST",
+        body: body,
+      }),
+    }),
+    updateContact: builder.mutation({
+      query: (body) => ({
+        url: "api/user/update-contact",
+        method: "POST",
+        body: body,
+      }),
+      invalidatesTags: ["User"],
     }),
   }),
 });
@@ -90,4 +105,6 @@ export const {
   useUpdateUserMutation,
   useChangePasswordUserMutation,
   useLogoutUserMutation,
+  useRequestUpdateContactMutation,
+  useUpdateContactMutation,
 } = authApi;

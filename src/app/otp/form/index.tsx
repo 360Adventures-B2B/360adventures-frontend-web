@@ -11,14 +11,24 @@ import { handleError } from "@/lib/handleApiError";
 import { useEffect, useRef, useState } from "react";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useAuth } from "@/context/AuthContext";
-import { useLazyValidateUserOtpQuery, useResendUserOtpMutation } from "@/lib/services/authService";
+import {
+  useLazyValidateUserOtpQuery,
+  useResendUserOtpMutation,
+  useUpdateContactMutation,
+} from "@/lib/services/authService";
 import { useSession } from "next-auth/react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import useSweetAlert from "@/hooks/useSweetAlert";
 import { useForgotPassword } from "@/context/ForgotPasswordContext";
+interface FormOtpProps {
+  mode: "register" | "reset-password" | "change-email" | "change-phone";
+  contact?: string;
+  closeModal?: () => void;
+}
 
-export default function FormOTP({ mode }: { mode: "register" | "reset-password" }) {
+export default function FormOTP({ mode, contact, closeModal }: FormOtpProps) {
+  console.log("🚀 ~ FormOTP ~ contact:", contact);
   const { token: tokenForgotPassword } = useForgotPassword();
 
   const { data: session } = useSession();
@@ -47,6 +57,7 @@ export default function FormOTP({ mode }: { mode: "register" | "reset-password" 
   const [trigger, { isLoading, isFetching }] = useLazyValidateUserOtpQuery();
 
   const [resendUserOtp, { isLoading: isLoadingResendOTP }] = useResendUserOtpMutation();
+  const [updateContact, { isLoading: isLoadingRequestUpdateContact }] = useUpdateContactMutation();
 
   const { showLoading, close } = useSweetAlert();
 
@@ -55,26 +66,47 @@ export default function FormOTP({ mode }: { mode: "register" | "reset-password" 
 
   async function onSubmit(formData: FormData) {
     try {
-      const params =
-        mode === "reset-password"
-          ? {
-              token: tokenForgotPassword,
-              otpCode: formData.otp,
-              is_reset_password: true,
-            }
-          : {
-              token: session?.user?.token,
-              otpCode: formData.otp,
-            };
+      if (mode === "change-email" || mode === "change-phone") {
+        const contactType = mode === "change-email" ? "email" : "phone";
+        const userContact = contact;
+        const contactParams = {
+          type: contactType,
+          user: userContact,
+          otp_code: formData.otp,
+        };
+        const res = await updateContact(contactParams).unwrap();
 
-      const res = await trigger(params).unwrap();
+        if (res.code === 200) {
+          toast({
+            className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+            title: "Success",
+            description: `Your ${contactType} has been updated successfully.`,
+            variant: "success",
+            duration: 5000,
+          });
+          closeModal?.();
+        }
+      } else {
+        const params =
+          mode === "reset-password"
+            ? {
+                token: tokenForgotPassword,
+                otpCode: formData.otp,
+                is_reset_password: true,
+              }
+            : {
+                token: session?.user?.token,
+                otpCode: formData.otp,
+              };
+        const res = await trigger(params).unwrap();
 
-      if (res.code === 200) {
-        if (mode === "reset-password") {
-          window.location.href = `/reset-password?token=${tokenForgotPassword}&otp=${formData.otp}`;
-        } else {
-          await updateIsVerify(true);
-          window.location.href = "/";
+        if (res.code === 200) {
+          if (mode === "reset-password") {
+            window.location.href = `/reset-password?token=${tokenForgotPassword}&otp=${formData.otp}`;
+          } else {
+            await updateIsVerify(true);
+            window.location.href = "/";
+          }
         }
       }
     } catch (error: any) {
@@ -193,9 +225,10 @@ export default function FormOTP({ mode }: { mode: "register" | "reset-password" 
         <form className="grid grid-cols-1 gap-6" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="flex justify-center">
             <span className="text-neutral-800 dark:text-neutral-200 text-center">
-              {mode === "register"
-                ? "We sent a verification code to your email. Kindly check and enter it below."
-                : "Enter the OTP code sent to you to reset your password."}
+              {mode === "register" && "We sent a verification code to your email. Kindly check and enter it below."}
+              {mode === "reset-password" && "Enter the OTP code sent to you to reset your password."}
+              {mode === "change-email" && "Enter the verification code sent to your new email address."}
+              {mode === "change-phone" && "Enter the OTP code sent to your phone number."}
             </span>
           </div>
 
@@ -217,7 +250,7 @@ export default function FormOTP({ mode }: { mode: "register" | "reset-password" 
           </div>
 
           <ButtonPrimary
-            loading={isLoading || isFetching}
+            loading={isLoading || isFetching || isLoadingRequestUpdateContact}
             type="submit"
             disabled={isLoading}
           >
@@ -225,7 +258,7 @@ export default function FormOTP({ mode }: { mode: "register" | "reset-password" 
           </ButtonPrimary>
         </form>
       </Form>
-      <span className="block text-center text-neutral-700 dark:text-neutral-300">
+      <span className="block text-center text-neutral-700 dark:text-neutral-300 mt-3 text-sm">
         have not received the code? {` `}
         <Link
           href="#"

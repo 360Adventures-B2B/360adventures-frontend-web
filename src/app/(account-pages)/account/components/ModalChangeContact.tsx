@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -7,8 +7,11 @@ import { Label } from "@/components/ui/label";
 import ButtonPrimary from "@/shared/ButtonPrimary";
 import Input from "@/shared/Input";
 import CustomPhoneInput from "@/shared/PhoneInput";
-import { log } from "console";
 import FormOTP from "@/app/otp/form";
+import { useRequestUpdateContactMutation } from "@/lib/services/authService";
+import { toast } from "@/hooks/use-toast";
+import { handleError } from "@/lib/handleApiError";
+import { cn } from "@/lib/utils";
 
 type Props = {
   type: "email" | "phone";
@@ -21,6 +24,9 @@ type FormData = {
 };
 
 export default function ModalChangeContact({ type, closeModal }: Props) {
+  const [requestUpdateContact, { isLoading: isLoadingRequestUpdateContact }] = useRequestUpdateContactMutation();
+  const [contactValue, setContactValue] = useState<string>("");
+
   const [showOTPModal, setShowOTPModal] = useState(false);
   const schema = useMemo(() => {
     return type === "email"
@@ -45,11 +51,37 @@ export default function ModalChangeContact({ type, closeModal }: Props) {
 
   const onSubmitModal = async (data: FormData) => {
     try {
-      console.log("Form submitted:", data);
-      setShowOTPModal(true);
-      //   closeModal(); // Tutup modal setelah berhasil submit
-    } catch (err: any) {
-      console.error("Error during form submission:", err);
+      const value = {
+        type: type,
+        user: type === "email" ? data.email : type === "phone" ? data.phone : "",
+      };
+
+      const res = await requestUpdateContact(value).unwrap();
+
+      if (res.code === 200) {
+        setShowOTPModal(true);
+        setContactValue(type === "email" ? data.email || "" : data.phone || "");
+        const message = type === "email" ? "Check your email for OTP" : "Check your WhatsApp for OTP";
+        toast({
+          className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+          title: "Success",
+          description: message,
+          variant: "success",
+          duration: 5000,
+        });
+      } else {
+        toast({
+          className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+          title: "Error",
+          description: "Something Wrong, Try Again!",
+          variant: "destructive",
+          duration: 5000,
+        });
+      }
+      form.reset();
+    } catch (error: any) {
+      form.reset();
+      handleError(error);
     }
   };
 
@@ -96,8 +128,9 @@ export default function ModalChangeContact({ type, closeModal }: Props) {
 
             <div className="pt-2">
               <ButtonPrimary
-                type="button" // type="button" agar tidak submit form utama
-                onClick={form.handleSubmit(onSubmitModal)} // Ketika klik tombol, submit modal
+                type="submit"
+                loading={isLoadingRequestUpdateContact}
+                onClick={form.handleSubmit(onSubmitModal)}
                 className="w-full"
               >
                 Submit
@@ -107,7 +140,11 @@ export default function ModalChangeContact({ type, closeModal }: Props) {
         </Form>
       ) : (
         // Jika showOTPModal true, tampilkan FormOTP
-        <FormOTP closeModal={() => setShowOTPModal(false)} />
+        <FormOTP
+          mode={type === "email" ? "change-email" : "change-phone"}
+          contact={contactValue}
+          closeModal={closeModal}
+        />
       )}
     </>
   );
