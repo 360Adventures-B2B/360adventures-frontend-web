@@ -25,13 +25,28 @@ const DatePicker = () => {
   };
 
   const getSurroundingDates = (centerDate: Date, range: number): Date[] => {
-    const dates = [];
+    const dates: Date[] = [];
     const half = Math.floor(range / 2);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-    for (let i = -half; i <= half; i++) {
-      const date = new Date(centerDate);
-      date.setDate(centerDate.getDate() + i);
-      dates.push(date);
+    const center = new Date(centerDate);
+    center.setHours(0, 0, 0, 0);
+
+    const isToday = center.getTime() === today.getTime();
+
+    if (isToday) {
+      for (let i = 0; i <= range; i++) {
+        const date = new Date(centerDate);
+        date.setDate(centerDate.getDate() + i);
+        dates.push(date);
+      }
+    } else {
+      for (let i = -half; i <= half; i++) {
+        const date = new Date(centerDate);
+        date.setDate(centerDate.getDate() + i);
+        dates.push(date);
+      }
     }
 
     return dates;

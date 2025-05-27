@@ -1,6 +1,6 @@
 import { ExtraPrice } from "./ExtraPrice";
 import { PersonType } from "./PersonType";
-import { Product } from "./Product";
+import { IncludeExclude, Itinerary, Product } from "./Product";
 
 export interface Package {
   id: number;
@@ -15,6 +15,11 @@ export interface Package {
   quota: number;
   person_types: PersonType[];
   extra_prices: ExtraPrice[];
+  includes: IncludeExclude[];
+  excludes: IncludeExclude[];
+  cancellation_policy: string;
+  itinerary: Itinerary[];
+  additional_information: string;
   product?: Product;
   created_at?: string;
   updated_at?: string;

@@ -4,46 +4,13 @@ import { createBaseQuery } from "./baseQuery";
 import { Product } from "@/interfaces/Product";
 import { Package } from "@/interfaces/Package";
 import { Pagination } from "@/interfaces/Pagination";
-
-// const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-type ProductsResponse = {
-  page: number;
-  per_page: number;
-  total: number;
-  total_pages: number;
-  data: Product[];
-  pagination: Pagination;
-};
-
-type ProductResponse = {
-  data: Product;
-};
-
-type PackageResponse = {
-  data: Package;
-};
+import { ApiResponse } from "@/interfaces/ApiResponse";
 
 export const productApi = createApi({
   reducerPath: "productApi",
   baseQuery: createBaseQuery(),
-  // baseQuery: fetchBaseQuery({ baseUrl: "/api/" }),
   endpoints: (builder) => ({
-    // getProduct: builder.query<ProductsResponse, Record<string, unknown> | void>({
-    //   async queryFn(filters = {}, _queryApi, _extraOptions, fetchWithBQ) {
-    //     const url = new URL(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products`);
-
-    //     Object.entries(filters ?? {}).forEach(([key, value]) => {
-    //       if (value != null && value !== "") {
-    //         url.searchParams.append(key, Array.isArray(value) ? JSON.stringify(value) : String(value));
-    //       }
-    //     });
-
-    //     const response = await fetchWithBQ(url.toString());
-    //     return response.error ? { error: response.error } : { data: response.data as ProductsResponse };
-    //   },
-    // }),
-
-    getProduct: builder.query<ProductsResponse, Record<string, unknown> | void>({
+    getProduct: builder.query<ApiResponse<Product[]>, Record<string, unknown> | void>({
       async queryFn(filters = {}, _queryApi, _extraOptions, fetchWithBQ) {
         const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
 
@@ -63,15 +30,7 @@ export const productApi = createApi({
         if (response.error) {
           return { error: response.error };
         }
-
-        const res = response.data as {
-          code: number;
-          status: string;
-          message: string;
-          data: Product[];
-          pagination: ProductsResponse["pagination"];
-        };
-
+       const res = response.data as ApiResponse<Product[]>;
         return {
           data: {
             data: res.data,
@@ -81,7 +40,7 @@ export const productApi = createApi({
       },
     }),
 
-    getDetailProduct: builder.query<ProductResponse, string>({
+    getDetailProduct: builder.query<ApiResponse<Product>, string>({
       query: (slug) => `api/products/${slug}`,
     }),
     checkAvailableProduct: builder.mutation<any, { ulid: string; body: any }>({

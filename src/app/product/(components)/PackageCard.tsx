@@ -5,6 +5,7 @@ import { Package } from "@/interfaces/Package";
 import { formatNumber } from "@/utils/currencyConverter";
 import { useBooking } from "@/context/BookingContext";
 import ModalDatePicker from "./ModalDatePicker";
+import PackageDetail from "./PackageDetail";
 
 interface PackageCardProps {
   packageData: Package;
@@ -16,7 +17,7 @@ const PackageCard: React.FC<PackageCardProps> = ({ packageData }) => {
   return (
     <div className="border border-gray-300 rounded-lg p-4 flex flex-col sm:flex-row gap-3">
       {/* Left Section: Title and Description */}
-      <div className="flex-1 flex flex-col gap-2 sm:border-r sm:border-gray-300 sm:pr-3">
+      <div className="flex-1 flex flex-col justify-between gap-2 sm:border-r sm:border-gray-300 sm:pr-3">
         {/* Bestseller Tag */}
         {/* <div className="flex items-center text-xs font-semibold text-red-500">
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 32 32" className="mr-1">
@@ -48,6 +49,18 @@ const PackageCard: React.FC<PackageCardProps> = ({ packageData }) => {
         <div className="text-sm text-gray-600 mt-1">
           <p>{packageData.description}</p>
         </div>
+        <NcModal
+          contentExtraClass="w-full md:w-1/2"
+          renderTrigger={(openModal) => (
+            <a onClick={() => openModal()} className="text-sm text-black hover:text-blue-600 hover:no-underline mt-4 cursor-pointer">
+              More details &gt;
+            </a>
+          )}
+          renderContent={(closeModal) => {
+            return <PackageDetail packageData={packageData} closeModal={closeModal} />;
+          }}
+          modalTitle={`Package Detail`}
+        />
       </div>
 
       {/* Right Section: Price and Select Button */}

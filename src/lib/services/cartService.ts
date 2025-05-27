@@ -1,10 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { createBaseQuery } from "./baseQuery";
 import { Cart } from "@/interfaces/Cart";
-
-type CartResponse = {
-  data: Cart[];
-};
+import { ApiResponse } from "@/interfaces/ApiResponse";
 
 export const cartApi = createApi({
   reducerPath: "cartApi",
@@ -12,7 +9,7 @@ export const cartApi = createApi({
   tagTypes: ["Cart"],
   // baseQuery: fetchBaseQuery({ baseUrl: "/api/" }),
   endpoints: (builder) => ({
-    getCarts: builder.query<CartResponse, { ids?: string[]; is_instant?: boolean } | void>({
+    getCarts: builder.query<ApiResponse<Cart[]>, { ids?: string[]; is_instant?: boolean } | void>({
       query: (args) => {
         const ids = args?.ids;
         const is_instant = args?.is_instant ?? false;
