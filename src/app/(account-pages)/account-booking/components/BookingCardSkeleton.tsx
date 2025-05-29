@@ -8,7 +8,7 @@ export default function BookingCardSkeleton() {
         <Skeleton className="w-full h-full" />
       </div>
       <div className="ml-0 lg:ml-52 mt-[14rem] sm:mt-[16rem] lg:mt-0 flex-1 p-0 text-left">
-        <Skeleton className="w-74 h-4 mb-2" />
+        <Skeleton className="w-80 h-4 mb-2" />
         <Skeleton className="w-72 h-5 mb-2" />
         <div className="mt-3 flex items-center">
           <Skeleton className="w-40 h-5" />

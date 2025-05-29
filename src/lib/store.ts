@@ -10,6 +10,7 @@ import { bookingApi } from "./services/bookingService";
 import { topupApi } from "./services/topupService";
 import { bankApi } from "./services/bankService";
 import { creditHistoryApi } from "./services/creditHistoryService";
+import { wishlistApi } from "./services/wishlistService";
 export const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
@@ -21,6 +22,7 @@ export const store = configureStore({
     [topupApi.reducerPath]: topupApi.reducer,
     [bankApi.reducerPath]: bankApi.reducer,
     [creditHistoryApi.reducerPath]: creditHistoryApi.reducer,
+    [wishlistApi.reducerPath]: wishlistApi.reducer,
     filters: filterReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -34,6 +36,7 @@ export const store = configureStore({
       topupApi.middleware,
       bankApi.middleware,
       creditHistoryApi.middleware,
+      wishlistApi.middleware,
     ]),
 });
 

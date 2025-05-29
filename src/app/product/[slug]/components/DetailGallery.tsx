@@ -10,19 +10,29 @@ interface ProductGalleryProps {
     ulid: string;
     image: string;
   }[];
+  featured_image: string; // URL gambar featured, required
+  video_playback?: string; // URL video playback, optional
 }
 
-export default function DetailGallery({ product_galleries }: ProductGalleryProps) {
+export default function DetailGallery({ product_galleries, featured_image, video_playback }: ProductGalleryProps) {
   const router = useRouter();
   const thisPathname = usePathname();
   const searchParams = useSearchParams();
   const modal = searchParams?.get("modal");
 
-  const galleryImages = product_galleries.map((g, index) => ({
-    id: index,
-    url: g.image,
-  }));
-  
+  const galleryImages = [];
+
+  if (featured_image) {
+    galleryImages.push({ id: 0, url: featured_image });
+  }
+
+  // Tambahkan product_galleries setelah featured_image
+  galleryImages.push(
+    ...product_galleries.map((g, index) => ({
+      id: index + 1, 
+      url: g.image,
+    }))
+  );
 
   const handleCloseModalImageGallery = () => {
     let params = new URLSearchParams(document.location.search);

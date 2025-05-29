@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { DEMO_STAY_LISTINGS } from "@/data/listings";
 import StartRating from "@/components/StartRating";
 import BtnLikeIcon from "@/components/BtnLikeIcon";
@@ -8,6 +8,7 @@ import Link from "next/link";
 import GallerySlider from "./GallerySlider";
 import { Product } from "@/interfaces/Product";
 import { formatNumber } from "@/utils/currencyConverter";
+import Image from "next/image";
 
 export interface ProductCardProps {
   className?: string;
@@ -17,18 +18,31 @@ export interface ProductCardProps {
 
 const ProductCard: FC<ProductCardProps> = ({ size = "default", className = "", data }) => {
   const galleryImgs = data?.product_galleries.map((item) => item.image);
-
+  const fallbackUrl = "https://dummyimage.com/600x400/000/fff";
+  const [imgSrc, setImgSrc] = useState(data?.featured_image || fallbackUrl);
   const renderSliderGallery = () => {
     return (
       <div className="relative w-full">
-        <GallerySlider
+        {/* <GallerySlider
           uniqueID={`ProductCard_${data?.id}`}
           ratioClass="aspect-w-4 aspect-h-3 "
           galleryImgs={galleryImgs}
           href="#"
           galleryClass={size === "default" ? undefined : ""}
-        />
-        <BtnLikeIcon className="absolute right-3 top-3 z-[1]" />
+        /> */}
+        <div className="aspect-w-16 aspect-h-11 ">
+          <Image
+            src={imgSrc}
+            fill
+            alt="listing card gallery"
+            className={`object-cover`}
+            onError={() => setImgSrc(fallbackUrl)}
+            sizes="(max-width: 1025px) 100vw, 300px"
+          />
+        </div>
+        {data?.id !== undefined && (
+          <BtnLikeIcon className="absolute right-3 top-3 z-[1]" productId={data.id} isLiked={data.is_wishlist} />
+        )}
         {data?.is_deal && (
           <SaleOffBadge className="absolute left-3 top-3" desc={`-${data?.selling_price_deal_percent}% today`} />
         )}

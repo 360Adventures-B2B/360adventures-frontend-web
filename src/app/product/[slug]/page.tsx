@@ -57,7 +57,7 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
 
   const fallbackUrl = "https://dummyimage.com/1000x1000/000/fff";
 
-  const [firstImgSrc, setFirstImgSrc] = useState(product?.product_galleries[0]?.image || fallbackUrl);
+  const [firstImgSrc, setFirstImgSrc] = useState(fallbackUrl);
 
   const [imageSrcs, setImageSrcs] = useState<string[]>([]);
   const [packages, setPackages] = useState<any[]>([]);
@@ -72,6 +72,12 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
       setPackages(product.packages);
     }
   }, [product]);
+
+  useEffect(() => {
+    if (product?.featured_image) {
+      setFirstImgSrc(product.featured_image);
+    }
+  }, [product?.featured_image]);
 
   useEffect(() => {
     if (product?.ulid && selectedDate) {
@@ -104,7 +110,7 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
 
   useEffect(() => {
     if (product?.product_galleries) {
-      const slicedImages = product.product_galleries.slice(1, 5).map((g) => g.image);
+      const slicedImages = product.product_galleries.slice(0, 4).map((g) => g.image);
       setImageSrcs(slicedImages);
     }
   }, [product]);
@@ -136,6 +142,17 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
       setUnavailableDates(finalDates);
     }
   }, [product, setUnavailableDates]);
+
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+
+  const handlePlayClick = (e: any) => {
+    e.stopPropagation(); // supaya onClick div induk gak jalan
+    setIsVideoPlaying(true);
+  };
+
+  const handleCloseVideo = () => {
+    setIsVideoPlaying(false);
+  };
 
   const mainContent = () => {
     return (
@@ -249,7 +266,11 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
   return (
     <div className="nc-ProductDetailPage">
       {/*  HEADER */}
-      <DetailGallery product_galleries={product?.product_galleries ?? []} />
+      <DetailGallery
+        product_galleries={product?.product_galleries ?? []}
+        featured_image={product?.featured_image || ""}
+        video_playback={product?.video_playback}
+      />
 
       {isLoading ? (
         <SkeletonHeader />
@@ -257,41 +278,67 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
         <header className="rounded-md sm:rounded-xl">
           <div className="relative grid grid-cols-3 sm:grid-cols-4 gap-1 sm:gap-2">
             <div
-              className="col-span-2 row-span-3 sm:row-span-2 relative rounded-md sm:rounded-xl overflow-hidden cursor-pointer"
-              onClick={handleOpenModalImageGallery}
+              className={`col-span-2 row-span-3 sm:row-span-2 relative rounded-md sm:rounded-xl overflow-hidden ${
+                !product?.video_playback ? "cursor-pointer" : ""
+              }`}
+              onClick={!product?.video_playback ? handleOpenModalImageGallery : undefined}
             >
-              <Image
-                fill
-                className="object-cover rounded-md sm:rounded-xl"
-                src={firstImgSrc}
-                alt="Product Image"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
-                onError={() => setFirstImgSrc(fallbackUrl)}
-              />
+              {!isVideoPlaying ? (
+                <>
+                  <Image
+                    fill
+                    className="object-cover rounded-md sm:rounded-xl"
+                    src={firstImgSrc}
+                    alt="Product Image"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
+                    onError={() => setFirstImgSrc(fallbackUrl)}
+                  />
+
+                  {/* Tombol Play di tengah gambar */}
+                  {product?.video_playback && (
+                    <button
+                      onClick={handlePlayClick}
+                      className="absolute inset-0 z-30 flex items-center justify-center bg-black bg-opacity-30 hover:bg-opacity-40 transition-opacity rounded-md sm:rounded-xl"
+                      aria-label="Play Video"
+                    >
+                      {/* Icon Play sederhana (bisa ganti dengan SVG atau icon library) */}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="white"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="white"
+                        className="w-16 h-16"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 5l14 7-14 7V5z" />
+                      </svg>
+                    </button>
+                  )}
+                </>
+              ) : (
+                // Video fullscreen di area gambar utama
+                <div className="absolute inset-0 bg-black rounded-md sm:rounded-xl z-20 flex items-center justify-center">
+                  <video
+                    className="w-full h-full object-cover rounded-md sm:rounded-xl"
+                    src={product?.video_playback}
+                    controls
+                    autoPlay
+                    muted={false}
+                    playsInline
+                  />
+                  {/* Tombol close video di pojok */}
+                  <button
+                    onClick={handleCloseVideo}
+                    className="absolute top-2 right-2 bg-black bg-opacity-50 rounded-full p-1 text-white hover:bg-opacity-75"
+                    aria-label="Close Video"
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
 
               <div className="absolute inset-0 bg-neutral-900 bg-opacity-20 opacity-0 hover:opacity-100 transition-opacity"></div>
             </div>
-            {/* {PHOTOS.filter((_, i) => i >= 1 && i < 5).map((item, index) => (
-              <div
-                key={index}
-                className={`relative rounded-md sm:rounded-xl overflow-hidden ${index >= 3 ? "hidden sm:block" : ""}`}
-              >
-                <div className="aspect-w-4 aspect-h-3 sm:aspect-w-6 sm:aspect-h-5">
-                  <Image
-                    fill
-                    className="object-cover rounded-md sm:rounded-xl "
-                    src={item || ""}
-                    alt=""
-                    sizes="400px"
-                  />
-                </div>
-
-                <div
-                  className="absolute inset-0 bg-neutral-900 bg-opacity-20 opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
-                  onClick={handleOpenModalImageGallery}
-                />
-              </div>
-            ))} */}
 
             {imageSrcs.map((src, index) => (
               <div
@@ -317,7 +364,7 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
             ))}
 
             <button
-              className="absolute hidden md:flex md:items-center md:justify-center left-3 bottom-3 px-4 py-2 rounded-xl bg-neutral-100 text-neutral-500 hover:bg-neutral-200 z-10"
+              className="absolute z-30 hidden md:flex md:items-center md:justify-center left-3 bottom-3 px-4 py-2 rounded-xl bg-neutral-100 text-neutral-500 hover:bg-neutral-200 z-10"
               onClick={handleOpenModalImageGallery}
             >
               <Squares2X2Icon className="w-5 h-5" />

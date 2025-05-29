@@ -101,12 +101,12 @@ const ListingImageGallery: FC<Props> = ({ images = DEMO_IMAGE, onClose, isShowMo
           />
         )}
 
-        <div className="columns-1 gap-4 sm:columns-2 xl:columns-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {imageSrcs.map(({ id, url }, index) => (
             <div
               key={id}
               onClick={() => {
-                const newPathname = getNewParam({ value: id });
+                const newPathname = getNewParam({ value: index });
                 router.push(`${thisPathname}/?${newPathname}` as Route);
               }}
               ref={id === Number(lastViewedPhoto) ? lastViewedPhotoRef : null}
@@ -114,14 +114,14 @@ const ListingImageGallery: FC<Props> = ({ images = DEMO_IMAGE, onClose, isShowMo
             >
               <Image
                 alt={`Gallery ${index}`}
-                className="transform rounded-lg brightness-90 transition will-change-auto group-hover:brightness-110 focus:outline-none"
+                className="object-cover rounded-lg brightness-90 transition will-change-auto group-hover:brightness-110 focus:outline-none"
                 style={{
                   transform: "translate3d(0, 0, 0)",
                 }}
                 src={url}
                 width={720}
                 height={480}
-                sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 350px"
+                sizes="(min-width: 640px) 100vw, (min-width: 1280px) 50vw, 350px"
                 onError={() => handleImageError(index)}
               />
             </div>
@@ -155,7 +155,7 @@ const ListingImageGallery: FC<Props> = ({ images = DEMO_IMAGE, onClose, isShowMo
               >
                 <ArrowSmallLeftIcon className="w-6 h-6" />
               </button>
-              <LikeSaveBtns />
+              {/* <LikeSaveBtns /> */}
             </div>
 
             <div className="flex min-h-full items-center justify-center sm:p-4 pt-0 text-center">
@@ -168,7 +168,7 @@ const ListingImageGallery: FC<Props> = ({ images = DEMO_IMAGE, onClose, isShowMo
                 leaveFrom="opacity-100 translate-y-0"
                 leaveTo="opacity-0 translate-y-5"
               >
-                <Dialog.Panel className="w-full max-w-screen-lg mx-auto transform p-4 pt-0 text-left transition-all ">
+                <Dialog.Panel className="w-full max-w-screen-lg mx-auto transform p-4 pt-0 text-left transition-all flex flex-row space-x-4">
                   {renderContent()}
                 </Dialog.Panel>
               </Transition.Child>

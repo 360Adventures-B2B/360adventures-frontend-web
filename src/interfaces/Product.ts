@@ -46,6 +46,9 @@ export interface Product {
   selling_price_deal: number;
   selling_price_deal_percent: number | null;
   is_deal: boolean;
+  is_wishlist: boolean;
+  featured_image: string;
+  video_playback: string;
   instant_confirmation: boolean;
   free_cancellation: boolean;
   pickup_included: boolean;
