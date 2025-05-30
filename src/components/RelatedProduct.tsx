@@ -10,103 +10,26 @@ import NextBtn from "./NextBtn";
 import { variants } from "@/utils/animationVariants";
 import { useWindowSize } from "react-use";
 import ProductCard from "./ProductCard";
-import { useGetProductQuery } from "@/lib/services/productService";
+import { Product } from "@/interfaces/Product";
 
 export interface RelatedProductProps {
   className?: string;
   itemClassName?: string;
   heading?: string;
   subHeading?: string;
-  categories?: TaxonomyType[];
-  categoryCardType?: "card3" | "card4" | "card5";
   itemPerRow?: 4 | 5;
   sliderStyle?: "style1" | "style2";
+  products: Product[];
 }
-
-const DEMO_CATS: TaxonomyType[] = [
-  {
-    id: "1",
-    href: "/listing-stay-map",
-    name: "Nature House",
-    taxonomy: "category",
-    count: 17288,
-    thumbnail:
-      "https://images.pexels.com/photos/2581922/pexels-photo-2581922.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
-  },
-  {
-    id: "2",
-    href: "/listing-stay-map",
-    name: "Wooden house",
-    taxonomy: "category",
-    count: 2118,
-    thumbnail:
-      "https://images.pexels.com/photos/2351649/pexels-photo-2351649.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  },
-  {
-    id: "3",
-    href: "/listing-stay-map",
-    name: "Houseboat",
-    taxonomy: "category",
-    count: 36612,
-    thumbnail:
-      "https://images.pexels.com/photos/962464/pexels-photo-962464.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  },
-  {
-    id: "4",
-    href: "/listing-stay-map",
-    name: "Farm House",
-    taxonomy: "category",
-    count: 18188,
-    thumbnail:
-      "https://images.pexels.com/photos/248837/pexels-photo-248837.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  },
-  {
-    id: "5",
-    href: "/listing-stay-map",
-    name: "Dome House",
-    taxonomy: "category",
-    count: 22288,
-    thumbnail:
-      "https://images.pexels.com/photos/3613236/pexels-photo-3613236.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  },
-  {
-    id: "6",
-    href: "/listing-stay-map",
-    name: "Dome House",
-    taxonomy: "category",
-    count: 188288,
-    thumbnail:
-      "https://images.pexels.com/photos/14534337/pexels-photo-14534337.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-  },
-  {
-    id: "7",
-    href: "/listing-stay-map",
-    name: "Wooden house",
-    taxonomy: "category",
-    count: 2118,
-    thumbnail:
-      "https://images.pexels.com/photos/2351649/pexels-photo-2351649.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  },
-  {
-    id: "8",
-    href: "/listing-stay-map",
-    name: "Wooden Dome",
-    taxonomy: "category",
-    count: 515,
-    thumbnail:
-      "https://images.pexels.com/photos/9039238/pexels-photo-9039238.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-  },
-];
 
 const RelatedProduct: FC<RelatedProductProps> = ({
   heading = "Suggestions for discovery",
   subHeading = "Popular places to recommends for you",
   className = "",
   itemClassName = "",
-  categories = DEMO_CATS,
   itemPerRow = 5,
-  categoryCardType = "card3",
   sliderStyle = "style1",
+  products,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
@@ -117,7 +40,7 @@ const RelatedProduct: FC<RelatedProductProps> = ({
     if (windowWidth < 320) {
       return setNumberOfitem(1);
     }
-    if (windowWidth < 500) {
+    if (windowWidth < 376) {
       return setNumberOfitem(itemPerRow - 3);
     }
     if (windowWidth < 1024) {
@@ -129,9 +52,6 @@ const RelatedProduct: FC<RelatedProductProps> = ({
 
     setNumberOfitem(itemPerRow);
   }, [itemPerRow, windowWidth]);
-
-  const { data, error, isLoading } = useGetProductQuery(undefined);
-  const products = data?.data || [];
 
   function changeItemId(newVal: number) {
     if (newVal > currentIndex) {
@@ -187,9 +107,9 @@ const RelatedProduct: FC<RelatedProductProps> = ({
                     key={indx}
                     style={{
                       width: `calc(1/${numberOfItems} * 100%)`,
+                       whiteSpace: "normal",
                     }}
                   >
-                    {/* {renderCard(item)} */}
                     <ProductCard data={item} />
                   </motion.li>
                 ))}

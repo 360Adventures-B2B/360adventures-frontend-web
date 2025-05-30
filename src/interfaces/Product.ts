@@ -70,6 +70,7 @@ export interface Product {
   product_quota_full: any[]; // Define detail if needed
   product_blocks: any[]; // Define detail if needed
   packages: Package[];
+  related_product: Product[];
 }
 
 export interface IncludeExclude {

@@ -23,6 +23,8 @@ import { useDate } from "@/context/DateContext";
 import { useBooking } from "@/context/BookingContext";
 import { useUnavailableDates } from "@/context/ProductUnavailableContext";
 import { formatDateString } from "@/utils/dateHelper";
+import BackgroundSection from "@/components/BackgroundSection";
+import RelatedProduct from "@/components/RelatedProduct";
 
 export interface ProductDetailPageProps {}
 
@@ -424,6 +426,22 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
           <div className="sticky top-28">{isLoading ? <SkeletonSidebar /> : renderSidebar()}</div>
         </div>
       </main>
+
+      {product?.related_product && product.related_product.length > 0 && (
+        <div className="container py-24 lg:py-32">
+          <div className="relative py-16">
+            <BackgroundSection />
+            <RelatedProduct
+              heading="You might also like "
+              subHeading=""
+              categoryCardType="card5"
+              itemPerRow={4}
+              sliderStyle="style2"
+              products={product.related_product || []}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

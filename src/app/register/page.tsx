@@ -39,7 +39,7 @@ const PageRegister: FC<PageRegisterProps> = ({}) => {
         <h2 className="py-10 flex items-center text-2xl leading-[115%] md:text-5xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
           Register Agent
         </h2>
-        <div className="max-w-md mx-auto space-y-6 ">
+       <div className="max-w-2xl mx-auto px-4 lg:px-6 py-8 space-y-6">
           <FormRegister />
         </div>
       </div>

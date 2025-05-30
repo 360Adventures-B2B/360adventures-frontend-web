@@ -43,6 +43,19 @@ export default function FormRegister() {
       .string()
       .oneOf([yup.ref("password"), undefined], "Confirmation password doesn't match")
       .required("Password confirmation is a required field"),
+    trade_license: yup
+      .mixed()
+      .test("required", "Trade license file is required", (value) => {
+        return value instanceof File;
+      })
+      .test("fileType", "Only PDF files are allowed", (value) => {
+        if (!value) return true; // skip kalau sudah gagal di required
+        return value.type === "application/pdf";
+      })
+      .test("fileSize", "File size is too large (max 2MB)", (value) => {
+        if (!value) return true; // skip kalau sudah gagal di required
+        return value.size <= 2 * 1024 * 1024;
+      }),
   });
 
   type FormData = yup.InferType<typeof schema>;
@@ -55,6 +68,7 @@ export default function FormRegister() {
       email: "",
       password: "",
       passwordConfirmation: "",
+      trade_license: "",
     },
   });
 
@@ -69,6 +83,7 @@ export default function FormRegister() {
         username: formData.username,
         email: formData.email,
         password: formData.password,
+        trade_license: formData.trade_license,
       };
       const res = await registerUser(value).unwrap();
 
@@ -120,8 +135,8 @@ export default function FormRegister() {
   return (
     <>
       <Form {...form}>
-        <form className="grid grid-cols-1 gap-6 gap-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-          <label className="block">
+        <form className="grid grid-cols-1 md:grid-cols-2 gap-6 gap-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+          <label className="block col-span-1">
             <span className="text-neutral-800 dark:text-neutral-200">Full Name</span>
             <FormField
               control={form.control}
@@ -137,7 +152,7 @@ export default function FormRegister() {
             />
           </label>
 
-          <label className="block">
+          <label className="block col-span-1">
             <span className="text-neutral-800 dark:text-neutral-200">Username</span>
             <FormField
               control={form.control}
@@ -159,7 +174,7 @@ export default function FormRegister() {
             />
           </label>
 
-          <label className="block">
+          <label className="block col-span-1">
             <span className="text-neutral-800 dark:text-neutral-200">Email address or Mobile phone</span>
             <FormField
               control={form.control}
@@ -181,7 +196,7 @@ export default function FormRegister() {
             />
           </label>
 
-          <label className="block">
+          <label className="block col-span-1">
             <span className="text-neutral-800 dark:text-neutral-200">Password</span>
             <FormField
               control={form.control}
@@ -203,7 +218,7 @@ export default function FormRegister() {
             />
           </label>
 
-          <label className="block">
+          <label className="block col-span-1">
             <span className="text-neutral-800 dark:text-neutral-200">Confirmation Password</span>
             <FormField
               control={form.control}
@@ -225,9 +240,44 @@ export default function FormRegister() {
             />
           </label>
 
-          <ButtonPrimary loading={isLoading} type="submit" className="w-full">
-            Register
-          </ButtonPrimary>
+          <label className="block">
+            <span className="text-neutral-800 dark:text-neutral-200">Trade License</span>
+            <FormField
+              control={form.control}
+              name="trade_license"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <div className="mt-1">
+                      <label className="flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer w-full">
+                        Upload File
+                        <Input
+                          type="file"
+                          accept=".pdf"
+                          className="hidden"
+                          {...field}
+                          value={undefined} // override supaya gak ada error
+                          onChange={(e) => {
+                            field.onChange(e.target.files?.[0]); // set file ke RHF
+                          }}
+                        />
+                      </label>
+                      {field.value && (
+                        <p className="mt-2 text-sm text-green-600">Selected file: {(field.value as File).name}</p>
+                      )}
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </label>
+
+          <div className="col-span-1 md:col-span-2">
+            <ButtonPrimary loading={isLoading} type="submit" className="w-full">
+              Register
+            </ButtonPrimary>
+          </div>
         </form>
       </Form>
 
