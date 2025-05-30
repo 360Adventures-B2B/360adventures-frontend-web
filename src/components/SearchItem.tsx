@@ -9,7 +9,7 @@ interface SearchItemProps {
 }
 
 export default function SearchItem({ product, handleCloseDropdown }: SearchItemProps) {
-  let currentImage = product?.product_galleries?.[0].image ?? null;
+  let currentImage = product?.featured_image ?? null;
   const fallbackUrl = "https://dummyimage.com/600x400/000/fff";
   const [imgSrc, setImgSrc] = useState(currentImage || fallbackUrl);
 
