@@ -21,6 +21,7 @@ export interface Package {
   itinerary: Itinerary[];
   additional_information: string;
   unavailable_dates?: [];
+  is_available?: boolean,
   product?: Product;
   created_at?: string;
   updated_at?: string;
