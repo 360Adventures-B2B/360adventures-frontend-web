@@ -52,7 +52,10 @@ const PackageCard: React.FC<PackageCardProps> = ({ packageData }) => {
         <NcModal
           contentExtraClass="w-full md:w-1/2"
           renderTrigger={(openModal) => (
-            <a onClick={() => openModal()} className="text-sm text-black hover:text-blue-600 hover:no-underline mt-4 cursor-pointer">
+            <a
+              onClick={() => openModal()}
+              className="text-sm text-black hover:text-blue-600 hover:no-underline mt-4 cursor-pointer"
+            >
               More details &gt;
             </a>
           )}
@@ -89,7 +92,14 @@ const PackageCard: React.FC<PackageCardProps> = ({ packageData }) => {
             )}
             renderContent={(closeModal) => {
               if (!bookingData.start_date) {
-                return <ModalDatePicker selectedDate={null} handleDateSelection={() => {}} closeModal={closeModal} />;
+                return (
+                  <ModalDatePicker
+                    selectedDate={null}
+                    handleDateSelection={() => {}}
+                    closeModal={closeModal}
+                    packageId={packageData.ulid}
+                  />
+                );
               }
               return <ModalPackage packageId={packageData.ulid} closeModal={closeModal} />;
             }}

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import QuantityStepper from "./QuantityStepper";
 import { useBooking } from "@/context/BookingContext";
 import { useGetDetailPackageMutation } from "@/lib/services/productService";
@@ -15,6 +15,7 @@ import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import ExtraPriceSelector from "./ExtraPriceSelector";
 import { handleError } from "@/lib/handleApiError";
+import { useError } from "@/context/ErrorContext";
 
 interface ModalPackageProps {
   packageId: string;
@@ -22,14 +23,14 @@ interface ModalPackageProps {
 }
 
 const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: closeModalPackage }) => {
+  const { showError } = useError();
   const { bookingData, dispatch } = useBooking();
-  console.log("🚀 ~ bookingData:", bookingData);
   const { selectedDate, setSelectedDate } = useDate();
 
   const [isChangeDate, setIsChangeDate] = useState(false);
   const [isFirstOpen, setIsFirstOpen] = useState(true);
 
-  const [getDetailPackage, { data, error, isLoading }] = useGetDetailPackageMutation();
+  const [getDetailPackage, { data, isError: isErrorDetailPackage, isLoading }] = useGetDetailPackageMutation();
 
   useEffect(() => {
     if (packageId) {
@@ -47,7 +48,6 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
   const [selectedTime, setSelectedTime] = useState("");
 
   const [addCart, { isLoading: isLoadingAddCart, isError }] = useAddCartMutation();
-
   const handleTimeSelect = (time: any) => {
     setSelectedTime(time);
     dispatch({ type: "UPDATE_TIME_SLOT", payload: time });
@@ -105,6 +105,35 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
           duration: 2000,
         });
         return;
+      }
+
+      for (const pkgPerson of packageData.person_types) {
+        const { name, min, max } = pkgPerson;
+
+        const bookingPerson = bookingData.person_types.find((p) => p.name === name);
+        const guest = bookingPerson ? bookingPerson.guest : 0;
+
+        if (guest < min) {
+          toast({
+            className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+            title: "Error",
+            description: `${name} must be at least ${min} guest${min > 1 ? "s" : ""}`,
+            variant: "destructive",
+            duration: 2000,
+          });
+          return;
+        }
+
+        if (guest > max) {
+          toast({
+            className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+            title: "Error",
+            description: `${name} cannot exceed ${max} guest${max > 1 ? "s" : ""}`,
+            variant: "destructive",
+            duration: 2000,
+          });
+          return;
+        }
       }
 
       const simplifiedPersonTypes = Array.isArray(bookingData.person_types)
@@ -171,10 +200,23 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
         handleDateSelection={handleDateSelection}
         closeModal={closeModalPackage}
         hideCloseButton={false}
+        packageId={packageData.ulid}
       />
     );
   }
+  
+  // const isMounted = useRef(false);
 
+  // useEffect(() => {
+  //   if (isMounted.current && isErrorDetailPackage) {
+  //     showError({
+  //       message: "Gagal memuat paket.",
+  //       backUrl: "/",
+  //     });
+  //   } else {
+  //     isMounted.current = true;
+  //   }
+  // }, [isErrorDetailPackage]);
   return (
     <div className="h-full flex flex-col max-h-[75vh] overflow-y-auto">
       <div className="flex-grow space-y-8">

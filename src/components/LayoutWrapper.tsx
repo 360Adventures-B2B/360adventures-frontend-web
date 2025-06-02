@@ -14,6 +14,8 @@ import TopLoaderProvider from "./TopLoaderProvider";
 import { TopupProvider } from "@/context/TopupContext";
 import { ForgotPasswordProvider } from "@/context/ForgotPasswordContext";
 import { UnavailableDatesProvider } from "@/context/ProductUnavailableContext";
+import { ErrorProvider } from "@/context/ErrorContext";
+import ErrorModal from "./ErrorModal";
 
 const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
@@ -25,25 +27,28 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
     <>
       <TopLoaderProvider />
       <ReduxProvider>
-        <AuthProvider>
-          <BookingProvider>
-            <DateProvider>
-              <TopupProvider>
-                <ForgotPasswordProvider>
-                  <UnavailableDatesProvider>
-                    <div>
-                      {!hideLayout && <ClientCommons />}
-                      {!hideLayout && <SiteHeader />}
-                      {children}
-                      {!hideLayout && <FooterNav />}
-                      {!hideLayout && <Footer />}
-                    </div>
-                  </UnavailableDatesProvider>
-                </ForgotPasswordProvider>
-              </TopupProvider>
-            </DateProvider>
-          </BookingProvider>
-        </AuthProvider>
+        <ErrorProvider>
+          <ErrorModal />
+          <AuthProvider>
+            <BookingProvider>
+              <DateProvider>
+                <TopupProvider>
+                  <ForgotPasswordProvider>
+                    <UnavailableDatesProvider>
+                      <div>
+                        {!hideLayout && <ClientCommons />}
+                        {!hideLayout && <SiteHeader />}
+                        {children}
+                        {!hideLayout && <FooterNav />}
+                        {!hideLayout && <Footer />}
+                      </div>
+                    </UnavailableDatesProvider>
+                  </ForgotPasswordProvider>
+                </TopupProvider>
+              </DateProvider>
+            </BookingProvider>
+          </AuthProvider>
+        </ErrorProvider>
       </ReduxProvider>
     </>
   );

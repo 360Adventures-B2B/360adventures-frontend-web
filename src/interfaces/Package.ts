@@ -20,6 +20,7 @@ export interface Package {
   cancellation_policy: string;
   itinerary: Itinerary[];
   additional_information: string;
+  unavailable_dates?: [];
   product?: Product;
   created_at?: string;
   updated_at?: string;

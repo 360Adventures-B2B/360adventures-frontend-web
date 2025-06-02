@@ -27,7 +27,14 @@ export default function PackageDetail({ packageData, closeModal }: PackageDetail
 
   if (showDateModal) {
     if (!bookingData.start_date) {
-      return <ModalDatePicker selectedDate={null} handleDateSelection={() => {}} closeModal={closeModal} />;
+      return (
+        <ModalDatePicker
+          selectedDate={null}
+          handleDateSelection={() => {}}
+          closeModal={closeModal}
+          packageId={packageData.ulid}
+        />
+      );
     }
     return <ModalPackage packageId={packageData.ulid} closeModal={closeModal} />;
   }
