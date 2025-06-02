@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, UseFormReturn } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
@@ -15,44 +15,14 @@ import { redirect, useRouter, useSearchParams } from "next/navigation";
 import PhoneInput from "@/shared/PhoneInput";
 import CustomPhoneInput from "@/shared/PhoneInput";
 import { useCheckoutCartMutation } from "@/lib/services/cartService";
-export default function FormCheckout() {
+interface FormCheckoutProps {
+  form: UseFormReturn<any>; // atau ganti `any` dengan tipe data form kamu
+}
+
+export default function FormCheckout({ form }: FormCheckoutProps) {
   const { data: user, isLoading: isLoadingUser, isError } = useGetUserQuery(undefined);
 
   const userData = user?.data;
-  const schema = yup.object().shape({
-    name: yup
-      .string()
-      .required("Name is required")
-      .min(3, "Name must be at least 3 characters")
-      .max(50, "Name must not exceed 50 characters"),
-    email: yup.string().required("Email is required").email("Invalid email format"),
-    phone: yup
-      .string()
-      .matches(/^\d+$/, "Phone must be a valid number")
-      .min(10, "Phone number must be at least 10 digits")
-      .max(15, "Phone number must not exceed 15 digits")
-      .required(),
-    country: yup.string().max(50, "Country must not exceed 50 characters").required(),
-    city: yup.string().max(50, "City must not exceed 50 characters").required(),
-    requirement: yup.string().max(500, "Special requirement must not exceed 500 characters").required(),
-    payment_gateway: yup.string().required("Select a payment method"),
-    term_conditions: yup.boolean().oneOf([true], "You must agree to terms"),
-  });
-  type FormData = yup.InferType<typeof schema>;
-
-  const form = useForm<FormData>({
-    resolver: yupResolver(schema),
-    defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-      country: "",
-      city: "",
-      requirement: "",
-      payment_gateway: "",
-      term_conditions: false,
-    },
-  });
 
   useEffect(() => {
     if (userData) {
@@ -82,12 +52,12 @@ export default function FormCheckout() {
     }
   }, []);
 
-  async function onSubmit(formData: FormData) {
+  async function onSubmit(formData: any) {
     try {
       const values = {
-        ids: selectedItems.map((item) => ({
+        ids: selectedItems.map((item, index) => ({
           id: item,
-          pickup_location: "",
+          pickup_location: formData.pickup_locations?.[index] || "",
         })),
         name: formData.name,
         email: formData.email,
@@ -98,6 +68,7 @@ export default function FormCheckout() {
         payment_method: formData.payment_gateway,
         platform: "web",
       };
+      console.log("🚀 ~ onSubmit ~ values:", values);
 
       const res = await checkoutCart({ body: values, is_instant: type === "instant" ? true : false }).unwrap();
 

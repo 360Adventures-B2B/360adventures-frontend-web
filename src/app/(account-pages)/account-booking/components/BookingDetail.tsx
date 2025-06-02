@@ -92,6 +92,13 @@ const BookingDetail = ({ booking }: { booking: IBooking }) => {
                 </li>
               )}
 
+              {booking.pickup_location && (
+                <li className="flex justify-between">
+                  <span className="font-medium">Pickup Location:</span>
+                  <span>{booking.pickup_location}</span>
+                </li>
+              )}
+
               {/* Booking Items */}
               {booking.person_types.length > 0 && (
                 <div className="mt-4">
