@@ -30,11 +30,12 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
   const [isChangeDate, setIsChangeDate] = useState(false);
   const [isFirstOpen, setIsFirstOpen] = useState(true);
 
-  const [getDetailPackage, { data, isError: isErrorDetailPackage, isLoading }] = useGetDetailPackageMutation();
+  const [getDetailPackage, { data, isError: isErrorDetailPackage, isLoading }] =
+    useGetDetailPackageMutation();
 
   useEffect(() => {
     if (packageId) {
-      const startDate = selectedDate || bookingData.start_date;
+      const startDate = bookingData.start_date;
       getDetailPackage({
         ulid: packageId,
         body: {
@@ -42,7 +43,7 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
         },
       });
     }
-  }, [packageId, selectedDate]);
+  }, [packageId]);
   const packageData = data?.data;
 
   const [selectedTime, setSelectedTime] = useState("");
@@ -189,34 +190,22 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
     }
   };
 
-  if (isLoading) {
+  if (isLoading || !packageData) {
     return <SkeletonPackage />;
   }
 
   if (isChangeDate) {
     return (
       <ModalDatePicker
-        selectedDate={selectedDate}
-        handleDateSelection={handleDateSelection}
+        selectedDate={bookingData?.start_date ? new Date(bookingData.start_date) : null}
+        handleDateSelection={() => {}}
         closeModal={closeModalPackage}
         hideCloseButton={false}
-        packageId={packageData.ulid}
+        packageId={packageId}
       />
     );
   }
-  
-  // const isMounted = useRef(false);
 
-  // useEffect(() => {
-  //   if (isMounted.current && isErrorDetailPackage) {
-  //     showError({
-  //       message: "Gagal memuat paket.",
-  //       backUrl: "/",
-  //     });
-  //   } else {
-  //     isMounted.current = true;
-  //   }
-  // }, [isErrorDetailPackage]);
   return (
     <div className="h-full flex flex-col max-h-[75vh] overflow-y-auto">
       <div className="flex-grow space-y-8">

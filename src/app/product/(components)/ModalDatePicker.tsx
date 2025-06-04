@@ -29,7 +29,7 @@ const ModalDatePicker: FC<ModalDatePickerProps> = ({
 }) => {
   const [monthsShown, setMonthsShown] = useState(1);
   const { bookingData, dispatch } = useBooking();
-  const { setHighlightedDate } = useDate();
+  const { setHighlightedDate, setSelectedDate } = useDate();
   const [isChangeDate, setIsChangeDate] = useState(false);
 
   useEffect(() => {
@@ -49,8 +49,9 @@ const ModalDatePicker: FC<ModalDatePickerProps> = ({
   }, []);
 
   const onDateChange = (date: Date) => {
-    handleDateSelection(date);
     if (date) {
+      handleDateSelection(date);
+
       dispatch({ type: "UPDATE_DATE", payload: formatDateString(date) });
       dispatch({ type: "UPDATE_TIME_SLOT", payload: "" });
 
@@ -58,6 +59,9 @@ const ModalDatePicker: FC<ModalDatePickerProps> = ({
     }
 
     if (isIconDatePickerClick && !bookingData.package_id) {
+      if (!selectedDate) {
+        setSelectedDate(date);
+      }
       closeModal();
     }
   };
@@ -69,6 +73,10 @@ const ModalDatePicker: FC<ModalDatePickerProps> = ({
   useEffect(() => {
     if (packageId) {
       getDetailPackage({ ulid: packageId, body: {} });
+      dispatch({ type: "UPDATE_PACKAGE", payload: packageId });
+      if (selectedDate) {
+        dispatch({ type: "UPDATE_DATE", payload: formatDateString(selectedDate) });
+      }
     }
   }, [packageId]);
 
@@ -91,16 +99,14 @@ const ModalDatePicker: FC<ModalDatePickerProps> = ({
     return Array.from(uniqueDateMap.values());
   }, [contextUnavailableDates, data]);
 
-  if (isChangeDate) {
-    if (bookingData.package_id) {
-      return <ModalPackage packageId={bookingData.package_id} closeModal={closeModal} />;
-    }
+  if (isChangeDate && bookingData?.package_id) {
+    return <ModalPackage packageId={packageId || bookingData?.package_id} closeModal={closeModal} />;
   }
 
   return (
     <div>
       <div className="text-lg font-semibold mb-4">Select a date</div>
-      {isLoading ? (
+      {packageId && (!data?.data || isLoading) ? (
         <div className="py-20 flex justify-center items-center">
           <svg
             className="animate-spin h-8 w-8 text-primary-600"
@@ -133,6 +139,7 @@ const ModalDatePicker: FC<ModalDatePickerProps> = ({
             onClick={() => {
               handleDateSelection(selectedDate);
               setIsChangeDate(true);
+              setSelectedDate(selectedDate);
             }}
           >
             Apply

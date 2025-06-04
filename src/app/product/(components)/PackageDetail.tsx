@@ -40,7 +40,7 @@ export default function PackageDetail({ packageData, closeModal }: PackageDetail
   }
 
   if (showPackageModal) {
-    return <ModalPackage packageId={packageData.ulid} closeModal={() => setShowPackageModal(false)} />;
+    return <ModalPackage packageId={packageData.ulid} closeModal={closeModal} />;
   }
 
   const handleClick = () => {
@@ -121,23 +121,21 @@ export default function PackageDetail({ packageData, closeModal }: PackageDetail
 
         {/* footer */}
         <div className="mt-auto bg-white p-4 rounded-lg shadow-lg sticky bottom-0 w-full z-40">
-          <div className="flex flex-col ƒsm:flex-row justify-between items-center w-full">
-            <div className="space-y-2 sm:space-y-0 sm:text-left w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row justify-between items-center w-full">
+            {/* Kiri: From + Harga */}
+            <div className="flex flex-col items-start w-full sm:w-auto">
               <span className="text-gray-600 text-sm sm:text-base">From</span>
-              <div className="flex items-center space-x-2">
-                <h4 className="text-lg sm:text-xl font-bold text-gray-800">
-                  {formatNumber(packageData.selling_price)}
-                </h4>
-              </div>
+              <h4 className="text-lg sm:text-xl font-bold text-gray-800">{formatNumber(packageData.selling_price)}</h4>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4 sm:mt-0">
+            {/* Kanan: Tombol */}
+            <div className="mt-4 sm:mt-0 w-full sm:w-auto">
               <ButtonPrimary
                 onClick={handleClick}
                 disabled={!!bookingData.start_date && !packageData.is_available}
-                className={`bg-primary-6000 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm sm:text-base w-full sm:w-auto
-      ${!!bookingData.start_date && !packageData.is_available ? "opacity-50 cursor-not-allowed" : ""}
-    `}
+                className={`bg-primary-6000 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm sm:text-base w-full sm:w-auto ${
+                  !!bookingData.start_date && !packageData.is_available ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
                 {bookingData.start_date ? "Select Package" : "Check Availability"}
               </ButtonPrimary>

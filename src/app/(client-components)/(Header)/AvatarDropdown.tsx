@@ -18,7 +18,7 @@ export default function AvatarDropdown({ className = "" }: Props) {
   const avatarImageUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(
     userName
   )}&size=128&background=random&color=fff`;
-  console.log("🚀 ~ AvatarDropdown ~ data:", data);
+  // console.log("🚀 ~ AvatarDropdown ~ data:", data);
   return (
     <>
       <Popover className={`AvatarDropdown relative flex ${className}`}>

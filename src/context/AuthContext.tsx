@@ -23,7 +23,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const { data: session, status, update } = useSession();
   const [user, setUser] = useState<User | null>(null);
-  console.log("🚀 ~ session:", session);
+  // console.log("🚀 ~ session:", session);
 
   useEffect(() => {
     if (session) {

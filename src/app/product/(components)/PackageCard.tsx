@@ -6,50 +6,57 @@ import { formatNumber } from "@/utils/currencyConverter";
 import { useBooking } from "@/context/BookingContext";
 import ModalDatePicker from "./ModalDatePicker";
 import PackageDetail from "./PackageDetail";
-
+import { useDate } from "@/context/DateContext";
+import { useDispatch } from "react-redux";
+import { openDetailPackageModal, openModalForPackageModal } from "@/lib/features/modalPackageSlices";
 interface PackageCardProps {
   packageData: Package;
+  onOpenModal: () => void;
 }
-
 const formatDate = (dateString: string) => {
   const options: Intl.DateTimeFormatOptions = { month: "short", day: "numeric", year: "numeric" };
   return new Date(dateString).toLocaleDateString("en-US", options);
 };
 
-const PackageCard: React.FC<PackageCardProps> = ({ packageData }) => {
+const PackageCard: React.FC<PackageCardProps> = ({ packageData, onOpenModal }) => {
   const { bookingData } = useBooking();
+  const { selectedDate, setSelectedDate } = useDate();
 
   const isAvailable = packageData.is_available;
   const formattedDate = bookingData.start_date ? formatDate(bookingData.start_date) : "";
 
-  const showBlockStyle = isAvailable === false;
-  const forceCheckAvailability = isAvailable !== true; // false atau undefined/null
+  const forceCheckAvailability = isAvailable !== true; 
+
+  const dispatch = useDispatch();
+
+  const handleOpenModalPackage = () => {
+    dispatch(openModalForPackageModal(packageData));
+  };
+
+  const handleOpenModalDetailPackage = () => {
+    dispatch(openDetailPackageModal(packageData));
+  };
 
   return (
     <div className="border border-gray-300 rounded-lg p-4 flex flex-col sm:flex-row gap-3">
       {/* Left Section */}
-      <div className={`flex-1 flex flex-col justify-between gap-2 sm:border-r sm:border-gray-300 sm:pr-3 ${packageData.is_available === false ? "opacity-60" : ""}`}>
+      <div
+        className={`flex-1 flex flex-col justify-between gap-2 sm:border-r sm:border-gray-300 sm:pr-3 ${
+          packageData.is_available === false ? "opacity-60" : ""
+        }`}
+      >
         <h4 className="text-md font-semibold text-gray-800">{packageData.name}</h4>
 
         {/* Description with opacity if not available */}
         <div className={`text-sm text-gray-600 mt-1`}>
           <p>{packageData.description}</p>
         </div>
-
-        {/* More details link tetap normal */}
-        <NcModal
-          contentExtraClass="w-full md:w-1/2"
-          renderTrigger={(openModal) => (
-            <a
-              onClick={() => openModal()}
-              className="text-sm text-black hover:text-blue-600 hover:no-underline mt-4 cursor-pointer"
-            >
-              More details &gt;
-            </a>
-          )}
-          renderContent={(closeModal) => <PackageDetail packageData={packageData} closeModal={closeModal} />}
-          modalTitle="Package Detail"
-        />
+        <a
+          onClick={handleOpenModalDetailPackage}
+          className="text-sm text-black hover:text-blue-600 hover:no-underline mt-4 cursor-pointer"
+        >
+          More details &gt;
+        </a>
       </div>
 
       {/* Right Section */}
@@ -67,42 +74,22 @@ const PackageCard: React.FC<PackageCardProps> = ({ packageData }) => {
         )}
 
         <div className="w-full">
-          <NcModal
-            contentExtraClass="w-full md:w-1/2"
-            renderTrigger={(openModal) => (
-              <button
-                onClick={() => openModal()}
-                className={`py-1.5 px-3 mt-3 w-full rounded-md text-sm
+          <button
+            onClick={handleOpenModalPackage}
+            className={`py-1.5 px-3 mt-3 w-full rounded-md text-sm
                 ${
                   isAvailable === false
                     ? "border border-primary-6000 text-primary-6000 bg-transparent cursor-pointer"
                     : "bg-primary-6000 hover:bg-primary-700 text-white cursor-pointer"
                 }
               `}
-              >
-                {forceCheckAvailability
-                  ? "Check Availability"
-                  : bookingData.start_date
-                  ? "Select Package"
-                  : "Check Availability"}
-              </button>
-            )}
-            renderContent={(closeModal) => {
-              // jika belum pilih tanggal atau paket tidak available, tampilkan date picker
-              if (!bookingData.start_date || !packageData.is_available) {
-                return (
-                  <ModalDatePicker
-                    selectedDate={null}
-                    handleDateSelection={() => {}}
-                    closeModal={closeModal}
-                    packageId={packageData.ulid}
-                  />
-                );
-              }
-              return <ModalPackage packageId={packageData.ulid} closeModal={closeModal} />;
-            }}
-            modalTitle={bookingData.start_date ? "Select your preferences" : "Select a Date"}
-          />
+          >
+            {forceCheckAvailability
+              ? "Check Availability"
+              : bookingData.start_date
+              ? "Select Package"
+              : "Check Availability"}
+          </button>
         </div>
       </div>
     </div>

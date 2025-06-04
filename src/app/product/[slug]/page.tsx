@@ -13,7 +13,6 @@ import SkeletonHeader from "../skeleton/SkeletonHeader";
 import SkeletonTitle from "../skeleton/SkeletonTitle";
 import SkeletonSidebar from "../skeleton/SkeletonSidebar";
 import SKeletonDatePicker from "../skeleton/SkeletonDatePicker";
-import { Product } from "@/interfaces/Product";
 import SectionContent from "../(components)/SectionContent";
 import Itinerary from "../(components)/Itinerary";
 import IncludeExclude from "../(components)/IncludeExclude";
@@ -25,6 +24,8 @@ import { useUnavailableDates } from "@/context/ProductUnavailableContext";
 import { formatDateString } from "@/utils/dateHelper";
 import BackgroundSection from "@/components/BackgroundSection";
 import RelatedProduct from "@/components/RelatedProduct";
+import { Package } from "@/interfaces/Package";
+import ModalPackageCard from "./components/ModalPackageCard";
 
 export interface ProductDetailPageProps {}
 
@@ -62,16 +63,16 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
   const [firstImgSrc, setFirstImgSrc] = useState(fallbackUrl);
 
   const [imageSrcs, setImageSrcs] = useState<string[]>([]);
-  const [packages, setPackages] = useState<any[]>([]);
+  const [packages, setPackages] = useState<Package[]>([]);
 
   // check available product
-  const [checkAvailableProduct, { isLoading: isLoadingCheckAvailableProduct }] = useCheckAvailableProductMutation();
+  const [checkAvailableProduct, { isLoading: isLoadingCheckAvailableProduct,  }] = useCheckAvailableProductMutation();
 
   const { selectedDate } = useDate();
 
   useEffect(() => {
     if (product?.packages) {
-      setPackages(product.packages);
+      setPackages(product?.packages);
     }
   }, [product]);
 
@@ -89,7 +90,6 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
             ulid: product.ulid,
             body: { start_date: formatDateString(selectedDate) },
           }).unwrap();
-
           setPackages(result.data);
         } catch (err) {
           console.error("Error fetching product availability:", err);
@@ -98,7 +98,7 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
 
       fetchProductAvailability();
     }
-  }, [product?.ulid, checkAvailableProduct, selectedDate]);
+  }, [selectedDate]);
 
   // handle date change
 
@@ -117,7 +117,7 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
     }
   }, [product]);
 
-  const { dispatch } = useBooking();
+  const { bookingData, dispatch } = useBooking();
   const { resetDate } = useDate();
 
   useEffect(() => {
@@ -154,6 +154,18 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
 
   const handleCloseVideo = () => {
     setIsVideoPlaying(false);
+  };
+
+  // for modal
+  const [modalOpenPackage, setModalOpenPackage] = useState<Package | null>(null);
+
+  // Saat klik tombol di PackageCard, trigger buka modal di parent
+  const openModalForPackage = (pkg: Package) => {
+    setModalOpenPackage(pkg);
+  };
+
+  const closeModal = () => {
+    setModalOpenPackage(null);
   };
 
   const mainContent = () => {
@@ -385,6 +397,8 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
           <div ref={packageSectionRef} className="package-section">
             {isLoading ? <SKeletonDatePicker /> : <DatePicker />}
           </div>
+          {/* modal package card */}
+          <ModalPackageCard />
 
           {isLoadingCheckAvailableProduct || isLoading ? (
             <div>
@@ -396,9 +410,9 @@ const ProductDetailPage: FC<ProductDetailPageProps> = ({}) => {
             </div>
           ) : (
             <div>
-              {packages?.map((pkg) => (
+              {packages.map((pkg) => (
                 <div key={pkg.id} className="mb-5">
-                  <PackageCard packageData={pkg} />
+                  <PackageCard packageData={pkg} onOpenModal={() => openModalForPackage(pkg)} />
                 </div>
               ))}
             </div>

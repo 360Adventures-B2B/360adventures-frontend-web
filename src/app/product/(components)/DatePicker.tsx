@@ -33,20 +33,22 @@ const DatePicker = () => {
     const center = new Date(centerDate);
     center.setHours(0, 0, 0, 0);
 
-    const isToday = center.getTime() === today.getTime();
+    for (let i = -half; i <= half; i++) {
+      const date = new Date(center);
+      date.setDate(center.getDate() + i);
+      date.setHours(0, 0, 0, 0);
 
-    if (isToday) {
-      for (let i = 0; i <= range; i++) {
-        const date = new Date(centerDate);
-        date.setDate(centerDate.getDate() + i);
-        dates.push(date);
-      }
-    } else {
-      for (let i = -half; i <= half; i++) {
-        const date = new Date(centerDate);
-        date.setDate(centerDate.getDate() + i);
-        dates.push(date);
-      }
+      if (date < today) continue;
+
+      dates.push(date);
+    }
+
+    let nextDate = new Date(dates.length ? dates[dates.length - 1] : center);
+    while (dates.length < range + 1) {
+      nextDate = new Date(nextDate);
+      nextDate.setDate(nextDate.getDate() + 1);
+      nextDate.setHours(0, 0, 0, 0);
+      dates.push(nextDate);
     }
 
     return dates;

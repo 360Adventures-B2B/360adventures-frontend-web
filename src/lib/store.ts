@@ -3,6 +3,7 @@ import { setupListeners } from "@reduxjs/toolkit/query/react";
 import { authApi } from "./services/authService";
 import { productApi } from "./services/productService";
 import filterReducer from "./features/filterSlices";
+import modalPackageReducer from "./features/modalPackageSlices";
 import { locationApi } from "./services/locationsService";
 import { categoryApi } from "./services/categoryService";
 import { cartApi } from "./services/cartService";
@@ -24,6 +25,7 @@ export const store = configureStore({
     [creditHistoryApi.reducerPath]: creditHistoryApi.reducer,
     [wishlistApi.reducerPath]: wishlistApi.reducer,
     filters: filterReducer,
+    modalPackage: modalPackageReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat([
