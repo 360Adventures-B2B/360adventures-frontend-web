@@ -24,7 +24,7 @@ const AccountSavelists = () => {
       </div>
       <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
 
-      <div>
+      <div className="nc-ProductSection relative">
         {isProductLoading || isFetchingProduct ? (
           <div className="grid grid-cols-2 gap-6 xl:grid-cols-4">
             {Array(4)

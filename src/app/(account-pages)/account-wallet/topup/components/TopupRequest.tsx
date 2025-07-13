@@ -89,7 +89,7 @@ const TopupRequest: React.FC<{}> = () => {
 
                 {topupRequests?.pagination?.last_page > 1 && (
                   <div className="text-center pt-10">
-                    <Pagination totalPages={topupRequests.pagination.total} maxVisiblePaging={maxVisible} />
+                    <Pagination totalPages={topupRequests.pagination.last_page || 1} maxVisiblePaging={maxVisible} />
                   </div>
                 )}
               </>

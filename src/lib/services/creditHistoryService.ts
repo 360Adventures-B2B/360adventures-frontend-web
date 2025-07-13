@@ -7,8 +7,16 @@ export const creditHistoryApi = createApi({
   baseQuery: createBaseQuery(),
   endpoints: (builder) => ({
     getCreditHistories: builder.query({
-      query: ({ page = 1, limit = 10, type = "" }: PaginationParams) =>
-        `/api/credit-histories?page=${page}&limit=${limit}&type=${type}`,
+      query: ({ page = 1, limit = 10, type }: PaginationParams) => {
+        const params = new URLSearchParams({
+          page: String(page),
+          limit: String(limit),
+        });
+        if (type) {
+          params.append("type", type);
+        }
+        return `/api/credit-histories?${params.toString()}`;
+      },
     }),
   }),
 });

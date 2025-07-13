@@ -1,6 +1,6 @@
 "use client";
 
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
@@ -34,6 +34,10 @@ const CustomPhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
   ) => {
     const [phone, setPhone] = useState(value);
 
+    useEffect(() => {
+      setPhone(value || "");
+    }, [value]);
+
     const handleChange = (value: string) => {
       setPhone(value);
       onChange && onChange(value);
@@ -42,7 +46,7 @@ const CustomPhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
     return (
       <div className="relative">
         <PhoneInput
-          country={"id"}
+          country={"ae"}
           value={phone}
           onChange={handleChange}
           inputClass={`block !rounded-l-2xl !w-full border-neutral-200 !rounded-r-2xl focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 ${rounded} ${fontClass} ${sizeClass} ${className}`}
@@ -57,11 +61,11 @@ const CustomPhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
           }}
           style={{
             position: 'relative',
-            zIndex: 9999, // ensure dropdown appears above other modal content
+            zIndex: 9999,
           }}
           dropdownStyle={{
             position: 'absolute',
-            zIndex: 9999, // ensure the dropdown is visible above other modal content
+            zIndex: 9999,
           }}
         />
       </div>

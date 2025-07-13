@@ -21,7 +21,10 @@ export interface Package {
   itinerary: Itinerary[];
   additional_information: string;
   unavailable_dates?: [];
-  is_available?: boolean,
+  is_available?: boolean;
+  instant_confirmation: boolean;
+  free_cancellation: boolean;
+  pickup_included: boolean;
   product?: Product;
   created_at?: string;
   updated_at?: string;

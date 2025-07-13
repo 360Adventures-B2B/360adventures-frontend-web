@@ -19,7 +19,9 @@ const CommonLayout: FC<CommonLayoutProps> = ({ children }) => {
         </div>
 
         {/* Main Content */}
-        <div className="container pt-8 sm:pt-10 px-10 pb-24 lg:pb-32">{children}</div>
+        <div className="container pt-8 sm:pt-10 px-4 lg:px-10 pb-24 lg:pb-32">
+          {children}
+        </div>
       </div>
     </div>
   );

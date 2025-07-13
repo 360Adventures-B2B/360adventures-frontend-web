@@ -57,7 +57,7 @@ const CheckOutPagePageMain: FC<CheckOutPagePageMainProps> = ({ className = "" })
       .required(),
     country: yup.string().max(50, "Country must not exceed 50 characters").required(),
     city: yup.string().max(50, "City must not exceed 50 characters").required(),
-    requirement: yup.string().max(500, "Special requirement must not exceed 500 characters").required(),
+    requirement: yup.string().max(500, "Special requirement must not exceed 500 characters").nullable(),
     payment_gateway: yup.string().required("Select a payment method"),
     term_conditions: yup.boolean().oneOf([true], "You must agree to terms"),
     pickup_locations: yup

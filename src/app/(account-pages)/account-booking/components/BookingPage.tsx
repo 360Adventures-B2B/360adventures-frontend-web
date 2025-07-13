@@ -84,7 +84,7 @@ export default function BookingPage() {
                   {/* Pagination */}
                   {bookings?.pagination?.last_page > 1 && (
                     <div className="text-center pt-5">
-                      <Pagination totalPages={bookings?.pagination?.last_page} maxVisiblePaging={maxVisible} />
+                      <Pagination totalPages={bookings?.pagination?.last_page || 1} maxVisiblePaging={maxVisible} />
                     </div>
                   )}
                 </>

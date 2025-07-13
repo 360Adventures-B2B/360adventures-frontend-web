@@ -68,7 +68,6 @@ export default function FormCheckout({ form }: FormCheckoutProps) {
         payment_method: formData.payment_gateway,
         platform: "web",
       };
-      console.log("🚀 ~ onSubmit ~ values:", values);
 
       const res = await checkoutCart({ body: values, is_instant: type === "instant" ? true : false }).unwrap();
 
@@ -145,7 +144,7 @@ export default function FormCheckout({ form }: FormCheckoutProps) {
               />
             </label>
 
-            <label className="block">
+            <label className="block z-0">
               <span className="text-neutral-800 dark:text-neutral-200">Phone</span>
               <FormField
                 control={form.control}

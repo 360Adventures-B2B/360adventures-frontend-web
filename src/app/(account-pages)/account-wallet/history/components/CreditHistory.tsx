@@ -85,7 +85,7 @@ const CreditHistory: React.FC<{}> = () => {
                   <CreditHistoryTable data={creditHistories?.data} />
                   {creditHistories?.pagination?.last_page > 1 && (
                     <div className="text-center pt-10">
-                      <Pagination totalPages={creditHistories?.pagination.total} maxVisiblePaging={maxVisible} />
+                      <Pagination totalPages={creditHistories?.pagination.last_page || 1} maxVisiblePaging={maxVisible} />
                     </div>
                   )}
                 </>

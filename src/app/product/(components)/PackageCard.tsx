@@ -25,7 +25,7 @@ const PackageCard: React.FC<PackageCardProps> = ({ packageData, onOpenModal }) =
   const isAvailable = packageData.is_available;
   const formattedDate = bookingData.start_date ? formatDate(bookingData.start_date) : "";
 
-  const forceCheckAvailability = isAvailable !== true; 
+  const forceCheckAvailability = isAvailable !== true;
 
   const dispatch = useDispatch();
 
@@ -45,6 +45,14 @@ const PackageCard: React.FC<PackageCardProps> = ({ packageData, onOpenModal }) =
           packageData.is_available === false ? "opacity-60" : ""
         }`}
       >
+        <div className="flex flex-wrap gap-2 mb-2">
+          <span className="text-xs font-medium bg-green-100 text-green-800 px-2 py-0.5 rounded">
+            Instant Confirmation
+          </span>
+          <span className="text-xs font-medium bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Free Cancellation</span>
+          <span className="text-xs font-medium bg-purple-100 text-purple-800 px-2 py-0.5 rounded">Pickup Included</span>
+        </div>
+
         <h4 className="text-md font-semibold text-gray-800">{packageData.name}</h4>
 
         {/* Description with opacity if not available */}

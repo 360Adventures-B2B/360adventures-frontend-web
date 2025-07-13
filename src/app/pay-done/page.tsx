@@ -29,19 +29,38 @@ const PayPage: FC<PayPageProps> = () => {
   const renderMain = () => {
     return (
       <div className="w-full flex flex-col rounded-2xl border border-neutral-200 dark:border-neutral-700 space-y-8 p-6 sm:p-6 xl:p-8">
-        <div className="flex items-center">
-          <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center bg-primary-700 rounded-full">
-            <i className="las la-check-circle text-white text-3xl"></i>
-          </div>
-          <div className="ml-3">
-            <h3 className="text-lg font-bold text-gray-900 leading-snug">
-              Thank You. Your booking was submitted successfully!
-            </h3>
-            <p className="text-gray-700">
-              Booking details have been sent to: <span className="font-medium">{bookingData?.email}</span>
-            </p>
-          </div>
-        </div>
+      <div className="flex items-center">
+  {bookingData?.payment_status === "paid" ? (
+    <>
+      <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center bg-primary-700 rounded-full">
+        <i className="las la-check-circle text-white text-3xl"></i>
+      </div>
+      <div className="ml-3">
+        <h3 className="text-lg font-bold text-gray-900 leading-snug">
+          Thank You. Your booking was submitted successfully!
+        </h3>
+        <p className="text-gray-700">
+          Booking details have been sent to:{" "}
+          <span className="font-medium">{bookingData?.email}</span>
+        </p>
+      </div>
+    </>
+  ) : (
+    <>
+      <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center bg-red-600 rounded-full">
+        <i className="las la-times-circle text-white text-3xl"></i>
+      </div>
+      <div className="ml-3">
+        <h3 className="text-lg font-bold text-red-700 leading-snug">
+          Payment Failed
+        </h3>
+        <p className="text-gray-600">
+          We could not process your booking. Please try again or contact support.
+        </p>
+      </div>
+    </>
+  )}
+</div>
 
         <div className="border-b border-neutral-200 dark:border-neutral-700"></div>
 
@@ -72,7 +91,7 @@ const PayPage: FC<PayPageProps> = () => {
             <div className="flex flex-col sm:col-span-2 lg:col-span-2">
               <span className="text-neutral-600 dark:text-neutral-400">Special Requirement</span>
               <span className="font-medium text-neutral-900 dark:text-neutral-100">
-                {bookingData?.special_requirement}
+                {bookingData?.special_requirement ?? '-'}
               </span>
             </div>
           </div>
@@ -91,7 +110,7 @@ const PayPage: FC<PayPageProps> = () => {
   return (
     <div className={`nc-PayPage`}>
       <main className="container mt-11 mb-24 lg:mb-32 lg:flex lg:flex-row">
-        <div className="w-full lg:w-3/5 xl:w-2/3 lg:pr-10 ">{loading ? <InformationSkeleton /> : renderMain()}</div>
+        <div className="w-full lg:w-3/5 xl:w-2/3 lg:pr-10 mb-5">{loading ? <InformationSkeleton /> : renderMain()}</div>
         <div className="flex-grow">{loading ? <BookingSummarySkeleton /> : renderSidebar()}</div>
       </main>
     </div>

@@ -8,6 +8,7 @@ const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: createBaseQuery(),
+  tagTypes: ["User"], 
   endpoints: (builder) => ({
     loginUser: builder.mutation({
       query: (credentials) => ({

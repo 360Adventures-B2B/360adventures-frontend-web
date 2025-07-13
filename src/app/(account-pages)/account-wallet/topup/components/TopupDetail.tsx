@@ -62,7 +62,7 @@ const TopupDetail = ({ item, closeModal }: TopupDetailProps) => {
     }
   };
 
-  const canUpdateTransferSlip = item.status === "pending" && !item.is_under_verification;
+  const canUpdateTransferSlip = item.status === "pending";
 
   return (
     <div>
