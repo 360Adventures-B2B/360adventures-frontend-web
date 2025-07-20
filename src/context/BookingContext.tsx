@@ -1,14 +1,21 @@
 // BookingContext.tsx
 import { ExtraPrice } from "@/interfaces/ExtraPrice";
 import { PersonType } from "@/interfaces/PersonType";
-import React, { createContext, useContext, useReducer, ReactNode, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  ReactNode,
+  useEffect,
+} from "react";
 
 // Interface untuk Booking Data
 interface BookingData {
   agent_id: string;
   package_id: string | null;
   start_date: string;
-  time_slot: string;
+  time_slot: string | null;
+  time_slot_id_rayna: string | null;
   person_types: PersonType[];
   extra_prices: ExtraPrice[];
   total_price: number;
@@ -20,6 +27,7 @@ type BookingAction =
   | { type: "UPDATE_PACKAGE"; payload: string | null }
   | { type: "UPDATE_DATE"; payload: string }
   | { type: "UPDATE_TIME_SLOT"; payload: string }
+  | { type: "UPDATE_TIME_SLOT_ID_RAYNA"; payload: string }
   | { type: "UPDATE_PERSON_TYPES"; payload: PersonType[] }
   | { type: "UPDATE_EXTRA_PRICES"; payload: ExtraPrice[] }
   | { type: "UPDATE_TOTAL_PRICE"; payload: number }
@@ -30,14 +38,18 @@ const initialBookingData: BookingData = {
   agent_id: "",
   package_id: null,
   start_date: "",
-  time_slot: "",
+  time_slot: null,
+  time_slot_id_rayna: null,
   person_types: [],
   extra_prices: [],
   total_price: 0,
 };
 
 // Reducer Function
-const bookingReducer = (state: BookingData, action: BookingAction): BookingData => {
+const bookingReducer = (
+  state: BookingData,
+  action: BookingAction
+): BookingData => {
   switch (action.type) {
     case "UPDATE_AGENT":
       return { ...state, agent_id: action.payload };
@@ -47,6 +59,8 @@ const bookingReducer = (state: BookingData, action: BookingAction): BookingData 
       return { ...state, start_date: action.payload };
     case "UPDATE_TIME_SLOT":
       return { ...state, time_slot: action.payload };
+    case "UPDATE_TIME_SLOT_ID_RAYNA":
+      return { ...state, time_slot_id_rayna: action.payload };
     case "UPDATE_PERSON_TYPES":
       return { ...state, person_types: action.payload };
     case "UPDATE_EXTRA_PRICES":
@@ -71,24 +85,36 @@ const BookingContext = createContext<BookingContextType | undefined>(undefined);
 
 // Provider Component
 export const BookingProvider = ({ children }: { children: ReactNode }) => {
-  const [bookingData, dispatch] = useReducer(bookingReducer, initialBookingData);
+  const [bookingData, dispatch] = useReducer(
+    bookingReducer,
+    initialBookingData
+  );
 
   useEffect(() => {
-    const totalPersonPrice = bookingData.person_types.reduce((acc, personType) => {
-      return acc + personType.selling_price * personType.guest;
-    }, 0);
+    const totalPersonPrice = bookingData.person_types.reduce(
+      (acc, personType) => {
+        return acc + personType.selling_price * personType.guest;
+      },
+      0
+    );
 
-    const totalExtraPrice = bookingData.extra_prices.reduce((acc, extraPrice) => {
-      if (extraPrice.type === "one_time") {
-        return acc + extraPrice.price;
-      }
+    const totalExtraPrice = bookingData.extra_prices.reduce(
+      (acc, extraPrice) => {
+        if (extraPrice.type === "one_time") {
+          return acc + extraPrice.price;
+        }
 
-      if (extraPrice.type === "per_person") {
-        const totalGuests = bookingData.person_types.reduce((guestAcc, personType) => guestAcc + personType.guest, 0);
-        return acc + extraPrice.price * totalGuests;
-      }
-      return acc;
-    }, 0);
+        if (extraPrice.type === "per_person") {
+          const totalGuests = bookingData.person_types.reduce(
+            (guestAcc, personType) => guestAcc + personType.guest,
+            0
+          );
+          return acc + extraPrice.price * totalGuests;
+        }
+        return acc;
+      },
+      0
+    );
 
     const totalPrice = totalPersonPrice + totalExtraPrice;
 
@@ -98,7 +124,11 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     });
   }, [bookingData.person_types, bookingData.extra_prices]);
 
-  return <BookingContext.Provider value={{ bookingData, dispatch }}>{children}</BookingContext.Provider>;
+  return (
+    <BookingContext.Provider value={{ bookingData, dispatch }}>
+      {children}
+    </BookingContext.Provider>
+  );
 };
 
 // Custom Hook

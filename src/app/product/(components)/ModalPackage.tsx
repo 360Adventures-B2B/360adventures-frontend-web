@@ -22,7 +22,10 @@ interface ModalPackageProps {
   closeModal: () => void;
 }
 
-const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: closeModalPackage }) => {
+const ModalPackage: React.FC<ModalPackageProps> = ({
+  packageId,
+  closeModal: closeModalPackage,
+}) => {
   const { showError } = useError();
   const { bookingData, dispatch } = useBooking();
   const { selectedDate, setSelectedDate } = useDate();
@@ -48,18 +51,28 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
 
   const [selectedTime, setSelectedTime] = useState("");
 
-  const [addCart, { isLoading: isLoadingAddCart, isError }] = useAddCartMutation();
-  const handleTimeSelect = (time: any) => {
-    setSelectedTime(time);
-    dispatch({ type: "UPDATE_TIME_SLOT", payload: time });
+  const [addCart, { isLoading: isLoadingAddCart, isError }] =
+    useAddCartMutation();
+  const handleTimeSelect = (slot: any) => {
+    setSelectedTime(slot.time_slot);
+
+    dispatch({ type: "UPDATE_TIME_SLOT", payload: slot.time_slot });
+    if (slot.time_slot_id) {
+      dispatch({
+        type: "UPDATE_TIME_SLOT_ID_RAYNA",
+        payload: slot.time_slot_id,
+      });
+    }
   };
 
   useEffect(() => {
     if (packageData && packageData.person_types && isFirstOpen) {
-      const updatedPersonTypes = packageData.person_types.map((person: any) => ({
-        ...person,
-        guest: 0,
-      }));
+      const updatedPersonTypes = packageData.person_types.map(
+        (person: any) => ({
+          ...person,
+          guest: 0,
+        })
+      );
 
       dispatch({ type: "UPDATE_PERSON_TYPES", payload: updatedPersonTypes });
       dispatch({ type: "UPDATE_PACKAGE", payload: packageId });
@@ -77,7 +90,9 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
     try {
       if (!bookingData.start_date) {
         toast({
-          className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+          className: cn(
+            "top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"
+          ),
           title: "Error",
           description: "Please select date!",
           variant: "destructive",
@@ -86,9 +101,15 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
         return;
       }
 
-      if (packageData?.time_slot && packageData?.time_slot.length > 0 && !bookingData.time_slot) {
+      if (
+        packageData?.time_slot &&
+        packageData?.time_slot.length > 0 &&
+        !bookingData.time_slot
+      ) {
         toast({
-          className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+          className: cn(
+            "top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"
+          ),
           title: "Error",
           description: "Please select time slot!",
           variant: "destructive",
@@ -99,7 +120,9 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
 
       if (!bookingData.person_types.some((person) => person.guest > 0)) {
         toast({
-          className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+          className: cn(
+            "top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"
+          ),
           title: "Error",
           description: "Please choose guest!",
           variant: "destructive",
@@ -111,14 +134,20 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
       for (const pkgPerson of packageData.person_types) {
         const { name, min, max } = pkgPerson;
 
-        const bookingPerson = bookingData.person_types.find((p) => p.name === name);
+        const bookingPerson = bookingData.person_types.find(
+          (p) => p.name === name
+        );
         const guest = bookingPerson ? bookingPerson.guest : 0;
 
         if (guest < min) {
           toast({
-            className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+            className: cn(
+              "top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"
+            ),
             title: "Error",
-            description: `${name} must be at least ${min} guest${min > 1 ? "s" : ""}`,
+            description: `${name} must be at least ${min} guest${
+              min > 1 ? "s" : ""
+            }`,
             variant: "destructive",
             duration: 2000,
           });
@@ -127,9 +156,13 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
 
         if (guest > max) {
           toast({
-            className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+            className: cn(
+              "top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"
+            ),
             title: "Error",
-            description: `${name} cannot exceed ${max} guest${max > 1 ? "s" : ""}`,
+            description: `${name} cannot exceed ${max} guest${
+              max > 1 ? "s" : ""
+            }`,
             variant: "destructive",
             duration: 2000,
           });
@@ -155,7 +188,13 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
         start_date: bookingData.start_date,
         person_types: simplifiedPersonTypes,
         ...(bookingData.time_slot ? { time_slot: bookingData.time_slot } : {}),
-        ...(simplifiedExtraPrices?.length ? { extra_prices: simplifiedExtraPrices } : {}),
+        ...(bookingData.time_slot_id_rayna !== undefined &&
+        bookingData.time_slot_id_rayna !== null
+          ? { time_slot_id_rayna: bookingData.time_slot_id_rayna }
+          : {}),
+        ...(simplifiedExtraPrices?.length
+          ? { extra_prices: simplifiedExtraPrices }
+          : {}),
       };
 
       const is_instant = action === "instant" ? "true" : "false";
@@ -164,7 +203,9 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
       if (res.code === 200) {
         if (action === "addCart") {
           toast({
-            className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+            className: cn(
+              "top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"
+            ),
             title: "Success",
             description: "Success Add Cart!",
             variant: "success",
@@ -179,7 +220,10 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
 
           const selectedItems = [ulid];
 
-          sessionStorage.setItem("selectedItems", JSON.stringify(selectedItems));
+          sessionStorage.setItem(
+            "selectedItems",
+            JSON.stringify(selectedItems)
+          );
 
           window.location.href = "/checkout?type=instant";
         }
@@ -197,7 +241,9 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
   if (isChangeDate) {
     return (
       <ModalDatePicker
-        selectedDate={bookingData?.start_date ? new Date(bookingData.start_date) : null}
+        selectedDate={
+          bookingData?.start_date ? new Date(bookingData.start_date) : null
+        }
         handleDateSelection={() => {}}
         closeModal={closeModalPackage}
         hideCloseButton={false}
@@ -216,10 +262,16 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
               <div className="bg-blue-500 text-white p-2 rounded-full text-xs sm:text-sm">Free cancellation</div>
             </div>
           </div> */}
-          <p className="text-lg sm:text-xl font-bold">{packageData?.product?.name}</p>
-          <h4 className="text-md sm:text-lg text-gray-700">{packageData?.name}</h4>
+          <p className="text-lg sm:text-xl font-bold">
+            {packageData?.product?.name}
+          </p>
+          <h4 className="text-md sm:text-lg text-gray-700">
+            {packageData?.name}
+          </h4>
           <div className="flex items-center space-x-2">
-            <span className="text-md sm:text-lg text-gray-700">{formatDate(bookingData.start_date)}</span>
+            <span className="text-md sm:text-lg text-gray-700">
+              {formatDate(bookingData.start_date)}
+            </span>
             <button
               type="button"
               className="p-1 rounded-full hover:bg-gray-200"
@@ -231,30 +283,31 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
             </button>
           </div>
         </div>
-
         {packageData?.time_slot?.length > 0 && (
           <div className="space-y-4 p-4 rounded-lg bg-gray-100">
             <h4 className="text-lg sm:text-xl font-semibold">Time slots</h4>
 
             <div className="flex flex-wrap gap-2 justify-start">
-              {packageData?.time_slot.map((time: any) => (
+              {packageData.time_slot.map((slot: any, index: number) => (
                 <button
-                  key={time}
+                  key={index}
                   className={`px-4 py-2 rounded-full text-sm sm:text-base ${
-                    selectedTime === time ? "bg-primary-500 text-white" : "bg-gray-200 text-gray-700"
+                    selectedTime === slot.time_slot
+                      ? "bg-primary-500 text-white"
+                      : "bg-gray-200 text-gray-700"
                   }`}
-                  onClick={() => handleTimeSelect(time)}
+                  onClick={() => handleTimeSelect(slot)}
                 >
-                  {time}
+                  {slot.time_slot}
                 </button>
               ))}
             </div>
           </div>
         )}
-
         <QuantityStepper personTypes={packageData?.person_types ?? []} />
-
-        {packageData?.extra_prices?.length > 0 && <ExtraPriceSelector extraPrices={packageData?.extra_prices ?? []} />}
+        {packageData?.extra_prices?.length > 0 && (
+          <ExtraPriceSelector extraPrices={packageData?.extra_prices ?? []} />
+        )}
       </div>
       {/* Footer section */}
       <div className="mt-auto bg-white p-4 rounded-lg shadow-lg sticky bottom-0 w-full">
@@ -262,7 +315,9 @@ const ModalPackage: React.FC<ModalPackageProps> = ({ packageId, closeModal: clos
           <div className="space-y-2 sm:space-y-0 sm:text-left w-full sm:w-auto">
             <span className="text-gray-600 text-sm sm:text-base">Total</span>
             <div className="flex items-center space-x-2">
-              <h4 className="text-lg sm:text-xl font-bold text-gray-800">{formatNumber(bookingData.total_price)}</h4>
+              <h4 className="text-lg sm:text-xl font-bold text-gray-800">
+                {formatNumber(bookingData.total_price)}
+              </h4>
             </div>
           </div>
 
