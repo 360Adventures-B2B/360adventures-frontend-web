@@ -14,8 +14,9 @@ import ButtonPrimary from "@/shared/ButtonPrimary";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import ExtraPriceSelector from "./ExtraPriceSelector";
-import { handleError } from "@/lib/handleApiError";
+import { handleError, isErrorResponse } from "@/lib/handleApiError";
 import { useError } from "@/context/ErrorContext";
+import PackageNotAvailable from "./PackageNotAvailable";
 
 interface ModalPackageProps {
   packageId: string;
@@ -31,6 +32,7 @@ const ModalPackage: React.FC<ModalPackageProps> = ({
   const { selectedDate, setSelectedDate } = useDate();
 
   const [isChangeDate, setIsChangeDate] = useState(false);
+  console.log("🚀 ~ ModalPackage ~ isChangeDate:", isChangeDate);
   const [isFirstOpen, setIsFirstOpen] = useState(true);
 
   const [getDetailPackage, { data, isError: isErrorDetailPackage, isLoading }] =
@@ -53,15 +55,48 @@ const ModalPackage: React.FC<ModalPackageProps> = ({
 
   const [addCart, { isLoading: isLoadingAddCart, isError }] =
     useAddCartMutation();
-  const handleTimeSelect = (slot: any) => {
-    setSelectedTime(slot.time_slot);
+  const handleTimeSelect = async (slot: any) => {
+    const selectedTimeSlot = slot.time_slot;
 
-    dispatch({ type: "UPDATE_TIME_SLOT", payload: slot.time_slot });
+    setSelectedTime(selectedTimeSlot);
+
+    dispatch({ type: "UPDATE_TIME_SLOT", payload: selectedTimeSlot });
     if (slot.time_slot_id) {
       dispatch({
         type: "UPDATE_TIME_SLOT_ID_RAYNA",
         payload: slot.time_slot_id,
       });
+    }
+
+    const startDate = bookingData.start_date;
+    if (packageId && startDate) {
+      try {
+        const res = await getDetailPackage({
+          ulid: packageId,
+          body: {
+            start_date: formatDateString(startDate),
+            check_slot: true,
+            time_slot: selectedTimeSlot,
+          },
+        }).unwrap();
+
+        const updatedPersonTypes = res.data.person_types.map((person: any) => ({
+          ...person,
+          guest: 0,
+        }));
+
+        dispatch({ type: "UPDATE_PERSON_TYPES", payload: updatedPersonTypes });
+      } catch (err) {
+        toast({
+          className: cn(
+            "top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"
+          ),
+          title: "Error",
+          description: err.message || "Server Error",
+          variant: "destructive",
+          duration: 2000,
+        });
+      }
     }
   };
 
@@ -233,6 +268,16 @@ const ModalPackage: React.FC<ModalPackageProps> = ({
       handleError(error);
     }
   };
+
+  if (!isLoading && isErrorDetailPackage) {
+    return (
+      <PackageNotAvailable
+        onSeeMore={() => {
+          closeModalPackage();
+        }}
+      />
+    );
+  }
 
   if (isLoading || !packageData) {
     return <SkeletonPackage />;

@@ -13,7 +13,9 @@ export interface CheckOutPagePageMainProps {
   className?: string;
 }
 
-const CheckOutPagePageMain: FC<CheckOutPagePageMainProps> = ({ className = "" }) => {
+const CheckOutPagePageMain: FC<CheckOutPagePageMainProps> = ({
+  className = "",
+}) => {
   const searchParams = useSearchParams();
   const [selectedItems, setSelectedItems] = useState<string[]>([]); // State untuk menyimpan selectedItems
   const type = searchParams.get("type");
@@ -48,18 +50,30 @@ const CheckOutPagePageMain: FC<CheckOutPagePageMainProps> = ({ className = "" })
       .required("Name is required")
       .min(3, "Name must be at least 3 characters")
       .max(50, "Name must not exceed 50 characters"),
-    email: yup.string().required("Email is required").email("Invalid email format"),
+    email: yup
+      .string()
+      .required("Email is required")
+      .email("Invalid email format"),
     phone: yup
       .string()
       .matches(/^\d+$/, "Phone must be a valid number")
       .min(10, "Phone number must be at least 10 digits")
       .max(15, "Phone number must not exceed 15 digits")
       .required(),
-    country: yup.string().max(50, "Country must not exceed 50 characters").required(),
+    country: yup
+      .string()
+      .max(50, "Country must not exceed 50 characters")
+      .required(),
     city: yup.string().max(50, "City must not exceed 50 characters").required(),
-    requirement: yup.string().max(500, "Special requirement must not exceed 500 characters").nullable(),
+    requirement: yup
+      .string()
+      .max(500, "Special requirement must not exceed 500 characters")
+      .nullable(),
     payment_gateway: yup.string().required("Select a payment method"),
-    term_conditions: yup.boolean().oneOf([true], "You must agree to terms"),
+    term_conditions: yup
+      .boolean()
+      .oneOf([true], "You must accept the Terms and Conditions")
+      .required(),
     pickup_locations: yup
       .array()
       .of(yup.string().required("Pickup location is required"))
@@ -85,7 +99,13 @@ const CheckOutPagePageMain: FC<CheckOutPagePageMainProps> = ({ className = "" })
   });
 
   const renderSidebar = () => {
-    return <BookingSummary bookingData={carts?.data || []} title="Your Item" form={form} />;
+    return (
+      <BookingSummary
+        bookingData={carts?.data || []}
+        title="Your Item"
+        form={form}
+      />
+    );
   };
 
   return (
@@ -95,7 +115,9 @@ const CheckOutPagePageMain: FC<CheckOutPagePageMainProps> = ({ className = "" })
           <div className="w-full lg:w-3/5 xl:w-2/3 lg:pr-10 ">
             <FormCheckout form={form} />
           </div>
-          <div className="flex-grow">{loading ? <BookingSummarySkeleton /> : renderSidebar()}</div>
+          <div className="flex-grow">
+            {loading ? <BookingSummarySkeleton /> : renderSidebar()}
+          </div>
         </main>
       </div>
     </FormProvider>

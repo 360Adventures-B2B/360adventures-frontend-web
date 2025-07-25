@@ -14,7 +14,10 @@ type PackageDetailProps = {
   closeModal: () => void;
 };
 
-export default function PackageDetail({ packageData, closeModal }: PackageDetailProps) {
+export default function PackageDetail({
+  packageData,
+  closeModal,
+}: PackageDetailProps) {
   if (!packageData) return null;
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
@@ -36,11 +39,15 @@ export default function PackageDetail({ packageData, closeModal }: PackageDetail
         />
       );
     }
-    return <ModalPackage packageId={packageData.ulid} closeModal={closeModal} />;
+    return (
+      <ModalPackage packageId={packageData.ulid} closeModal={closeModal} />
+    );
   }
 
   if (showPackageModal) {
-    return <ModalPackage packageId={packageData.ulid} closeModal={closeModal} />;
+    return (
+      <ModalPackage packageId={packageData.ulid} closeModal={closeModal} />
+    );
   }
 
   const handleClick = () => {
@@ -55,10 +62,15 @@ export default function PackageDetail({ packageData, closeModal }: PackageDetail
     <>
       <div className="h-full flex flex-col max-h-[75vh] overflow-y-auto">
         <div className="flex justify-between items-start">
-          <h2 className="text-xl font-bold text-gray-800">{packageData.name}</h2>
+          <h2 className="text-xl font-bold text-gray-800">
+            {packageData.name}
+          </h2>
         </div>
 
-        <p className="text-gray-600 mt-2">{packageData.description}</p>
+        <div className="text-gray-600 mt-2">
+          <div dangerouslySetInnerHTML={{ __html: packageData.description }} />
+        </div>
+
         {/* <IncludeExclude includes={packageData?.includes} excludes={packageData?.excludes} /> */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
           {packageData.includes && packageData.includes.length > 0 && (
@@ -102,22 +114,36 @@ export default function PackageDetail({ packageData, closeModal }: PackageDetail
         )}
 
         {/* cancellation policy */}
-        {packageData.cancellation_policy && packageData.cancellation_policy.trim() !== "" && (
-          <div className="mt-6">
-            <div className="font-semibold">Cancellation Policy</div>
-            <div className="w-14 border-b border-neutral-200 dark:border-neutral-700 mb-4"></div>
-            <div className="text-neutral-600 dark:text-neutral-300">{packageData.cancellation_policy}</div>
-          </div>
-        )}
+        {packageData.cancellation_policy &&
+          packageData.cancellation_policy.trim() !== "" && (
+            <div className="mt-6">
+              <div className="font-semibold">Cancellation Policy</div>
+              <div className="w-14 border-b border-neutral-200 dark:border-neutral-700 mb-4"></div>
+              <div className="text-neutral-600 dark:text-neutral-300">
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: packageData.cancellation_policy,
+                  }}
+                />
+              </div>
+            </div>
+          )}
 
         {/* additional information */}
-        {packageData.additional_information && packageData.additional_information.trim() !== "" && (
-          <div className="mt-6">
-            <div className="font-semibold">Additional Information</div>
-            <div className="w-14 border-b border-neutral-200 dark:border-neutral-700 mb-4"></div>
-            <div className="text-neutral-600 dark:text-neutral-300">{packageData.additional_information}</div>
-          </div>
-        )}
+        {packageData.additional_information &&
+          packageData.additional_information.trim() !== "" && (
+            <div className="mt-6">
+              <div className="font-semibold">Additional Information</div>
+              <div className="w-14 border-b border-neutral-200 dark:border-neutral-700 mb-4"></div>
+              <div className="text-neutral-600 dark:text-neutral-300">
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: packageData.additional_information,
+                  }}
+                />
+              </div>
+            </div>
+          )}
 
         {/* footer */}
         <div className="mt-auto bg-white p-4 rounded-lg shadow-lg sticky bottom-0 w-full z-40">
@@ -125,7 +151,9 @@ export default function PackageDetail({ packageData, closeModal }: PackageDetail
             {/* Kiri: From + Harga */}
             <div className="flex flex-col items-start w-full sm:w-auto">
               <span className="text-gray-600 text-sm sm:text-base">From</span>
-              <h4 className="text-lg sm:text-xl font-bold text-gray-800">{formatNumber(packageData.selling_price)}</h4>
+              <h4 className="text-lg sm:text-xl font-bold text-gray-800">
+                {formatNumber(packageData.selling_price)}
+              </h4>
             </div>
 
             {/* Kanan: Tombol */}
@@ -134,10 +162,14 @@ export default function PackageDetail({ packageData, closeModal }: PackageDetail
                 onClick={handleClick}
                 disabled={!!bookingData.start_date && !packageData.is_available}
                 className={`bg-primary-6000 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm sm:text-base w-full sm:w-auto ${
-                  !!bookingData.start_date && !packageData.is_available ? "opacity-50 cursor-not-allowed" : ""
+                  !!bookingData.start_date && !packageData.is_available
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
                 }`}
               >
-                {bookingData.start_date ? "Select Package" : "Check Availability"}
+                {bookingData.start_date
+                  ? "Select Package"
+                  : "Check Availability"}
               </ButtonPrimary>
             </div>
           </div>

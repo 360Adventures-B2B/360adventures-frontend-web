@@ -4,6 +4,7 @@ import { authApi } from "./services/authService";
 import { productApi } from "./services/productService";
 import filterReducer from "./features/filterSlices";
 import modalPackageReducer from "./features/modalPackageSlices";
+import settingReducer from "./features/settingSlices";
 import { locationApi } from "./services/locationsService";
 import { categoryApi } from "./services/categoryService";
 import { cartApi } from "./services/cartService";
@@ -12,6 +13,7 @@ import { topupApi } from "./services/topupService";
 import { bankApi } from "./services/bankService";
 import { creditHistoryApi } from "./services/creditHistoryService";
 import { wishlistApi } from "./services/wishlistService";
+import { settingApi } from "./services/settingService";
 export const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
@@ -26,6 +28,8 @@ export const store = configureStore({
     [wishlistApi.reducerPath]: wishlistApi.reducer,
     filters: filterReducer,
     modalPackage: modalPackageReducer,
+    setting: settingReducer,
+    [settingApi.reducerPath]: settingApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat([
@@ -39,6 +43,7 @@ export const store = configureStore({
       bankApi.middleware,
       creditHistoryApi.middleware,
       wishlistApi.middleware,
+      settingApi.middleware,
     ]),
 });
 

@@ -8,22 +8,34 @@ import ModalDatePicker from "./ModalDatePicker";
 import PackageDetail from "./PackageDetail";
 import { useDate } from "@/context/DateContext";
 import { useDispatch } from "react-redux";
-import { openDetailPackageModal, openModalForPackageModal } from "@/lib/features/modalPackageSlices";
+import {
+  openDetailPackageModal,
+  openModalForPackageModal,
+} from "@/lib/features/modalPackageSlices";
 interface PackageCardProps {
   packageData: Package;
   onOpenModal: () => void;
 }
 const formatDate = (dateString: string) => {
-  const options: Intl.DateTimeFormatOptions = { month: "short", day: "numeric", year: "numeric" };
+  const options: Intl.DateTimeFormatOptions = {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  };
   return new Date(dateString).toLocaleDateString("en-US", options);
 };
 
-const PackageCard: React.FC<PackageCardProps> = ({ packageData, onOpenModal }) => {
+const PackageCard: React.FC<PackageCardProps> = ({
+  packageData,
+  onOpenModal,
+}) => {
   const { bookingData } = useBooking();
   const { selectedDate, setSelectedDate } = useDate();
 
   const isAvailable = packageData.is_available;
-  const formattedDate = bookingData.start_date ? formatDate(bookingData.start_date) : "";
+  const formattedDate = bookingData.start_date
+    ? formatDate(bookingData.start_date)
+    : "";
 
   const forceCheckAvailability = isAvailable !== true;
 
@@ -49,15 +61,21 @@ const PackageCard: React.FC<PackageCardProps> = ({ packageData, onOpenModal }) =
           <span className="text-xs font-medium bg-green-100 text-green-800 px-2 py-0.5 rounded">
             Instant Confirmation
           </span>
-          <span className="text-xs font-medium bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Free Cancellation</span>
-          <span className="text-xs font-medium bg-purple-100 text-purple-800 px-2 py-0.5 rounded">Pickup Included</span>
+          <span className="text-xs font-medium bg-blue-100 text-blue-800 px-2 py-0.5 rounded">
+            Free Cancellation
+          </span>
+          <span className="text-xs font-medium bg-purple-100 text-purple-800 px-2 py-0.5 rounded">
+            Pickup Included
+          </span>
         </div>
 
-        <h4 className="text-md font-semibold text-gray-800">{packageData.name}</h4>
+        <h4 className="text-md font-semibold text-gray-800">
+          {packageData.name}
+        </h4>
 
         {/* Description with opacity if not available */}
         <div className={`text-sm text-gray-600 mt-1`}>
-          <p>{packageData.description}</p>
+          <div dangerouslySetInnerHTML={{ __html: packageData.description }} />
         </div>
         <a
           onClick={handleOpenModalDetailPackage}
@@ -69,16 +87,24 @@ const PackageCard: React.FC<PackageCardProps> = ({ packageData, onOpenModal }) =
 
       {/* Right Section */}
       <div className="flex-col justify-between items-start sm:items-end mt-3 sm:mt-0 w-full sm:w-1/3">
-        <div className={`pricing ${packageData.is_available === false ? "opacity-60" : ""}`}>
+        <div
+          className={`pricing ${
+            packageData.is_available === false ? "opacity-60" : ""
+          }`}
+        >
           <p className="text-md font-semibold text-gray-900">From</p>
           <div className="flex items-center gap-1 mt-1">
-            <span className="text-lg font-bold text-green-600">{formatNumber(packageData.selling_price)}</span>
+            <span className="text-lg font-bold text-green-600">
+              {formatNumber(packageData.selling_price)}
+            </span>
           </div>
         </div>
 
         {/* Info jika tidak tersedia */}
         {isAvailable === false && formattedDate && (
-          <p className="text-xs text-red-500 mt-3">This package is not available on {formattedDate}</p>
+          <p className="text-xs text-red-500 mt-3">
+            This package is not available on {formattedDate}
+          </p>
         )}
 
         <div className="w-full">
