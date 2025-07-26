@@ -34,30 +34,43 @@ export const createBaseQuery = () => {
 
     const result = await baseQuery(args, api, extraOptions);
 
-    if (result.error && (result.error.status === 401 || result.error.status === 403)) {
+    if (
+      result.error &&
+      (result.error.status === 401 || result.error.status === 403)
+    ) {
       const session = await getSession();
       const refreshToken = session?.user?.token;
 
       const requestUrl = args?.url || args;
 
-      if (
+      const isAuthEndpoint =
         requestUrl &&
         !requestUrl.includes("api/auth/verify-otp") &&
         !requestUrl.includes("api/auth/reset-password") &&
         !requestUrl.includes("api/auth/login") &&
-        !requestUrl.includes("api/auth/register")
-      ) {
+        !requestUrl.includes("api/auth/register");
+
+      const currentPath =
+        typeof window !== "undefined" ? window.location.pathname : "";
+
+      const allowGuestPath = ["/privacy-policy", "/terms-condition"]; 
+
+      const isGuestAllowed = allowGuestPath.includes(currentPath);
+
+      if (isAuthEndpoint && !isGuestAllowed) {
         if (refreshToken) {
           try {
-            // Memanggil API untuk refresh token
-            const refreshResult = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh-token`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "x-api-key": process.env.NEXT_PUBLIC_API_KEY || "",
-                Authorization: `Bearer ${refreshToken}`,
-              },
-            });
+            const refreshResult = await fetch(
+              `${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh-token`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "x-api-key": process.env.NEXT_PUBLIC_API_KEY || "",
+                  Authorization: `Bearer ${refreshToken}`,
+                },
+              }
+            );
 
             if (refreshResult.ok) {
               const data = await refreshResult.json();
@@ -74,6 +87,8 @@ export const createBaseQuery = () => {
             console.error("Refresh token failed", error);
           }
         }
+
+        // ❌ Only signOut if NOT in guest-allowed path
         await signOut({ redirect: true });
       }
     }

@@ -10,6 +10,8 @@ import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import ncNanoId from "@/utils/ncNanoId";
 import { useAuth } from "@/context/AuthContext";
+import { formatNumber } from "@/utils/currencyConverter";
+import { useGetUserQuery } from "@/lib/services/authService";
 
 export interface NavMobileProps {
   // data?: NavItemType[];
@@ -17,7 +19,14 @@ export interface NavMobileProps {
 }
 
 const NavMobile: React.FC<NavMobileProps> = ({ onClickClose }) => {
-  const { user, handleLogout } = useAuth();
+  const { handleLogout } = useAuth();
+
+  const {
+    data: user,
+    isLoading: isLoadingUser,
+    isError,
+  } = useGetUserQuery(undefined);
+  const userData = user?.data;
 
   const CUSTOM_NAVIGATION_MOBILE: NavItemType[] = [
     {
@@ -28,7 +37,7 @@ const NavMobile: React.FC<NavMobileProps> = ({ onClickClose }) => {
     {
       id: ncNanoId(),
       href: "/",
-      name: `Hi, ${user?.name || ""}`,
+      name: `Hi, ${userData?.name || ""}`,
       type: "dropdown",
       children: [
         {
@@ -38,13 +47,13 @@ const NavMobile: React.FC<NavMobileProps> = ({ onClickClose }) => {
         },
         {
           id: ncNanoId(),
-          href: "/",
+          href: "/account-booking",
           name: "My Bookings",
         },
         //
         {
           id: ncNanoId(),
-          href: "/",
+          href: "/account-savelists",
           name: "My Wishlist",
         },
         {
@@ -69,16 +78,31 @@ const NavMobile: React.FC<NavMobileProps> = ({ onClickClose }) => {
               {...(i.onClick ? { onClick: i.onClick } : {})}
               className="flex px-4 text-neutral-900 dark:text-neutral-200 text-sm font-medium rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 mt-0.5"
             >
-              <span className={`py-2.5 pr-3 ${!i.children ? "block w-full" : ""}`}>{i.name}</span>
+              <span
+                className={`py-2.5 pr-3 ${!i.children ? "block w-full" : ""}`}
+              >
+                {i.name}
+              </span>
               {i.children && (
-                <span className="flex-1 flex" onClick={(e) => e.preventDefault()}>
-                  <Disclosure.Button as="span" className="py-2.5 flex justify-end flex-1">
-                    <ChevronDownIcon className="ml-2 h-4 w-4 text-neutral-500" aria-hidden="true" />
+                <span
+                  className="flex-1 flex"
+                  onClick={(e) => e.preventDefault()}
+                >
+                  <Disclosure.Button
+                    as="span"
+                    className="py-2.5 flex justify-end flex-1"
+                  >
+                    <ChevronDownIcon
+                      className="ml-2 h-4 w-4 text-neutral-500"
+                      aria-hidden="true"
+                    />
                   </Disclosure.Button>
                 </span>
               )}
             </Link>
-            {i.children && <Disclosure.Panel>{_renderMenuChild(i)}</Disclosure.Panel>}
+            {i.children && (
+              <Disclosure.Panel>{_renderMenuChild(i)}</Disclosure.Panel>
+            )}
           </Disclosure>
         ))}
       </ul>
@@ -89,22 +113,38 @@ const NavMobile: React.FC<NavMobileProps> = ({ onClickClose }) => {
     const Wrapper = item.type === "dropdown" ? "div" : Link;
 
     return (
-      <Disclosure key={item.id} as="li" className="text-neutral-900 dark:text-white">
+      <Disclosure
+        key={item.id}
+        as="li"
+        className="text-neutral-900 dark:text-white"
+      >
         <Wrapper
           className="flex w-full px-4 font-medium uppercase tracking-wide text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg"
           {...(item.type !== "dropdown" && { href: item.href || undefined })}
         >
-          <span className={`py-2.5 pr-3 ${!item.children ? "block w-full" : ""}`}>{item.name}</span>
+          <span
+            className={`py-2.5 pr-3 ${!item.children ? "block w-full" : ""}`}
+          >
+            {item.name}
+          </span>
 
           {item.children && (
             <span className="flex-1 flex" onClick={(e) => e.preventDefault()}>
-              <Disclosure.Button as="span" className="py-2.5 flex items-center justify-end flex-1">
-                <ChevronDownIcon className="ml-2 h-4 w-4 text-neutral-500" aria-hidden="true" />
+              <Disclosure.Button
+                as="span"
+                className="py-2.5 flex items-center justify-end flex-1"
+              >
+                <ChevronDownIcon
+                  className="ml-2 h-4 w-4 text-neutral-500"
+                  aria-hidden="true"
+                />
               </Disclosure.Button>
             </span>
           )}
         </Wrapper>
-        {item.children && <Disclosure.Panel>{_renderMenuChild(item)}</Disclosure.Panel>}
+        {item.children && (
+          <Disclosure.Panel>{_renderMenuChild(item)}</Disclosure.Panel>
+        )}
       </Disclosure>
     );
   };
@@ -114,7 +154,10 @@ const NavMobile: React.FC<NavMobileProps> = ({ onClickClose }) => {
       <div className="py-6 px-5">
         <Logo />
         <div className="flex flex-col mt-5 text-neutral-700 dark:text-neutral-300 text-sm">
-          <span>Discover the most outstanding articles on all topics of life. Write your stories and share them</span>
+          <span>
+            Discover the most outstanding articles on all topics of life. Write
+            your stories and share them
+          </span>
 
           {/* <div className="flex justify-between items-center mt-4">
             <SocialsList itemClass="w-9 h-9 flex items-center justify-center rounded-full bg-neutral-100 text-xl dark:bg-neutral-800 dark:text-neutral-300" />
@@ -129,7 +172,10 @@ const NavMobile: React.FC<NavMobileProps> = ({ onClickClose }) => {
       </div>
       <ul className="flex flex-col py-6 px-2 space-y-1">
         {CUSTOM_NAVIGATION_MOBILE.map(_renderItem)}
-        <Disclosure as="li" className="text-neutral-900 dark:text-white relative">
+        <Disclosure
+          as="li"
+          className="text-neutral-900 dark:text-white relative"
+        >
           <Link
             className="flex w-full px-4 py-2 items-center justify-between bg-white dark:bg-neutral-800 rounded-lg transition"
             href="#"
@@ -137,10 +183,18 @@ const NavMobile: React.FC<NavMobileProps> = ({ onClickClose }) => {
             <div className="flex items-center gap-2">
               <i className="las la-money-bill text-primary-6000 text-xl"></i>
               <span className="font-medium text-sm">Balance:</span>
-              <span className="font-semibold text-base text-primary-6000">1.000</span>
+              <span className="font-semibold text-base text-primary-6000">
+                {isLoadingUser
+                  ? "Loading..."
+                  : isError || !userData
+                  ? "N/A"
+                  : formatNumber(userData?.credit_amount)}
+              </span>
             </div>
             <Link href={"/account-wallet/topup"}>
-              <ButtonPrimary className="text-white text-xs py-1.5 px-4 rounded-lg">Top Up</ButtonPrimary>
+              <ButtonPrimary className="text-white text-xs py-1.5 px-4 rounded-lg">
+                Top Up
+              </ButtonPrimary>
             </Link>
           </Link>
         </Disclosure>

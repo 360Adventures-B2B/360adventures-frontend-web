@@ -14,9 +14,9 @@ export default withAuth(
     const searchParams = req.nextUrl.searchParams;
     const resetToken = searchParams.get("token");
 
-    const publicRoutes = ["/login", "/register", "/forgot-password"];
+    const publicRoutes = ["/login", "/register", "/forgot-password","/privacy-policy","/terms-condition"];
     const isPublicRoute = publicRoutes.includes(path);
-
+    
     if (session && !session?.isVerify) {
       if (req.url.includes("/otp")) {
         return NextResponse.next();
@@ -55,7 +55,7 @@ export default withAuth(
     callbacks: {
       authorized: ({ req, token }) => {
         const path = req.nextUrl.pathname;
-        const publicRoutes = ["/login", "/register", "/forgot-password"];
+        const publicRoutes = ["/login", "/register", "/forgot-password", "/privacy-policy","/terms-condition"];
 
         if (path === "/reset-password") {
           const hasToken = req.nextUrl.searchParams.has("token");

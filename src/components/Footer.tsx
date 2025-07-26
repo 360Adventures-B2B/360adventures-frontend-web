@@ -20,116 +20,111 @@ export interface WidgetFooterMenu {
   menus: CustomLink[];
 }
 
-const widgetMenus: WidgetFooterMenu[] = [
-  {
-    id: "5",
-    title: "Getting started",
-    menus: [
-      { href: "#", label: "Installation" },
-      { href: "#", label: "Release Notes" },
-      { href: "#", label: "Upgrade Guide" },
-      { href: "#", label: "Browser Support" },
-      { href: "#", label: "Editor Support" },
-    ],
-  },
-  {
-    id: "1",
-    title: "Explore",
-    menus: [
-      { href: "#", label: "Design features" },
-      { href: "#", label: "Prototyping" },
-      { href: "#", label: "Design systems" },
-      { href: "#", label: "Pricing" },
-      { href: "#", label: "Security" },
-    ],
-  },
-  {
-    id: "2",
-    title: "Resources",
-    menus: [
-      { href: "#", label: "Best practices" },
-      { href: "#", label: "Support" },
-      { href: "#", label: "Developers" },
-      { href: "#", label: "Learn design" },
-      { href: "#", label: "Releases" },
-    ],
-  },
-  {
-    id: "4",
-    title: "Community",
-    menus: [
-      { href: "#", label: "Discussion Forums" },
-      { href: "#", label: "Code of Conduct" },
-      { href: "#", label: "Community Resources" },
-      { href: "#", label: "Contributing" },
-      { href: "#", label: "Concurrent Mode" },
-    ],
-  },
-];
-
 const appName = process.env.NEXT_PUBLIC_APP_NAME || "Your Company";
 
 const Footer: React.FC = () => {
   const androidAppUrl = useSettingValue("anroid_app_url");
   const iosAppUrl = useSettingValue("ios_app_url");
-
   return (
-    // <>
-    //   <FooterNav />
-
-    //   <div className="nc-Footer relative py-24 lg:py-28 border-t border-neutral-200 dark:border-neutral-700">
-    //     <div className="container grid grid-cols-2 gap-y-10 gap-x-5 sm:gap-x-8 md:grid-cols-4 lg:grid-cols-5 lg:gap-x-10 ">
-    //       <div className="grid grid-cols-4 gap-5 col-span-2 md:col-span-4 lg:md:col-span-1 lg:flex lg:flex-col">
-    //         <div className="col-span-2 md:col-span-1">
-    //           <Logo />
-    //         </div>
-    //         <div className="col-span-2 flex items-center md:col-span-3">
-    //           <SocialsList1 className="flex items-center space-x-3 lg:space-x-0 lg:flex-col lg:space-y-2.5 lg:items-start" />
-    //         </div>
-    //       </div>
-    //       {widgetMenus.map(renderWidgetMenuItem)}
-    //     </div>
-    //   </div>
-    // </>
     <>
       <footer className="bg-white border-t border-gray-200 text-gray-700 mt-10">
-        <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-          {/* Logo & Award / Review Us */}
-          <div className="flex flex-col items-start md:items-start space-y-4">
+        <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-4 gap-8 items-start">
+          {/* Review Us */}
+          <div className="flex flex-col items-start space-y-4">
             <h4 className="font-bold text-lg">Review Us</h4>
             <div className="flex items-center space-x-4">
-              <Image
-                src={TripadvisorPng}
-                alt="Tripadvisor Travelers Choice"
-                width={100}
-                height={100}
-                className="object-contain hover:scale-105 transition-transform"
-              />
-              <Image
-                src={ReviewUsJpg}
-                alt="Review Us"
-                width={100}
-                height={100}
-                className="object-contain hover:scale-105 transition-transform"
-              />
+              <Link
+                href="https://www.tripadvisor.com/Attraction_Review-g295424-d25548548-Reviews-360_Adventures_Tourism_LLC-Dubai_Emirate_of_Dubai.html"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image
+                  src={TripadvisorPng}
+                  alt="Tripadvisor Travelers Choice"
+                  width={100}
+                  height={100}
+                  className="object-contain hover:scale-105 transition-transform"
+                />
+              </Link>
+
+              <Link
+                href="https://g.co/kgs/JHPv82R"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image
+                  src={ReviewUsJpg}
+                  alt="Review Us"
+                  width={100}
+                  height={100}
+                  className="object-contain hover:scale-105 transition-transform"
+                />
+              </Link>
             </div>
           </div>
 
-          {/* Business Links - Responsive (stack di mobile, inline di desktop) */}
-          <div className="flex flex-col items-start md:items-center">
-            <h4 className="font-bold text-lg mb-3">Business</h4>
-            <div className="flex flex-col md:flex-row text-sm space-y-2 md:space-y-0 md:space-x-3">
-              <Link href="#" className="hover:text-primary-6000 transition">
+          {/* Business Links - Vertikal */}
+          <div className="flex flex-col items-start space-y-4">
+            <h4 className="font-bold text-lg mb-2">Business</h4>
+            <div className="flex items-center space-x-2 text-sm">
+              <Link
+                href="https://360adventures.ae/about-us"
+                target="_blank"
+                className="hover:text-primary-6000 transition text-sm"
+              >
                 About Us
               </Link>
-              <span className="hidden md:inline">|</span>
-              <Link href="#" className="hover:text-primary-6000 transition">
+            </div>
+            <div className="flex items-center space-x-2 text-sm">
+              <Link
+                href="/privacy-policy"
+                className="hover:text-primary-6000 transition text-sm"
+              >
                 Privacy Policy
               </Link>
-              <span className="hidden md:inline">|</span>
-              <Link href="#" className="hover:text-primary-6000 transition">
+            </div>
+
+            <div className="flex items-center space-x-2 text-sm">
+              <Link
+                href="/terms-condition"
+                className="hover:text-primary-6000 transition text-sm"
+              >
                 Terms & Conditions
               </Link>
+            </div>
+          </div>
+
+          {/* Contact Us */}
+          <div className="flex flex-col items-start space-y-4">
+            <h4 className="font-bold text-lg">Contact Us</h4>
+            <div className="flex items-center space-x-2 text-sm">
+              <i className="las la-envelope text-primary-6000 text-xl"></i>
+              <a
+                href="mailto:support@360adventures.ae"
+                className="hover:text-primary-6000 transition"
+              >
+                support@360adventures.ae
+              </a>
+            </div>
+            <div className="flex items-center space-x-2 text-sm">
+              <i className="las la-phone text-primary-6000 text-xl"></i>
+              <a
+                href="tel:+971501234567"
+                className="hover:text-primary-6000 transition"
+              >
+                +971 58 273 4717
+              </a>
+            </div>
+
+            <div className="flex items-center space-x-2 text-sm">
+              <i className="lab la-whatsapp text-primary-6000 text-xl"></i>
+              <a
+                href="https://wa.me/971501234567"
+                target="_blank"
+                className="hover:text-primary-6000 transition"
+              >
+                +971 58 273 4717
+              </a>
             </div>
           </div>
 
@@ -137,21 +132,30 @@ const Footer: React.FC = () => {
           <div className="flex flex-col items-start md:items-end space-y-4">
             <h4 className="font-bold text-lg">Social Media</h4>
             <div className="flex space-x-4 text-2xl">
-              <Link href="#">
-                <i className="lab la-facebook hover:text-primary-6000 transition"></i>
-              </Link>
-              <Link href="#">
-                <i className="lab la-linkedin hover:text-primary-6000 transition"></i>
-              </Link>
-              <Link href="#">
+              <Link
+                href="https://www.instagram.com/360adventures.ae/"
+                target="_blank"
+              >
                 <i className="lab la-instagram hover:text-primary-6000 transition"></i>
               </Link>
-              <Link href="#">
+              <Link href="https://www.facebook.com/" target="_blank">
+                <i className="lab la-facebook hover:text-primary-6000 transition"></i>
+              </Link>
+              <Link
+                href="https://www.linkedin.com/company/360-adventures-tourism/"
+                target="_blank"
+              >
+                <i className="lab la-linkedin hover:text-primary-6000 transition"></i>
+              </Link>
+              <Link
+                href="https://www.youtube.com/@360Adventures-ae"
+                target="_blank"
+              >
                 <i className="lab la-youtube hover:text-primary-6000 transition"></i>
               </Link>
             </div>
 
-            {/* Download Apps (Image buttons) */}
+            {/* Download Apps */}
             <div className="flex space-x-4 mt-4">
               <Link href={(androidAppUrl || "#") as Route} target="_blank">
                 <Image
