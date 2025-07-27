@@ -9,7 +9,9 @@ const BookingDetail = ({ booking }: { booking: IBooking }) => {
     <div className="bg-white rounded-2xl w-full max-w-4xl overflow-hidden">
       {/* Header */}
       <div className="p-6 border-b">
-        <h2 className="text-2xl font-semibold">Booking Ref: #{booking.booking_reference_id}</h2>
+        <h2 className="text-2xl font-semibold">
+          Booking Ref: #{booking.booking_reference_id}
+        </h2>
       </div>
 
       {/* Tabs */}
@@ -17,13 +19,21 @@ const BookingDetail = ({ booking }: { booking: IBooking }) => {
         <div className="flex space-x-4 border-b">
           <button
             onClick={() => setActiveTab("booking")}
-            className={`py-2 px-4 ${activeTab === "booking" ? "border-b-2 border-blue-500" : "text-gray-500"}`}
+            className={`py-2 px-4 ${
+              activeTab === "booking"
+                ? "border-b-2 border-blue-500"
+                : "text-gray-500"
+            }`}
           >
             Booking Detail
           </button>
           <button
             onClick={() => setActiveTab("customer")}
-            className={`py-2 px-4 ${activeTab === "customer" ? "border-b-2 border-blue-500" : "text-gray-500"}`}
+            className={`py-2 px-4 ${
+              activeTab === "customer"
+                ? "border-b-2 border-blue-500"
+                : "text-gray-500"
+            }`}
           >
             Customer Information
           </button>
@@ -100,19 +110,26 @@ const BookingDetail = ({ booking }: { booking: IBooking }) => {
               )}
 
               {/* Booking Items */}
-              {booking.person_types.length > 0 && (
+              {booking.person_types.some((person) => person.guest > 0) && (
                 <div className="mt-4">
                   <h3 className="text-lg font-semibold mb-2">Items</h3>
                   <ul className="space-y-2">
-                    {/* Person Types */}
-                    {booking.person_types.map((person, idx) => (
-                      <li key={idx} className="flex justify-between font-medium">
-                        <span className="font-medium">
-                          {person.name} ({person.guest} × {formatNumber(person.selling_price)})
-                        </span>
-                        <span className="font-medium">{formatNumber(person.total || 0)}</span>
-                      </li>
-                    ))}
+                    {booking.person_types
+                      .filter((person) => person.guest > 0)
+                      .map((person, idx) => (
+                        <li
+                          key={idx}
+                          className="flex justify-between font-medium"
+                        >
+                          <span className="font-medium">
+                            {person.name} ({person.guest} ×{" "}
+                            {formatNumber(person.selling_price)})
+                          </span>
+                          <span className="font-medium">
+                            {formatNumber(person.total || 0)}
+                          </span>
+                        </li>
+                      ))}
                   </ul>
                 </div>
               )}
@@ -123,12 +140,19 @@ const BookingDetail = ({ booking }: { booking: IBooking }) => {
                   <h3 className="text-lg font-semibold mb-2">Extra Add-ons</h3>
                   <ul className="space-y-2">
                     {booking.extra_prices.map((extra, idx) => (
-                      <li key={idx} className="flex justify-between font-medium">
+                      <li
+                        key={idx}
+                        className="flex justify-between font-medium"
+                      >
                         <div>
                           <span className="font-medium">{extra.name}</span>
-                          <div className="text-gray-500 font-medium">Type: {extra.type.replace("_", " ")}</div>
+                          <div className="text-gray-500 font-medium">
+                            Type: {extra.type.replace("_", " ")}
+                          </div>
                         </div>
-                        <span className="font-medium">{formatNumber(extra.total || 0)}</span>
+                        <span className="font-medium">
+                          {formatNumber(extra.total || 0)}
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -137,7 +161,9 @@ const BookingDetail = ({ booking }: { booking: IBooking }) => {
 
               <li className="flex justify-between font-medium">
                 <span>Total Price:</span>
-                <span className="font-medium">{formatNumber(booking.total_price)}</span>
+                <span className="font-medium">
+                  {formatNumber(booking.total_price)}
+                </span>
               </li>
             </ul>
           </div>

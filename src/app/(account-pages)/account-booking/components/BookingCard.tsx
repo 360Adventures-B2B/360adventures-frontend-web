@@ -22,27 +22,51 @@ export default function BookingCard({ booking }: { booking: IBooking }) {
     booking.package?.product?.image || fallbackUrl
   );
 
+  const [isLoadingDownload, setIsLoadingDownload] = useState(false);
+
   const [triggerDownloadTicket, { isFetching }] = useLazyDownloadTicketQuery();
+  // const handleDownload = async () => {
+  //   try {
+  //     const res = await triggerDownloadTicket(booking?.ulid || "").unwrap();
+  //     const fileUrl = res?.data?.url;
+
+  //     if (!fileUrl) {
+  //       console.warn("No URL found in response");
+  //       return;
+  //     }
+
+  //     const newWindow = window.open(fileUrl, "_blank");
+
+  //     if (!newWindow) {
+  //       console.error("Failed to open the file. Pop-up might be blocked.");
+  //       return;
+  //     }
+
+  //     newWindow.focus();
+  //   } catch (error) {
+  //     console.error("Download failed:", error);
+  //   }
+  // };
   const handleDownload = async () => {
     try {
-      const res = await triggerDownloadTicket(booking?.ulid || "").unwrap();
-      const fileUrl = res?.data?.url;
+      const ticketId = booking?.ulid;
+      if (!ticketId) return;
 
-      if (!fileUrl) {
-        console.warn("No URL found in response");
-        return;
-      }
+      setIsLoadingDownload(true);
+      const response = await fetch(`/api/download-ticket?id=${ticketId}`);
+      const blob = await response.blob();
 
-      const newWindow = window.open(fileUrl, "_blank");
-
-      if (!newWindow) {
-        console.error("Failed to open the file. Pop-up might be blocked.");
-        return;
-      }
-
-      newWindow.focus();
-    } catch (error) {
-      console.error("Download failed:", error);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `ticket-${ticketId}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      setIsLoadingDownload(false);
+    } catch (err) {
+      console.error("Download failed", err);
     }
   };
 
@@ -164,7 +188,7 @@ export default function BookingCard({ booking }: { booking: IBooking }) {
             {(booking?.booking_status === "confirmed" ||
               booking?.booking_status === "completed") && (
               <ButtonPrimary
-                loading={isFetching}
+                loading={isFetching || isLoadingDownload}
                 onClick={handleDownload}
                 fontSize="text-sm"
                 sizeClass="px-4 py-2"
