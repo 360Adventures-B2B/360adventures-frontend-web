@@ -6,7 +6,13 @@ import React from "react";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
@@ -18,15 +24,28 @@ export default function FormRegister() {
   const phoneRegex = /^[0-9]{10,15}$/;
 
   const schema = yup.object().shape({
-    name: yup.string().min(3, "Full name must be at least 3 characters").required("Full name is a required field"),
+    name: yup
+      .string()
+      .min(3, "Full name must be at least 3 characters")
+      .required("Full name is a required field"),
 
-    username: yup.string().min(5, "Username must be at least 5 characters").required("Username is a required field"),
+    username: yup
+      .string()
+      .min(5, "Username must be at least 5 characters")
+      .required("Username is a required field"),
+
+    company_name: yup
+      .string()
+      .min(5, "Company Profile must be at least 5 characters")
+      .required("Company Profile is a required field"),
 
     email: yup
       .string()
       .test("email-or-phone", "Email or phone is invalid", (value) => {
         if (!value) return false;
-        return yup.string().email().isValidSync(value) || phoneRegex.test(value);
+        return (
+          yup.string().email().isValidSync(value) || phoneRegex.test(value)
+        );
       })
       .required("Email or phone is a required field"),
 
@@ -36,12 +55,18 @@ export default function FormRegister() {
       .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
       .matches(/[a-z]/, "Password must contain at least one lowercase letter")
       .matches(/[0-9]/, "Password must contain at least one number")
-      .matches(/[^a-zA-Z0-9]/, "Password must contain at least one special character")
+      .matches(
+        /[^a-zA-Z0-9]/,
+        "Password must contain at least one special character"
+      )
       .required("Password is a required field"),
 
     passwordConfirmation: yup
       .string()
-      .oneOf([yup.ref("password"), undefined], "Confirmation password doesn't match")
+      .oneOf(
+        [yup.ref("password"), undefined],
+        "Confirmation password doesn't match"
+      )
       .required("Password confirmation is a required field"),
     trade_license: yup
       .mixed()
@@ -65,6 +90,7 @@ export default function FormRegister() {
     defaultValues: {
       name: "",
       username: "",
+      company_name: "",
       email: "",
       password: "",
       passwordConfirmation: "",
@@ -81,6 +107,7 @@ export default function FormRegister() {
       const value = {
         name: formData.name,
         username: formData.username,
+        company_name: formData.company_name,
         email: formData.email,
         password: formData.password,
         trade_license: formData.trade_license,
@@ -95,13 +122,16 @@ export default function FormRegister() {
           email: user.email,
           name: user.name,
           token: res.data.token,
+          isApprove: user.is_approve,
           callbackUrl: "/",
           action: "register",
           redirect: false,
         });
         if (result) {
           toast({
-            className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+            className: cn(
+              "top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"
+            ),
             title: "Success",
             description: "Check Email Your OTP",
             variant: "success",
@@ -110,7 +140,9 @@ export default function FormRegister() {
           router.push("/otp");
         } else {
           toast({
-            className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+            className: cn(
+              "top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"
+            ),
             title: "Error",
             description: "Something Wrong, Try Again!",
             variant: "destructive",
@@ -120,7 +152,9 @@ export default function FormRegister() {
         }
       } else {
         toast({
-          className: cn("top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"),
+          className: cn(
+            "top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"
+          ),
           title: "Error",
           description: "Invalid Credentials",
           variant: "destructive",
@@ -135,16 +169,28 @@ export default function FormRegister() {
   return (
     <>
       <Form {...form}>
-        <form className="grid grid-cols-1 md:grid-cols-2 gap-6 gap-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+        <form
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 gap-y-6"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
+          {/* Full Name */}
           <label className="block col-span-1">
-            <span className="text-neutral-800 dark:text-neutral-200">Full Name</span>
+            <span className="text-neutral-800 dark:text-neutral-200">
+              Full Name
+            </span>
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input type="text" placeholder="Name" autoComplete="name" className="mt-1 w-full" {...field} />
+                    <Input
+                      type="text"
+                      placeholder="Name"
+                      autoComplete="name"
+                      className="mt-1 w-full"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -152,8 +198,11 @@ export default function FormRegister() {
             />
           </label>
 
+          {/* Username */}
           <label className="block col-span-1">
-            <span className="text-neutral-800 dark:text-neutral-200">Username</span>
+            <span className="text-neutral-800 dark:text-neutral-200">
+              Username
+            </span>
             <FormField
               control={form.control}
               name="username"
@@ -174,8 +223,36 @@ export default function FormRegister() {
             />
           </label>
 
+          {/* Company Profile - Text */}
           <label className="block col-span-1">
-            <span className="text-neutral-800 dark:text-neutral-200">Email address or Mobile phone</span>
+            <span className="text-neutral-800 dark:text-neutral-200">
+              Company Name
+            </span>
+            <FormField
+              control={form.control}
+              name="company_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Enter your Company Profile"
+                      autoComplete="organization"
+                      className="mt-1 w-full"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </label>
+
+          {/* Email / Phone */}
+          <label className="block col-span-1">
+            <span className="text-neutral-800 dark:text-neutral-200">
+              Email address or Mobile phone
+            </span>
             <FormField
               control={form.control}
               name="email"
@@ -196,8 +273,11 @@ export default function FormRegister() {
             />
           </label>
 
+          {/* Password */}
           <label className="block col-span-1">
-            <span className="text-neutral-800 dark:text-neutral-200">Password</span>
+            <span className="text-neutral-800 dark:text-neutral-200">
+              Password
+            </span>
             <FormField
               control={form.control}
               name="password"
@@ -218,8 +298,11 @@ export default function FormRegister() {
             />
           </label>
 
+          {/* Confirmation Password */}
           <label className="block col-span-1">
-            <span className="text-neutral-800 dark:text-neutral-200">Confirmation Password</span>
+            <span className="text-neutral-800 dark:text-neutral-200">
+              Confirmation Password
+            </span>
             <FormField
               control={form.control}
               name="passwordConfirmation"
@@ -240,8 +323,11 @@ export default function FormRegister() {
             />
           </label>
 
-          <label className="block">
-            <span className="text-neutral-800 dark:text-neutral-200">Trade License</span>
+          {/* Trade License - Upload File, Full Width */}
+          <label className="block col-span-2">
+            <span className="text-neutral-800 dark:text-neutral-200">
+              Trade License
+            </span>
             <FormField
               control={form.control}
               name="trade_license"
@@ -256,14 +342,16 @@ export default function FormRegister() {
                           accept=".pdf"
                           className="hidden"
                           {...field}
-                          value={undefined} // override supaya gak ada error
+                          value={undefined}
                           onChange={(e) => {
-                            field.onChange(e.target.files?.[0]); // set file ke RHF
+                            field.onChange(e.target.files?.[0]);
                           }}
                         />
                       </label>
                       {field.value && (
-                        <p className="mt-2 text-sm text-green-600">Selected file: {(field.value as File).name}</p>
+                        <p className="mt-2 text-sm text-green-600">
+                          Selected file: {(field.value as File).name}
+                        </p>
                       )}
                     </div>
                   </FormControl>
@@ -273,6 +361,7 @@ export default function FormRegister() {
             />
           </label>
 
+          {/* Submit Button */}
           <div className="col-span-1 md:col-span-2">
             <ButtonPrimary loading={isLoading} type="submit" className="w-full">
               Register

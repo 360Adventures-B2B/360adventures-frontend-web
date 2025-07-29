@@ -38,6 +38,7 @@ export const createBaseQuery = () => {
       result.error &&
       (result.error.status === 401 || result.error.status === 403)
     ) {
+
       const session = await getSession();
       const refreshToken = session?.user?.token;
 

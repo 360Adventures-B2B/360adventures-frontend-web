@@ -58,6 +58,7 @@ export default function FormLogin() {
           email: user.email,
           name: user.name,
           token: res.data.token,
+          isApprove: user.is_approve,
           callbackUrl: searchParams.get("callbackUrl") || "/",
           action: "login",
           redirect: false,

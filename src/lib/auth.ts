@@ -24,16 +24,29 @@ export const authOptions: AuthOptions = {
         token: {
           type: "text",
         },
+        isApprove: {
+          type: "text",
+        },
         action: { type: "hidden" },
       },
-      authorize: async (credentials: Record<"id" | "name" | "email" | "token" | "action", string> | undefined, req) => {
+      authorize: async (
+        credentials:
+          | Record<
+              "id" | "name" | "email" | "token" | "isApprove" | "action",
+              string
+            >
+          | undefined,
+        req
+      ) => {
         if (!credentials) return null;
+
         return {
           id: credentials.id,
           name: credentials.name,
           email: credentials.email,
           token: credentials.token,
           isVerify: credentials.action === "login",
+          isApprove: credentials.isApprove === "true", // convert ke boolean
         };
       },
     }),
@@ -44,12 +57,13 @@ export const authOptions: AuthOptions = {
         token.id = user.id;
         token.token = user.token;
         token.isVerify = user.isVerify;
+        token.isApprove = user.isApprove;
       }
 
       if (trigger === "update") {
         token.isVerify = session.isVerify || token.isVerify;
         token.token = session.token || token.token;
-        // return { ...token, ...session.user };
+        token.isApprove = session.isApprove ?? token.isApprove;
       }
 
       return token;
@@ -59,6 +73,7 @@ export const authOptions: AuthOptions = {
         session.user.id = token.id;
         session.user.token = token.token as string;
         session.user.isVerify = token.isVerify;
+        session.user.isApprove = token.isApprove;
       }
       return session;
     },
