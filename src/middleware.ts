@@ -66,14 +66,16 @@ export default withAuth(
 
     // -------------------- Payment Topup --------------------
     if (
-      (path === "/payment-topup/success" || path === "/payment-topup/failure") &&
+      (path === "/payment-topup/success" ||
+        path === "/payment-topup/failure") &&
       !searchParams.get("paymentLinkId")
     ) {
       return NextResponse.redirect(new URL("/", req.url));
     }
+    // Allow logged-in users to access certain public routes like privacy-policy and terms-condition
+    const allowPublicForAll = ["/privacy-policy", "/terms-condition"];
 
-    // -------------------- Block Public Route for Logged In User --------------------
-    if (session && isPublicRoute) {
+    if (session && isPublicRoute && !allowPublicForAll.includes(path)) {
       return NextResponse.redirect(new URL("/", req.url));
     }
 
