@@ -37,6 +37,8 @@ const CheckOutPagePageMain: FC<CheckOutPagePageMainProps> = ({
     ids: selectedItems,
     is_instant: type === "instant" ? true : false,
   });
+  const pickupRequiredFlags =
+    carts?.data?.map((cart) => cart.package?.pickup_included === true) || [];
 
   const loading = isFetchingGetCart || isLoadingGetCart;
 
@@ -73,11 +75,28 @@ const CheckOutPagePageMain: FC<CheckOutPagePageMainProps> = ({
     term_conditions: yup
       .boolean()
       .oneOf([true], "You must accept the Terms and Conditions")
-      .required(),
+      .required("Terms and Conditions is required"),
     pickup_locations: yup
       .array()
-      .of(yup.string().required("Pickup location is required"))
-      .min(1, "At least one pickup location is required"),
+      .of(yup.string().nullable())
+      .test(
+        "pickup-location-required-per-item",
+        "Pickup location required for some items",
+        function (value) {
+          const { path, createError } = this;
+          for (let i = 0; i < pickupRequiredFlags.length; i++) {
+            if (pickupRequiredFlags[i]) {
+              if (!value || !value[i] || value[i].trim() === "") {
+                return createError({
+                  path: `${path}[${i}]`,
+                  message: "Pickup location is required",
+                });
+              }
+            }
+          }
+          return true;
+        }
+      ),
   });
   type FormData = yup.InferType<typeof schema>;
 

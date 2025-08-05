@@ -4,6 +4,7 @@ import { PersonType } from "./PersonType";
 export interface Package {
   ulid: string;
   name: string;
+  pickup_included: boolean;
 }
 
 export interface Product {

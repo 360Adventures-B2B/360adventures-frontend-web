@@ -58,15 +58,21 @@ const PackageCard: React.FC<PackageCardProps> = ({
         }`}
       >
         <div className="flex flex-wrap gap-2 mb-2">
-          <span className="text-xs font-medium bg-green-100 text-green-800 px-2 py-0.5 rounded">
-            Instant Confirmation
-          </span>
-          <span className="text-xs font-medium bg-blue-100 text-blue-800 px-2 py-0.5 rounded">
-            Free Cancellation
-          </span>
-          <span className="text-xs font-medium bg-purple-100 text-purple-800 px-2 py-0.5 rounded">
-            Pickup Included
-          </span>
+          {packageData.instant_confirmation && (
+            <span className="text-xs font-medium bg-green-100 text-green-800 px-2 py-0.5 rounded">
+              Instant Confirmation
+            </span>
+          )}
+          {packageData.free_cancellation && (
+            <span className="text-xs font-medium bg-blue-100 text-blue-800 px-2 py-0.5 rounded">
+              Free Cancellation
+            </span>
+          )}
+          {packageData.pickup_included && (
+            <span className="text-xs font-medium bg-purple-100 text-purple-800 px-2 py-0.5 rounded">
+              Pickup Included
+            </span>
+          )}
         </div>
 
         <h4 className="text-md font-semibold text-gray-800">

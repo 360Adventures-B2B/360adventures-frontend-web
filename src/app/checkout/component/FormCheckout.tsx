@@ -279,7 +279,7 @@ export default function FormCheckout({ form }: FormCheckoutProps) {
                     />
                     <label htmlFor="termsCheckbox" className="ml-2">
                       By continuing, you agree to the
-                      <a target="_blank" href="#" className="text-blue-600 hover:underline">
+                      <a target="_blank" href="/terms-condition" className="text-blue-600 hover:underline">
                         {" "}
                         Terms and Conditions
                       </a>
