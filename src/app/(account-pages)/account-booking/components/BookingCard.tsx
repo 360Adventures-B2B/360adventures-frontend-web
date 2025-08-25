@@ -8,6 +8,7 @@ import { formatDate, formatDateTime } from "@/utils/dateHelper";
 import Image from "next/image";
 import ModalCancelBooking from "./ModalCancelBooking";
 import { useLazyDownloadTicketQuery } from "@/lib/services/bookingService";
+import { useDownloadTicket } from "@/hooks/useDownloadTicket";
 
 export default function BookingCard({ booking }: { booking: IBooking }) {
   const statusColors: Record<string, string> = {
@@ -21,54 +22,7 @@ export default function BookingCard({ booking }: { booking: IBooking }) {
   const [imgSrc, setImgSrc] = useState(
     booking.package?.product?.image || fallbackUrl
   );
-
-  const [isLoadingDownload, setIsLoadingDownload] = useState(false);
-
-  const [triggerDownloadTicket, { isFetching }] = useLazyDownloadTicketQuery();
-  // const handleDownload = async () => {
-  //   try {
-  //     const res = await triggerDownloadTicket(booking?.ulid || "").unwrap();
-  //     const fileUrl = res?.data?.url;
-
-  //     if (!fileUrl) {
-  //       console.warn("No URL found in response");
-  //       return;
-  //     }
-
-  //     const newWindow = window.open(fileUrl, "_blank");
-
-  //     if (!newWindow) {
-  //       console.error("Failed to open the file. Pop-up might be blocked.");
-  //       return;
-  //     }
-
-  //     newWindow.focus();
-  //   } catch (error) {
-  //     console.error("Download failed:", error);
-  //   }
-  // };
-  const handleDownload = async () => {
-    try {
-      const ticketId = booking?.ulid;
-      if (!ticketId) return;
-
-      setIsLoadingDownload(true);
-      const response = await fetch(`/api/download-ticket?id=${ticketId}`);
-      const blob = await response.blob();
-
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `ticket-${ticketId}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-      setIsLoadingDownload(false);
-    } catch (err) {
-      console.error("Download failed", err);
-    }
-  };
+  const { isLoadingDownload, handleDownload } = useDownloadTicket();
 
   return (
     <div>
@@ -188,8 +142,8 @@ export default function BookingCard({ booking }: { booking: IBooking }) {
             {(booking?.booking_status === "confirmed" ||
               booking?.booking_status === "completed") && (
               <ButtonPrimary
-                loading={isFetching || isLoadingDownload}
-                onClick={handleDownload}
+                loading={isLoadingDownload}
+                onClick={() => handleDownload(booking?.ulid)}
                 fontSize="text-sm"
                 sizeClass="px-4 py-2"
                 className="w-full lg:w-auto border rounded-lg"

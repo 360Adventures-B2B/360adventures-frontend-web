@@ -9,6 +9,7 @@ import BookingSummary from "@/components/BookingSummary";
 import BookingSummarySkeleton from "@/components/skeleton/BookingSummarySkeleton";
 import InformationSkeleton from "./components/InformationSkeleton";
 import ButtonSecondary from "@/shared/ButtonSecondary";
+import { useDownloadTicket } from "@/hooks/useDownloadTicket";
 
 export interface PayPageProps {}
 
@@ -23,10 +24,11 @@ const PayPage: FC<PayPageProps> = () => {
     isError,
     isFetching,
   } = useGetBookingSummaryQuery(orderId);
-  console.log("🚀 ~ booking:", booking);
 
   const bookingData = booking?.data;
   const loading = isLoading || isFetching;
+
+  const { isLoadingDownload, handleDownload } = useDownloadTicket();
 
   if (
     !loading &&
@@ -149,6 +151,19 @@ const PayPage: FC<PayPageProps> = () => {
             <ButtonSecondary onClick={() => window.location.reload()}>
               <i className="las la-sync-alt mr-2"></i>
               Refresh
+            </ButtonSecondary>
+          )}
+          {bookingData?.payment_status === "paid" && (
+            <ButtonSecondary
+              loading={isLoadingDownload}
+              onClick={() =>
+                handleDownload(
+                  bookingData?.bookings.map((b: { ulid: string }) => b.ulid)
+                )
+              }
+            >
+              {/* <i className="las la-download mr-2"></i> */}
+              Download Voucher
             </ButtonSecondary>
           )}
         </div>
