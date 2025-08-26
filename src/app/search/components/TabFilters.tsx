@@ -235,12 +235,6 @@ const TabFilters = () => {
                         <h3 className="text-xl font-medium">Booking Option</h3>
                         <div className="mt-6 relative flex flex-wrap gap-2">
                           {bookingOptionsList.map((bookingOption) => {
-                            console.log(
-                              "OPTION:",
-                              bookingOption,
-                              "CURRENT FILTERS:",
-                              filters.booking_option
-                            );
                             const isActive =
                               filters.booking_option.includes(bookingOption);
                             const iconClass =
