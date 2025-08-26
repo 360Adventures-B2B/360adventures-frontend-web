@@ -164,11 +164,10 @@ function PageHome() {
 
         {/* <DealsSection /> */}
 
-        {/* Location Section */}
-        <LocationSection />
-
         {/* product section  */}
         <ProductSection />
+        {/* Location Section */}
+        <LocationSection className="pb-14" />
 
         <div className="relative py-16">
           <BackgroundSection />
