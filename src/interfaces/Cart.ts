@@ -5,6 +5,9 @@ export interface Package {
   ulid: string;
   name: string;
   pickup_included: boolean;
+  enable_phone?: boolean;
+  enable_country?: boolean;
+  enable_city?: boolean;
 }
 
 export interface Product {

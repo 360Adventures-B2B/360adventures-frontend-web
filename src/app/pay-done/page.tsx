@@ -116,23 +116,38 @@ const PayPage: FC<PayPageProps> = () => {
               </span>
             </div>
 
-            <div className="flex flex-col">
-              <span className="text-neutral-600 dark:text-neutral-400">
-                Country
-              </span>
-              <span className="font-medium text-neutral-900 dark:text-neutral-100">
-                {bookingData?.country}
-              </span>
-            </div>
+            {bookingData?.phone && bookingData.phone.trim() !== "" && (
+              <div className="flex flex-col">
+                <span className="text-neutral-600 dark:text-neutral-400">
+                  <i className="fa fa-phone-square" aria-hidden="true"></i>
+                </span>
+                <span className="font-medium text-neutral-900 dark:text-neutral-100">
+                  {bookingData.phone}
+                </span>
+              </div>
+            )}
 
-            <div className="flex flex-col">
-              <span className="text-neutral-600 dark:text-neutral-400">
-                City
-              </span>
-              <span className="font-medium text-neutral-900 dark:text-neutral-100">
-                {bookingData?.city}
-              </span>
-            </div>
+            {bookingData?.country && bookingData.country.trim() !== "" && (
+              <div className="flex flex-col">
+                <span className="text-neutral-600 dark:text-neutral-400">
+                  Country
+                </span>
+                <span className="font-medium text-neutral-900 dark:text-neutral-100">
+                  {bookingData.country}
+                </span>
+              </div>
+            )}
+
+            {bookingData?.city && bookingData.city.trim() !== "" && (
+              <div className="flex flex-col">
+                <span className="text-neutral-600 dark:text-neutral-400">
+                  City
+                </span>
+                <span className="font-medium text-neutral-900 dark:text-neutral-100">
+                  {bookingData.city}
+                </span>
+              </div>
+            )}
 
             <div className="flex flex-col sm:col-span-2 lg:col-span-2">
               <span className="text-neutral-600 dark:text-neutral-400">

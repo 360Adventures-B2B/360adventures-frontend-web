@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useForm, UseFormReturn } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { handleError } from "@/lib/handleApiError";
 import Input from "@/shared/Input";
 import Label from "@/components/Label";
@@ -16,11 +22,20 @@ import PhoneInput from "@/shared/PhoneInput";
 import CustomPhoneInput from "@/shared/PhoneInput";
 import { useCheckoutCartMutation } from "@/lib/services/cartService";
 interface FormCheckoutProps {
-  form: UseFormReturn<any>; // atau ganti `any` dengan tipe data form kamu
+  form: UseFormReturn<any>; 
+  enableFlags: {
+    enable_phone: boolean;
+    enable_country: boolean;
+    enable_city: boolean;
+  };
 }
 
-export default function FormCheckout({ form }: FormCheckoutProps) {
-  const { data: user, isLoading: isLoadingUser, isError } = useGetUserQuery(undefined);
+export default function FormCheckout({ form,enableFlags }: FormCheckoutProps) {
+  const {
+    data: user,
+    isLoading: isLoadingUser,
+    isError,
+  } = useGetUserQuery(undefined);
 
   const userData = user?.data;
 
@@ -69,14 +84,22 @@ export default function FormCheckout({ form }: FormCheckoutProps) {
         platform: "web",
       };
 
-      const res = await checkoutCart({ body: values, is_instant: type === "instant" ? true : false }).unwrap();
+      const res = await checkoutCart({
+        body: values,
+        is_instant: type === "instant" ? true : false,
+      }).unwrap();
 
       if (res.code == 200) {
-        if (values.payment_method === "payment_gateway" && res?.data?.payment_url) {
+        if (
+          values.payment_method === "payment_gateway" &&
+          res?.data?.payment_url
+        ) {
           window.location.href = res?.data?.payment_url;
           return;
         }
-        window.location.href = `/pay-done?order_id=${res?.data?.order_id || ""}`;
+        window.location.href = `/pay-done?order_id=${
+          res?.data?.order_id || ""
+        }`;
       }
 
       if (res.code == 409) {
@@ -101,7 +124,9 @@ export default function FormCheckout({ form }: FormCheckoutProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <label className="block">
-              <span className="text-neutral-800 dark:text-neutral-200">Name</span>
+              <span className="text-neutral-800 dark:text-neutral-200">
+                Name
+              </span>
               <FormField
                 control={form.control}
                 name="name"
@@ -123,7 +148,9 @@ export default function FormCheckout({ form }: FormCheckoutProps) {
             </label>
 
             <label className="block">
-              <span className="text-neutral-800 dark:text-neutral-200">Email</span>
+              <span className="text-neutral-800 dark:text-neutral-200">
+                Email
+              </span>
               <FormField
                 control={form.control}
                 name="email"
@@ -144,69 +171,91 @@ export default function FormCheckout({ form }: FormCheckoutProps) {
               />
             </label>
 
-            <label className="block z-0">
-              <span className="text-neutral-800 dark:text-neutral-200">Phone</span>
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <CustomPhoneInput
-                        type="text"
-                        placeholder="Enter your phone number"
-                        autoComplete="tel"
-                        className="mt-1"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </label>
+            {enableFlags.enable_phone && (
+              <label className="block z-0">
+                <span className="text-neutral-800 dark:text-neutral-200">
+                  Phone
+                </span>
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <CustomPhoneInput {...field} className="mt-1" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </label>
+            )}
 
-            <label className="block">
-              <span className="text-neutral-800 dark:text-neutral-200">Country</span>
-              <FormField
-                control={form.control}
-                name="country"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input type="text" placeholder="Enter your country" className="mt-1" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </label>
+            {enableFlags.enable_country && (
+              <label className="block">
+                <span className="text-neutral-800 dark:text-neutral-200">
+                  Country
+                </span>
+                <FormField
+                  control={form.control}
+                  name="country"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="Enter your country"
+                          className="mt-1"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </label>
+            )}
 
-            <label className="block">
-              <span className="text-neutral-800 dark:text-neutral-200">City</span>
-              <FormField
-                control={form.control}
-                name="city"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input type="text" placeholder="Enter your city" className="mt-1" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </label>
+            {enableFlags.enable_city && (
+              <label className="block">
+                <span className="text-neutral-800 dark:text-neutral-200">
+                  City
+                </span>
+                <FormField
+                  control={form.control}
+                  name="city"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="Enter your city"
+                          className="mt-1"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </label>
+            )}
 
             <label className="block md:col-span-2">
-              <span className="text-neutral-800 dark:text-neutral-200">Special Requirement</span>
+              <span className="text-neutral-800 dark:text-neutral-200">
+                Special Requirement
+              </span>
               <FormField
                 control={form.control}
                 name="requirement"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Textarea placeholder="Special requirement" className="mt-1" {...field} />
+                      <Textarea
+                        placeholder="Special requirement"
+                        className="mt-1"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -235,9 +284,13 @@ export default function FormCheckout({ form }: FormCheckoutProps) {
                             onChange={field.onChange}
                             className="form-radio h-5 w-5 checked:bg-primary-700 hover:checked:bg-primary-700 focus:checked:bg-primary-700 focus:outline-none focus:ring-0 accent-primary-700"
                           />
-                          <span className="text-lg font-medium">Credit Balance</span>
+                          <span className="text-lg font-medium">
+                            Credit Balance
+                          </span>
                         </div>
-                        <span className="text-sm text-gray-600">Balance: {userData?.credit_amount}</span>
+                        <span className="text-sm text-gray-600">
+                          Balance: {userData?.credit_amount}
+                        </span>
                       </label>
                     </div>
 
@@ -251,12 +304,16 @@ export default function FormCheckout({ form }: FormCheckoutProps) {
                             onChange={field.onChange}
                             className="form-radio h-5 w-5 checked:bg-primary-700 hover:checked:bg-primary-700 focus:checked:bg-primary-700 focus:outline-none focus:ring-0 accent-primary-700"
                           />
-                          <span className="text-lg font-medium">Visa / Mastercard / Apple Pay / G Pay</span>
+                          <span className="text-lg font-medium">
+                            Visa / Mastercard / Apple Pay / G Pay
+                          </span>
                         </div>
                       </label>
                     </div>
 
-                    {fieldState.error && <ErrorText text={fieldState.error.message} />}
+                    {fieldState.error && (
+                      <ErrorText text={fieldState.error.message} />
+                    )}
                   </>
                 )}
               />
@@ -279,19 +336,29 @@ export default function FormCheckout({ form }: FormCheckoutProps) {
                     />
                     <label htmlFor="termsCheckbox" className="ml-2">
                       By continuing, you agree to the
-                      <a target="_blank" href="/terms-condition" className="text-blue-600 hover:underline">
+                      <a
+                        target="_blank"
+                        href="/terms-condition"
+                        className="text-blue-600 hover:underline"
+                      >
                         {" "}
                         Terms and Conditions
                       </a>
                     </label>
                   </div>
-                  {fieldState.error && <ErrorText text={fieldState.error.message} />}
+                  {fieldState.error && (
+                    <ErrorText text={fieldState.error.message} />
+                  )}
                 </>
               )}
             />
 
             <div className="pt-8">
-              <ButtonPrimary type="submit" className="w-full" loading={isLoading}>
+              <ButtonPrimary
+                type="submit"
+                className="w-full"
+                loading={isLoading}
+              >
                 Confirm and pay
               </ButtonPrimary>
             </div>
