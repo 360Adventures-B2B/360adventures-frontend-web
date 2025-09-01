@@ -21,6 +21,7 @@ import { redirect, useRouter, useSearchParams } from "next/navigation";
 import PhoneInput from "@/shared/PhoneInput";
 import CustomPhoneInput from "@/shared/PhoneInput";
 import { useCheckoutCartMutation } from "@/lib/services/cartService";
+import { formatNumber } from "@/utils/currencyConverter";
 interface FormCheckoutProps {
   form: UseFormReturn<any>; 
   enableFlags: {
@@ -289,7 +290,7 @@ export default function FormCheckout({ form,enableFlags }: FormCheckoutProps) {
                           </span>
                         </div>
                         <span className="text-sm text-gray-600">
-                          Balance: {userData?.credit_amount}
+                          Balance: {isLoadingUser ? "loading..." : formatNumber(userData?.credit_amount)}
                         </span>
                       </label>
                     </div>

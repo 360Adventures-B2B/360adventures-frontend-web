@@ -7,6 +7,7 @@ import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useGetUserQuery } from "@/lib/services/authService";
+import { formatNumber } from "@/utils/currencyConverter";
 interface Props {
   className?: string;
 }
@@ -47,7 +48,7 @@ export default function AvatarDropdown({ className = "" }: Props) {
                       <div className="flex-grow">
                         <h4 className="font-semibold">{user?.name}</h4>
                         <p className="text-xs mt-0.5">
-                          Balance: {isLoading ? "loading..." : data?.data?.credit_amount}
+                          Balance: {isLoading ? "loading..." : formatNumber(data?.data?.credit_amount)}
                         </p>
                       </div>
                     </div>
