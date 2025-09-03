@@ -168,7 +168,7 @@ const PayPage: FC<PayPageProps> = () => {
               Refresh
             </ButtonSecondary>
           )}
-          {bookingData?.payment_status === "paid" && (
+          {/* {bookingData?.payment_status === "paid" && (
             <ButtonSecondary
               loading={isLoadingDownload}
               onClick={() =>
@@ -177,10 +177,9 @@ const PayPage: FC<PayPageProps> = () => {
                 )
               }
             >
-              {/* <i className="las la-download mr-2"></i> */}
               Download Voucher
             </ButtonSecondary>
-          )}
+          )} */}
         </div>
       </div>
     );

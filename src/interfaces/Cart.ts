@@ -30,6 +30,9 @@ export interface Cart {
   product: Product;
   pickup_location?: string;
   is_expired?: boolean;
+
+  payment_status?: string;
+  booking_status?: string;
   created_at?: string;
   updated_at?: string;
 }
