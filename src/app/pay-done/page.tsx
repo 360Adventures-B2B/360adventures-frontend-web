@@ -119,7 +119,7 @@ const PayPage: FC<PayPageProps> = () => {
             {bookingData?.phone && bookingData.phone.trim() !== "" && (
               <div className="flex flex-col">
                 <span className="text-neutral-600 dark:text-neutral-400">
-                  <i className="fa fa-phone-square" aria-hidden="true"></i>
+                  Phone
                 </span>
                 <span className="font-medium text-neutral-900 dark:text-neutral-100">
                   {bookingData.phone}

@@ -8,13 +8,15 @@ import TopupRedirectPageSkeleton from "../components/TopupRedirectPageSkeleton";
 const PaymentTopupSuccessPage = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const paymentLinkId = searchParams.get("paymentLinkId");
+  const paymentLinkId = searchParams.get("orderId");
+  console.log("🚀 ~ PaymentTopupSuccessPage ~ paymentLinkId:", paymentLinkId);
 
   const [shouldRetry, setShouldRetry] = useState(true);
 
-  const { data, isLoading, isFetching, isError, refetch } = useGetDetailTopupRequestQuery(paymentLinkId, {
-    skip: !paymentLinkId || !shouldRetry,
-  });
+  const { data, isLoading, isFetching, isError, refetch } =
+    useGetDetailTopupRequestQuery(paymentLinkId, {
+      skip: !paymentLinkId || !shouldRetry,
+    });
 
   const handleRefresh = () => {
     setShouldRetry(true); // Start polling again
@@ -32,25 +34,41 @@ const PaymentTopupSuccessPage = () => {
   }
   const topupData = data?.data;
 
-  if (topupData.status !== "pending" && topupData.status !== "success") {
+  if (
+    topupData.status !== "pending" &&
+    topupData.status !== "success" &&
+    topupData.status !== "reject"
+  ) {
     router.push("/");
     return <TopupRedirectPageSkeleton />; // Halaman tidak menampilkan apa-apa jika status tidak valid
   }
 
   return (
     <TopupRedirectPage
-      status={topupData?.status === "success" ? "success" : "pending"}
+      status={
+        topupData?.status === "success"
+          ? "success"
+          : topupData?.status === "pending"
+          ? "pending"
+          : "failed"
+      }
       order_id={topupData?.ulid || ""}
       reference_id={topupData?.reference_id}
       date={topupData?.created_at}
       amount={topupData?.amount}
+      fee_credit_card={topupData?.fee_credit_card}
       payment_method={topupData?.payment_method}
       payment_type={topupData?.payment_type}
       total_paid={(topupData?.amount || 0) + (topupData?.fee_credit_card || 0)}
       description={
-        topupData?.status === "success" ? "Your top-up was successful!" : "Your payment is pending. Please wait..."
+        topupData?.status === "success"
+          ? "Your top-up was successful!"
+          : topupData?.status === "pending"
+          ? "Your payment is pending. Please wait..."
+          : "Oops! Something went wrong with your top-up. Please try again."
       }
-      onRefresh={handleRefresh} // Pass the refresh handler
+      {...(topupData?.status === "pending" && { onRefresh: handleRefresh })}
+      // status loading/spinner
       isLoading={isLoadingOrFetching}
     />
   );

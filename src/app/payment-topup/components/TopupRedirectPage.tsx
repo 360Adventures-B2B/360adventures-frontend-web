@@ -15,6 +15,7 @@ interface TopupRedirectPageProps {
   reference_id?: string;
   date?: string;
   amount?: number;
+  fee_credit_card?: number;
   payment_method?: string;
   payment_type?: string;
   total_paid?: number;
@@ -31,6 +32,7 @@ const TopupRedirectPage: React.FC<TopupRedirectPageProps> = ({
   reference_id = "-",
   date = "-",
   amount,
+  fee_credit_card,
   payment_method = "-",
   payment_type = "-",
   total_paid,
@@ -82,6 +84,12 @@ const TopupRedirectPage: React.FC<TopupRedirectPageProps> = ({
             <div className="flex justify-between text-sm text-gray-600">
               <span className="font-semibold">Top-up Amount:</span>
               <span>{formatNumber(amount)}</span>
+            </div>
+          )}
+           {fee_credit_card !== undefined && (
+            <div className="flex justify-between text-sm text-gray-600">
+              <span className="font-semibold">Top-up Fee:</span>
+              <span>{formatNumber(fee_credit_card)}</span>
             </div>
           )}
           {payment_method && (

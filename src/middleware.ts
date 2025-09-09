@@ -68,7 +68,7 @@ export default withAuth(
     if (
       (path === "/payment-topup/success" ||
         path === "/payment-topup/failure") &&
-      !searchParams.get("paymentLinkId")
+      !searchParams.get("orderId")
     ) {
       return NextResponse.redirect(new URL("/", req.url));
     }
