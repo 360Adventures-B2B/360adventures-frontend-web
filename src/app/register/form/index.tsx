@@ -167,215 +167,220 @@ export default function FormRegister() {
   }
 
   return (
-    <>
-      <Form {...form}>
-        <form
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 gap-y-6"
-          onSubmit={form.handleSubmit(onSubmit)}
-        >
-          {/* Full Name */}
-          <label className="block col-span-1">
-            <span className="text-neutral-800 dark:text-neutral-200">
-              Full Name
-            </span>
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="Name"
-                      autoComplete="name"
-                      className="mt-1 w-full"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </label>
+  <>
+    <Form {...form}>
+      <form
+        className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        {/* Full Name */}
+        <label className="block col-span-2 md:col-span-1">
+          <span className="text-neutral-800 dark:text-neutral-200">
+            Full Name
+          </span>
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="Name"
+                    autoComplete="name"
+                    className="mt-1 w-full"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </label>
 
-          {/* Username */}
-          <label className="block col-span-1">
-            <span className="text-neutral-800 dark:text-neutral-200">
-              Username
-            </span>
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="Username"
-                      autoComplete="username"
-                      className="mt-1 w-full"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </label>
+        {/* Username */}
+        <label className="block col-span-2 md:col-span-1">
+          <span className="text-neutral-800 dark:text-neutral-200">
+            Username
+          </span>
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="Username"
+                    autoComplete="username"
+                    className="mt-1 w-full"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </label>
 
-          {/* Company Profile - Text */}
-          <label className="block col-span-1">
-            <span className="text-neutral-800 dark:text-neutral-200">
-              Company Name
-            </span>
-            <FormField
-              control={form.control}
-              name="company_name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="Enter your Company Profile"
-                      autoComplete="organization"
-                      className="mt-1 w-full"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </label>
+        {/* Company Name */}
+        <label className="block col-span-2 md:col-span-1">
+          <span className="text-neutral-800 dark:text-neutral-200">
+            Company Name
+          </span>
+          <FormField
+            control={form.control}
+            name="company_name"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="Enter your Company Profile"
+                    autoComplete="organization"
+                    className="mt-1 w-full"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </label>
 
-          {/* Email / Phone */}
-          <label className="block col-span-1">
-            <span className="text-neutral-800 dark:text-neutral-200">
-              Email address or Mobile phone
-            </span>
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="Email address or Mobile phone"
-                      autoComplete="email"
-                      className="mt-1 w-full"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </label>
+        {/* Email / Phone */}
+        <label className="block col-span-2 md:col-span-1">
+          <span className="text-neutral-800 dark:text-neutral-200">
+            Email address or Mobile phone
+          </span>
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="Email address or Mobile phone"
+                    autoComplete="email"
+                    className="mt-1 w-full"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </label>
 
-          {/* Password */}
-          <label className="block col-span-1">
-            <span className="text-neutral-800 dark:text-neutral-200">
-              Password
-            </span>
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="Password"
-                      autoComplete="password"
-                      className="mt-1 w-full"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </label>
+        {/* Password */}
+        <label className="block col-span-2 md:col-span-1">
+          <span className="text-neutral-800 dark:text-neutral-200">
+            Password
+          </span>
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="Password"
+                    autoComplete="new-password"
+                    className="mt-1 w-full"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </label>
 
-          {/* Confirmation Password */}
-          <label className="block col-span-1">
-            <span className="text-neutral-800 dark:text-neutral-200">
-              Confirmation Password
-            </span>
-            <FormField
-              control={form.control}
-              name="passwordConfirmation"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="Confirmation Password"
-                      autoComplete="confirmation_password"
-                      className="mt-1 w-full"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </label>
+        {/* Confirmation Password */}
+        <label className="block col-span-2 md:col-span-1">
+          <span className="text-neutral-800 dark:text-neutral-200">
+            Confirmation Password
+          </span>
+          <FormField
+            control={form.control}
+            name="passwordConfirmation"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="Confirmation Password"
+                    autoComplete="new-password"
+                    className="mt-1 w-full"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </label>
 
-          {/* Trade License - Upload File, Full Width */}
-          <label className="block col-span-2">
-            <span className="text-neutral-800 dark:text-neutral-200">
-              Trade License
-            </span>
-            <FormField
-              control={form.control}
-              name="trade_license"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <div className="mt-1">
-                      <label className="flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer w-full">
-                        Upload File
-                        <Input
-                          type="file"
-                          accept=".pdf"
-                          className="hidden"
-                          {...field}
-                          value={undefined}
-                          onChange={(e) => {
-                            field.onChange(e.target.files?.[0]);
-                          }}
-                        />
-                      </label>
-                      {field.value && (
-                        <p className="mt-2 text-sm text-green-600">
-                          Selected file: {(field.value as File).name}
-                        </p>
-                      )}
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </label>
+        {/* Trade License - Upload File */}
+        <label className="block col-span-2">
+          <span className="text-neutral-800 dark:text-neutral-200">
+            Trade License
+          </span>
+          <FormField
+            control={form.control}
+            name="trade_license"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <div className="mt-1">
+                    <label className="flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer w-full">
+                      Upload File
+                      <Input
+                        type="file"
+                        accept=".pdf"
+                        className="hidden"
+                        {...field}
+                        value={undefined}
+                        onChange={(e) => {
+                          field.onChange(e.target.files?.[0]);
+                        }}
+                      />
+                    </label>
+                    {field.value && (
+                      <p className="mt-2 text-sm text-green-600">
+                        Selected file: {(field.value as File).name}
+                      </p>
+                    )}
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </label>
 
-          {/* Submit Button */}
-          <div className="col-span-1 md:col-span-2">
-            <ButtonPrimary loading={isLoading} type="submit" className="w-full">
-              Register
-            </ButtonPrimary>
-          </div>
-        </form>
-      </Form>
+        {/* Submit Button */}
+        <div className="col-span-2">
+          <ButtonPrimary
+            loading={isLoading}
+            type="submit"
+            className="w-full"
+          >
+            Register
+          </ButtonPrimary>
+        </div>
+      </form>
+    </Form>
 
-      <span className="block text-center text-neutral-700 dark:text-neutral-300">
-        Already an account? {` `}
-        <Link href="/login" className="font-semibold underline">
-          Login
-        </Link>
-      </span>
-    </>
-  );
+    <span className="block text-center text-neutral-700 dark:text-neutral-300">
+      Already an account?{" "}
+      <Link href="/login" className="font-semibold underline">
+        Login
+      </Link>
+    </span>
+  </>
+);
+
 }
