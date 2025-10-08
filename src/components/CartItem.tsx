@@ -69,6 +69,15 @@ const CartItem: React.FC<CartItemProps> = ({ item, selectedItems, toggleSelectIt
           {item?.start_date && formatDate(item?.start_date)}
         </p>
 
+        {/* Time Slot */}
+        {item?.time_slot && (
+          <p className="timeSlot text-sm text-[#444] mt-1">
+            <i className="las la-clock mr-2"></i>
+            {item.time_slot}
+          </p>
+        )}
+
+
         {/* Guest Details */}
         <div className="guestDetails text-sm text-[#444] mt-2">
           {item?.person_types
