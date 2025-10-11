@@ -1,7 +1,5 @@
 import StaticContentPage from "@/components/StaticContentPage";
 
-export const revalidate = 86400;
-
 export default async function PrivacyPolicyPage() {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const apiKey = process.env.NEXT_PUBLIC_API_KEY;
@@ -10,7 +8,7 @@ export default async function PrivacyPolicyPage() {
     headers: {
       "x-api-key": apiKey || "",
     },
-    next: { revalidate },
+    cache: "no-store", // ⛔️ Jangan cache sama sekali
   });
 
   const data = await res.json();
