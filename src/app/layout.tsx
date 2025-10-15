@@ -2,36 +2,37 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import "@/fonts/line-awesome-1.3.0/css/line-awesome.css";
 import "@/styles/index.scss";
-import "rc-slider/assets/index.css";
-import { Metadata } from "next";
 import LayoutWrapper from "@/components/LayoutWrapper";
 import { Toaster } from "@/components/ui/toaster";
-import NextTopLoader from "nextjs-toploader";
+import { LogoProvider } from "@/context/LogoProvider";
 
-const funnelDisplay = Poppins({
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
-});
+const funnelDisplay = Poppins({ subsets: ["latin"], display: "swap", weight: ["300","400","500","600","700"] });
 
-export const metadata: Metadata = {
-  title: "360Adventures - B2B Platform",
-  description: "360Adventures B2B Platform",
-  // themeColor: [{ media: "(prefers-color-scheme: dark)", color: "#fff" }],
-  // viewport: "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover",
-  icons: [
-    { rel: "apple-touch-icon", url: "icons/360adventures-favicon.png" },
-    { rel: "icon", url: "icons/360adventures-favicon.png" },
-  ],
-};
+async function getSetting(key: string) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/setting-websites`, {
+    headers: { "x-api-key": process.env.NEXT_PUBLIC_API_KEY || "" },
+    cache: "no-store",
+  });
+  const data = await res.json();
+  return data.data.find((s: any) => s.key === key)?.value || "";
+}
 
-export default function RootLayout({ children, params }: { children: React.ReactNode; params: any }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const favicon = (await getSetting("site_favicon")) || "/icons/360adventures-favicon.png";
+  const siteLogo = (await getSetting("site_logo")) || "/img/360adventures-logo.png";
+
   return (
     <html lang="en" className={funnelDisplay.className}>
+      <head>
+        <title>360Adventures - B2B Platform</title>
+        <link rel="icon" href={favicon} />
+        <link rel="apple-touch-icon" href={favicon} />
+      </head>
       <body className="bg-white theme-360adventures text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
-     
-        <LayoutWrapper>{children}</LayoutWrapper>
-        <Toaster />
+        <LogoProvider logo={siteLogo}>
+          <LayoutWrapper>{children}</LayoutWrapper>
+          <Toaster />
+        </LogoProvider>
       </body>
     </html>
   );
