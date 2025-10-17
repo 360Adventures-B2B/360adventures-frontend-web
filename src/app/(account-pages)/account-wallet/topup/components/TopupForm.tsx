@@ -85,10 +85,10 @@ export default function TopUpForm({ closeModal }: TopUpFormProps) {
       return;
     }
 
-    if (state.payment_method === "qr_code") {
-      window.location.href = `/qr-payment?amount=${finalAmount}`;
-      return;
-    }
+    // if (state.payment_method === "qr_code") {
+    //   window.location.href = `/qr-payment?amount=${finalAmount}`;
+    //   return;
+    // }
 
     const body = {
       amount: finalAmount,
