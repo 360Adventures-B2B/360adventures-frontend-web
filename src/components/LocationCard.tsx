@@ -44,7 +44,7 @@ const LocationCard: FC<LocationCardProps> = ({ className = "", location }) => {
         <span
           className={`block mt-1.5 text-sm text-neutral-6000 dark:text-neutral-400`}
         >
-          {location?.products_count} activities
+          {location?.products_count} Activities
         </span>
       </div>
     </Link>

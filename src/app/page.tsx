@@ -169,10 +169,10 @@ function PageHome() {
         {/* Location Section */}
         <LocationSection className="pb-14" />
 
-        <div className="relative py-16">
+        {/* <div className="relative py-16">
           <BackgroundSection />
           <SectionBecomeAnAuthor />
-        </div>
+        </div> */}
       </div>
     </main>
   );
