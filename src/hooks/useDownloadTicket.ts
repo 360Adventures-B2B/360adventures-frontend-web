@@ -16,7 +16,7 @@ export function useDownloadTicket() {
       await Promise.all(
         ids.map(async (id) => {
           const response = await fetch(`/api/download-ticket?id=${id}`);
-          if (!response.ok) throw new Error("Failed to download " + id);
+          if (!response.ok) throw new Error("Faild to download ticket, try again");
 
           const blob = await response.blob();
           const url = URL.createObjectURL(blob);
@@ -32,6 +32,7 @@ export function useDownloadTicket() {
       );
     } catch (err) {
       console.error("Download failed", err);
+      throw err;
     } finally {
       setIsLoadingDownload(false);
     }

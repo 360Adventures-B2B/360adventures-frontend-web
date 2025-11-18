@@ -9,6 +9,8 @@ import Image from "next/image";
 import ModalCancelBooking from "./ModalCancelBooking";
 import { useLazyDownloadTicketQuery } from "@/lib/services/bookingService";
 import { useDownloadTicket } from "@/hooks/useDownloadTicket";
+import { toast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 export default function BookingCard({ booking }: { booking: IBooking }) {
   const statusColors: Record<string, string> = {
@@ -143,7 +145,21 @@ export default function BookingCard({ booking }: { booking: IBooking }) {
               booking?.booking_status === "completed") && (
               <ButtonPrimary
                 loading={isLoadingDownload}
-                onClick={() => handleDownload(booking?.ulid)}
+                onClick={async () => {
+                  try {
+                    await handleDownload(booking?.ulid);
+                  } catch (err: any) {
+                    toast({
+                      className: cn(
+                        "top-0 right-0 flex fixed md:max-w-[350px] md:top-4 md:right-4"
+                      ),
+                      title: "Error",
+                      description: err?.message || "Failed to download ticket",
+                      variant: "destructive",
+                      duration: 5000,
+                    });
+                  }
+                }}
                 fontSize="text-sm"
                 sizeClass="px-4 py-2"
                 className="w-full lg:w-auto border rounded-lg"
